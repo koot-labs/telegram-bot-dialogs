@@ -3,9 +3,9 @@
 namespace KootLabs\TelegramBotDialogs\Laravel\Stores;
 
 use Illuminate\Contracts\Redis\Connection;
-use KootLabs\TelegramBotDialogs\Storages\Store;
+use KootLabs\TelegramBotDialogs\Storages\Storage;
 
-final class RedisStoreAdapter implements Store
+final class RedisStorageAdapter implements Storage
 {
     private Connection $redis;
 

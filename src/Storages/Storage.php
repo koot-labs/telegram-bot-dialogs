@@ -2,7 +2,7 @@
 
 namespace KootLabs\TelegramBotDialogs\Storages;
 
-interface Store
+interface Storage
 {
     public const STORE_PREFIX = 'tg:dialog:';
 
