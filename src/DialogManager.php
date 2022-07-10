@@ -21,6 +21,12 @@ final class DialogManager
         $this->storage = $storage;
     }
 
+    /** Use non-default Bot for API calls */
+    public function setBot(Api $bot): void
+    {
+        $this->bot = $bot;
+    }
+
     /**
      * Activate a new Dialog.
      * to start it - call {@see \KootLabs\TelegramBotDialogs\DialogManager::proceed}
@@ -28,28 +34,6 @@ final class DialogManager
     public function activate(Dialog $dialog): void
     {
         $this->storeDialogState($dialog);
-    }
-
-    /** Use non-default Bot for API calls */
-    public function setBot(Api $bot): void
-    {
-        $this->bot = $bot;
-    }
-
-    private function getDialogInstance(Update $update): ?Dialog
-    {
-        if (! $this->exists($update)) {
-            return null;
-        }
-
-        $message = $update->getMessage();
-        assert($message instanceof \Telegram\Bot\Objects\Message);
-        $chatId = $message->chat->id;
-
-        $dialog = $this->readDialogState($chatId);
-        $dialog->setBot($this->bot);
-
-        return $dialog;
     }
 
     /**
@@ -79,6 +63,22 @@ final class DialogManager
         $message = $update->getMessage();
         $chatId = $message instanceof Message ? $message->chat->id : null;
         return $chatId && $this->storage->has($chatId);
+    }
+
+    private function getDialogInstance(Update $update): ?Dialog
+    {
+        if (! $this->exists($update)) {
+            return null;
+        }
+
+        $message = $update->getMessage();
+        assert($message instanceof \Telegram\Bot\Objects\Message);
+        $chatId = $message->chat->id;
+
+        $dialog = $this->readDialogState($chatId);
+        $dialog->setBot($this->bot);
+
+        return $dialog;
     }
 
     /** Store all Dialog. */
