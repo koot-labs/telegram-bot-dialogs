@@ -4,8 +4,6 @@ namespace KootLabs\TelegramBotDialogs\Storages;
 
 interface Storage
 {
-    public const STORE_PREFIX = 'tg:dialog:';
-
     /** Save an item in the storage with a specific key and data. */
     public function set(string | int $key, mixed $value, int $ttl): void;
 
