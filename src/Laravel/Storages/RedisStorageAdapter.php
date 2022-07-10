@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace KootLabs\TelegramBotDialogs\Laravel\Stores;
+namespace KootLabs\TelegramBotDialogs\Laravel\Storages;
 
 use Illuminate\Contracts\Redis\Connection;
 use KootLabs\TelegramBotDialogs\Storages\Storage;
 
 final class RedisStorageAdapter implements Storage
 {
-    private const STORE_PREFIX = 'tg:dialog:';
+    private const KEY_PREFIX = 'tg:dialog:';
 
     private Connection $redis;
 
@@ -61,6 +61,6 @@ final class RedisStorageAdapter implements Storage
 
     private function decorateKey(string | int $key): string
     {
-        return sprintf('%s%s', self::STORE_PREFIX, $key);
+        return sprintf('%s%s', self::KEY_PREFIX, $key);
     }
 }

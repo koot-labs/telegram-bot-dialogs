@@ -6,7 +6,7 @@ use KootLabs\TelegramBotDialogs\Storages\Storage;
 
 final class RedisStorage implements Storage
 {
-    private const STORE_PREFIX = 'tg:dialog:';
+    private const KEY_PREFIX = 'tg:dialog:';
 
     private \Redis $redis;
     private string $host;
@@ -92,6 +92,6 @@ final class RedisStorage implements Storage
 
     private function decorateKey(string | int $key): string
     {
-        return sprintf('%s%s', self::STORE_PREFIX, $key);
+        return sprintf('%s%s', self::KEY_PREFIX, $key);
     }
 }

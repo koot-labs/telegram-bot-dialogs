@@ -6,7 +6,7 @@ use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 use KootLabs\TelegramBotDialogs\DialogManager;
-use KootLabs\TelegramBotDialogs\Laravel\Stores\RedisStorageAdapter;
+use KootLabs\TelegramBotDialogs\Laravel\Storages\RedisStorageAdapter;
 use KootLabs\TelegramBotDialogs\Storages\Storage;
 
 final class DialogsServiceProvider extends ServiceProvider implements DeferrableProvider
