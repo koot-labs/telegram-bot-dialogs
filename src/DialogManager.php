@@ -22,6 +22,13 @@ final class DialogManager
     }
 
     /** Use non-default Bot for API calls */
+    public function bot(Api $bot): self
+    {
+        $this->bot = $bot;
+        return $this;
+    }
+
+    /** Use non-default Bot for API calls */
     public function setBot(Api $bot): void
     {
         $this->bot = $bot;
@@ -57,7 +64,7 @@ final class DialogManager
         }
     }
 
-    /** Whether Dialog exist for a given Update. */
+    /** Whether an active Dialog exist for a given Update. */
     public function exists(Update $update): bool
     {
         $message = $update->getMessage();

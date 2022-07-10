@@ -4,7 +4,10 @@ namespace KootLabs\TelegramBotDialogs\Laravel\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-/** @mixin \KootLabs\TelegramBotDialogs\DialogManager */
+/**
+ * @method static bot(\KootLabs\TelegramBotDialogs\Bot $bot):Dialogs
+ * @mixin \KootLabs\TelegramBotDialogs\DialogManager
+ */
 final class Dialogs extends Facade
 {
     /** Get the registered name of the component. */
