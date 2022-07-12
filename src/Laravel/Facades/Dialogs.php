@@ -3,9 +3,10 @@
 namespace KootLabs\TelegramBotDialogs\Laravel\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use KootLabs\TelegramBotDialogs\DialogManager;
 
 /**
- * @method static bot(\KootLabs\TelegramBotDialogs\Bot $bot):Dialogs
+ * @method static bot(\Telegram\Bot\Api $bot):Dialogs
  * @mixin \KootLabs\TelegramBotDialogs\DialogManager
  */
 final class Dialogs extends Facade
@@ -13,6 +14,6 @@ final class Dialogs extends Facade
     /** Get the registered name of the component. */
     protected static function getFacadeAccessor(): string
     {
-        return 'telegram.dialogs';
+        return DialogManager::class;
     }
 }
