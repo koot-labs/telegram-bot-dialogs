@@ -44,6 +44,24 @@ final class DialogManager
     }
 
     /**
+     * Initiate a new Dialog from server side.
+     * Note, a User firstly should start a chat with a bot.
+     * @experimental
+     */
+    public function initiate(Dialog $dialog): void
+    {
+        $this->activate($dialog);
+
+        $this->proceed(new Update([]));
+
+        if ($dialog->isEnd()) {
+            $this->storage->delete($dialog->getChatId());
+        } else {
+            $this->storeDialogState($dialog);
+        }
+    }
+
+    /**
      * Run next step of the active Dialog.
      * This is a thin wrapper for {@see \KootLabs\TelegramBotDialogs\Dialog::proceed}
      * to store and restore Dialog state between request-response calls.
