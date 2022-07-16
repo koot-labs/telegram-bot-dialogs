@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Facade;
 use KootLabs\TelegramBotDialogs\DialogManager;
 
 /**
- * @method static bot(\Telegram\Bot\Api $bot):Dialogs
+ * @method \KootLabs\TelegramBotDialogs\DialogManager bot(\Telegram\Bot\Api $bot)
  * @mixin \KootLabs\TelegramBotDialogs\DialogManager
  */
 final class Dialogs extends Facade
