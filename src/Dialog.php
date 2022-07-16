@@ -80,9 +80,11 @@ abstract class Dialog
             }
 
             try {
-                $this->beforeEveryStep($update, $currentStepIndex);
-                $this->$stepMethodName($update);
-                $this->afterEveryStep($update, $currentStepIndex);
+                $shouldContinue = $this->beforeEveryStep($update, $currentStepIndex);
+                if ($shouldContinue) {
+                    $this->$stepMethodName($update);
+                    $this->afterEveryStep($update, $currentStepIndex);
+                }
             } catch (UnexpectedUpdateType) {
                 return; // skip moving to the next step
             }
@@ -100,8 +102,11 @@ abstract class Dialog
         }
     }
 
-    /** @experimental Run code before every step. */
-    protected function beforeEveryStep(Update $update, int $step): void
+    /**
+     * @experimental Run code before every step.
+     * Return false in order to skip the step for the current Update, Dialog state will not be changed.
+     */
+    protected function beforeEveryStep(Update $update, int $step): bool
     {
         // override the method to add your logic here
     }
@@ -169,29 +174,30 @@ abstract class Dialog
             throw new InvalidDialogStep('Configurable Dialog step does not contain required “name” value.');
         }
 
-        $this->beforeEveryStep($update, $currentStepIndex);
+        $shouldContinue = $this->beforeEveryStep($update, $currentStepIndex);
+        if ($shouldContinue) {
+            if (isset($stepConfig['response'])) {
+                $params = [
+                    'chat_id' => $this->getChatId(),
+                    'text' => $stepConfig['response'],
+                ];
 
-        if (isset($stepConfig['response'])) {
-            $params = [
-                'chat_id' => $this->getChatId(),
-                'text' => $stepConfig['response'],
-            ];
+                if (!empty($stepConfig['options'])) {
+                    $params = array_merge($params, $stepConfig['options']);
+                }
 
-            if (!empty($stepConfig['options'])) {
-                $params = array_merge($params, $stepConfig['options']);
+                $this->bot->sendMessage($params);
             }
 
-            $this->bot->sendMessage($params);
-        }
+            if (!empty($stepConfig['jump'])) {
+                $this->jump($stepConfig['jump']);
+            }
 
-        if (!empty($stepConfig['jump'])) {
-            $this->jump($stepConfig['jump']);
-        }
+            $this->afterEveryStep($update, $currentStepIndex);
 
-        $this->afterEveryStep($update, $currentStepIndex);
-
-        if (isset($stepConfig['end']) && $stepConfig['end'] === true) {
-            $this->end();
+            if (isset($stepConfig['end']) && $stepConfig['end'] === true) {
+                $this->end();
+            }
         }
     }
 
