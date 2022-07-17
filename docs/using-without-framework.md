@@ -22,7 +22,11 @@ $dialogManager->proceed($dialog);
 ```
 
 a note for this example: The overhead of filesystem IO often makes this adapter one of the slower choices.
-If throughput is paramount, the in-memory adapters (Apcu, Memcached, and Redis) or the database adapters (PDO) are recommended.
+If throughput is paramount, the in-memory adapters (
+[Apcu](https://symfony.com/doc/current/components/cache/adapters/apcu_adapter.html#apcu-adapter),
+[Memcached](https://symfony.com/doc/current/components/cache/adapters/memcached_adapter.html#memcached-adapter), and
+[Redis](https://symfony.com/doc/current/components/cache/adapters/redis_adapter.html#redis-adapter)) or the database adapters
+([PDO](https://symfony.com/doc/current/components/cache/adapters/pdo_doctrine_dbal_adapter.html#pdo-doctrine-adapter)) are recommended.
 
 Redis example:
 ```php
