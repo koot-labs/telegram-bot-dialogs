@@ -108,7 +108,7 @@ abstract class Dialog
      */
     protected function beforeEveryStep(Update $update, int $step): bool
     {
-        // override the method to add your logic here
+        return true;
     }
 
     /** @experimental Run code after every step. */
