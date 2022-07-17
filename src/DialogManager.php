@@ -2,7 +2,7 @@
 
 namespace KootLabs\TelegramBotDialogs;
 
-use KootLabs\TelegramBotDialogs\Storages\Storage;
+use Psr\SimpleCache\CacheInterface;
 use Telegram\Bot\Api;
 use Telegram\Bot\Objects\Message;
 use Telegram\Bot\Objects\Update;
@@ -13,9 +13,9 @@ final class DialogManager
     private Api $bot;
 
     /** Storage to store Dialog state between requests. */
-    private Storage $storage;
+    private CacheInterface $storage;
 
-    public function __construct(Api $bot, Storage $storage)
+    public function __construct(Api $bot, CacheInterface $storage)
     {
         $this->bot = $bot;
         $this->storage = $storage;
@@ -83,7 +83,7 @@ final class DialogManager
     {
         $message = $update->getMessage();
         $chatId = $message instanceof Message ? $message->chat->id : null;
-        return $chatId && $this->storage->has($chatId);
+        return $chatId && $this->storage->has((string) $chatId);
     }
 
     private function getDialogInstance(Update $update): ?Dialog
@@ -105,18 +105,18 @@ final class DialogManager
     /** Forget Dialog state. */
     private function forgetDialogState(Dialog $dialog): void
     {
-        $this->storage->delete($dialog->getChatId());
+        $this->storage->delete((string) $dialog->getChatId());
     }
 
     /** Store all Dialog. */
     private function storeDialogState(Dialog $dialog): void
     {
-        $this->storage->set($dialog->getChatId(), $dialog, $dialog->ttl());
+        $this->storage->set((string) $dialog->getChatId(), $dialog, $dialog->ttl());
     }
 
     /** Restore Dialog. */
     private function readDialogState(int $chatId): Dialog
     {
-        return $this->storage->get($chatId);
+        return $this->storage->get((string) $chatId);
     }
 }

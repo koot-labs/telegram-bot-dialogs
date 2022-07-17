@@ -7,7 +7,7 @@ use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 use KootLabs\TelegramBotDialogs\DialogManager;
 use KootLabs\TelegramBotDialogs\Laravel\Storages\RedisStorageAdapter;
-use KootLabs\TelegramBotDialogs\Storages\Storage;
+use Psr\SimpleCache\CacheInterface;
 
 final class DialogsServiceProvider extends ServiceProvider implements DeferrableProvider
 {
@@ -32,14 +32,14 @@ final class DialogsServiceProvider extends ServiceProvider implements Deferrable
 
     private function registerBindings(): void
     {
-        $this->app->singleton(Storage::class, static function (Container $app): Storage {
+        $this->app->singleton('telegram.dialogs.cache', static function (Container $app): CacheInterface {
             $config = $app->get('config');
             $connection = $app->make('redis')->connection($config->get('telegramdialogs.stores.redis.connection'));
             return new RedisStorageAdapter($connection);
         });
 
-        $this->app->singleton(DialogManager::class, static function (Container $app): DialogManager {
-            return new DialogManager($app->make('telegram.bot'), $app->make(Storage::class));
+        $this->app->bind(DialogManager::class, static function (Container $app): DialogManager {
+            return new DialogManager($app->make('telegram.bot'), $app->make('telegram.dialogs.cache'));
         });
 
         $this->app->alias(DialogManager::class, 'telegram.dialogs');
@@ -52,9 +52,9 @@ final class DialogsServiceProvider extends ServiceProvider implements Deferrable
     public function provides(): array
     {
         return [
-            'telegram.dialogs',
             DialogManager::class,
-            Storage::class,
+            'telegram.dialogs',
+            'telegram.dialogs.cache',
         ];
     }
 }
