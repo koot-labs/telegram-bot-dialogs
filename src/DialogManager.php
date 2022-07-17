@@ -54,11 +54,9 @@ final class DialogManager
 
         $this->proceed(new Update([]));
 
-        if ($dialog->isEnd()) {
-            $this->storage->delete($dialog->getChatId());
-        } else {
-            $this->storeDialogState($dialog);
-        }
+        $dialog->isEnd()
+            ? $this->forgetDialogState($dialog)
+            : $this->storeDialogState($dialog);
     }
 
     /**
@@ -75,11 +73,9 @@ final class DialogManager
 
         $dialog->proceed($update);
 
-        if ($dialog->isEnd()) {
-            $this->storage->delete($dialog->getChatId());
-        } else {
-            $this->storeDialogState($dialog);
-        }
+        $dialog->isEnd()
+            ? $this->forgetDialogState($dialog)
+            : $this->storeDialogState($dialog);
     }
 
     /** Whether an active Dialog exist for a given Update. */
@@ -104,6 +100,12 @@ final class DialogManager
         $dialog->setBot($this->bot);
 
         return $dialog;
+    }
+
+    /** Forget Dialog state. */
+    private function forgetDialogState(Dialog $dialog): void
+    {
+        $this->storage->delete($dialog->getChatId());
     }
 
     /** Store all Dialog. */
