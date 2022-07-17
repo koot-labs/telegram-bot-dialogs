@@ -41,6 +41,7 @@ final class RedisStorageAdapter implements CacheInterface
         return (bool) $this->redis->del($this->decorateKey($key));
     }
 
+    /** @inheritDoc */
     public function clear(): bool
     {
         throw new \Exception('Not implemented yet');
@@ -52,16 +53,19 @@ final class RedisStorageAdapter implements CacheInterface
         return (bool) $this->redis->exists($this->decorateKey($key));
     }
 
+    /** @inheritDoc */
     public function getMultiple(iterable $keys, mixed $default = null): iterable
     {
         throw new \Exception('Not implemented yet');
     }
 
+    /** @inheritDoc */
     public function setMultiple(iterable $values, \DateInterval | int | null $ttl = null): bool
     {
         throw new \Exception('Not implemented yet');
     }
 
+    /** @inheritDoc */
     public function deleteMultiple(iterable $keys): bool
     {
         throw new \Exception('Not implemented yet');
