@@ -2,6 +2,7 @@
 
 namespace KootLabs\TelegramBotDialogs;
 
+use KootLabs\TelegramBotDialogs\Exceptions\ControlFlow\SwitchToAnotherDialog;
 use Psr\SimpleCache\CacheInterface;
 use Telegram\Bot\Api;
 use Telegram\Bot\Objects\Message;
@@ -71,7 +72,14 @@ final class DialogManager
             return;
         }
 
-        $dialog->proceed($update);
+        try {
+            $dialog->proceed($update);
+        } catch (SwitchToAnotherDialog $exception) {
+            $this->forgetDialogState($dialog);
+            $this->activate($exception->nextDialog);
+            $this->proceed($update);
+            return;
+        }
 
         $dialog->isEnd()
             ? $this->forgetDialogState($dialog)

@@ -3,7 +3,7 @@
 namespace KootLabs\TelegramBotDialogs;
 
 use KootLabs\TelegramBotDialogs\Exceptions\InvalidDialogStep;
-use KootLabs\TelegramBotDialogs\Exceptions\UnexpectedUpdateType;
+use KootLabs\TelegramBotDialogs\Exceptions\ControlFlow\UnexpectedUpdateType;
 use Telegram\Bot\Api;
 use Telegram\Bot\Objects\Update;
 
