@@ -72,7 +72,9 @@ abstract class Dialog
 
         if (is_array($stepNameOrConfig)) {
             $this->proceedConfiguredStep($stepNameOrConfig, $update, $currentStepIndex);
-        } elseif (is_string($stepNameOrConfig)) {
+        } elseif (! is_string($stepNameOrConfig)) {
+            throw new InvalidDialogStep("Unknown format of the step #$currentStepIndex.");
+        } else {
             $stepMethodName = $stepNameOrConfig;
 
             if (! method_exists($this, $stepMethodName)) {
@@ -88,8 +90,6 @@ abstract class Dialog
             } catch (UnexpectedUpdateType) {
                 return; // skip moving to the next step
             }
-        } else {
-            throw new InvalidDialogStep('Unknown format of the step.');
         }
 
         // Step forward only if did not change inside the step handler
