@@ -4,7 +4,7 @@ namespace KootLabs\TelegramBotDialogs;
 
 use KootLabs\TelegramBotDialogs\Exceptions\InvalidDialogStep;
 use KootLabs\TelegramBotDialogs\Exceptions\ControlFlow\UnexpectedUpdateType;
-use Telegram\Bot\Api;
+use Telegram\Bot\Bot;
 use Telegram\Bot\Objects\Update;
 
 abstract class Dialog
@@ -14,8 +14,8 @@ abstract class Dialog
     /** @var array<string, mixed> Key-value storage to store data between steps. */
     protected array $memory = [];
 
-    /** @var \Telegram\Bot\Api Associated Bot instance that will perform API calls. */
-    protected Api $bot;
+    /** Associated Bot instance that will perform API calls. */
+    protected Bot $bot;
 
     /** Seconds to store state of the Dialog after latest activity on it. */
     protected int $ttl = 300;
@@ -23,13 +23,13 @@ abstract class Dialog
     /** @var list<string|array<array-key, string|bool>> List of steps. */
     protected array $steps = [];
 
-    /** @var int Index of the next step. */
+    /** Index of the next step. */
     protected int $next = 0;
 
-    /** @var int|null Index of the next step that set manually using jump() method. */
+    /** Index of the next step that set manually using jump() method. */
     private ?int $afterProceedJumpToIndex = null;
 
-    public function __construct(int $chatId, Api $bot = null)
+    public function __construct(int $chatId, Bot $bot = null)
     {
         $this->chat_id = $chatId;
         if ($bot) {
@@ -41,7 +41,7 @@ abstract class Dialog
      * Specify bot instance (for multi-bot applications).
      * @internal DialogManager is the only user of this method.
      */
-    final public function setBot(Api $bot): void
+    final public function setBot(Bot $bot): void
     {
         $this->bot = $bot;
     }

@@ -4,33 +4,33 @@ namespace KootLabs\TelegramBotDialogs;
 
 use KootLabs\TelegramBotDialogs\Exceptions\ControlFlow\SwitchToAnotherDialog;
 use Psr\SimpleCache\CacheInterface;
-use Telegram\Bot\Api;
-use Telegram\Bot\Objects\Message;
+use Telegram\Bot\Bot;
+use Telegram\Bot\Objects\Chat;
 use Telegram\Bot\Objects\Update;
 
 final class DialogManager
 {
     /** Bot instance to use for all API calls. */
-    private Api $bot;
+    private Bot $bot;
 
     /** Storage to store Dialog state between requests. */
     private CacheInterface $storage;
 
-    public function __construct(Api $bot, CacheInterface $storage)
+    public function __construct(Bot $bot, CacheInterface $storage)
     {
         $this->bot = $bot;
         $this->storage = $storage;
     }
 
     /** Use non-default Bot for API calls */
-    public function bot(Api $bot): self
+    public function bot(Bot $bot): self
     {
         $this->bot = $bot;
         return $this;
     }
 
     /** Use non-default Bot for API calls */
-    public function setBot(Api $bot): void
+    public function setBot(Bot $bot): void
     {
         $this->bot = $bot;
     }
@@ -89,9 +89,12 @@ final class DialogManager
     /** Whether an active Dialog exist for a given Update. */
     public function exists(Update $update): bool
     {
-        $message = $update->getMessage();
-        $chatId = $message instanceof Message ? $message->chat->id : null;
-        return $chatId && $this->storage->has((string) $chatId);
+        $chat = $update->getChat();
+        if (! $chat instanceof Chat) {
+            return false;
+        }
+
+        return $this->storage->has((string) $chat->id);
     }
 
     private function getDialogInstance(Update $update): ?Dialog
@@ -100,11 +103,12 @@ final class DialogManager
             return null;
         }
 
-        $message = $update->getMessage();
-        assert($message instanceof \Telegram\Bot\Objects\Message);
-        $chatId = $message->chat->id;
+        $chat = $update->getChat();
+        if (! $chat instanceof Chat) {
+            return null;
+        }
 
-        $dialog = $this->readDialogState($chatId);
+        $dialog = $this->readDialogState($chat->id);
         $dialog->setBot($this->bot);
 
         return $dialog;

@@ -1,7 +1,6 @@
 # Framework-agnostic installation example
 
 ```php
-use Telegram\Bot\Api;
 use KootLabs\TelegramBotDialogs\DialogManager;
 use KootLabs\TelegramBotDialogs\Dialogs\HelloExampleDialog;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -11,7 +10,7 @@ require __DIR__.'/vendor/autoload.php';
 
 /** @todo replace by your token, {@see https://core.telegram.org/bots#6-botfather} */ 
 $token = '110201543:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw';
-$bot = new Api($token);
+$bot = new \Telegram\Bot\Bot(['bot' => 'bot-name', 'token' => $token]);
 $cache = new FilesystemAdapter('', 0, __DIR__.'/../dialogs-cache');
 $psr16Cache = new Psr16Cache($cache);
 $dialogManager = new DialogManager($bot, $psr16Cache);
