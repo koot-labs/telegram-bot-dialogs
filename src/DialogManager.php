@@ -94,7 +94,7 @@ final class DialogManager
             return false;
         }
 
-        return $this->storage->has((string) $chat->id);
+        return $this->storage->has("{$this->bot->getName()}:$chat->id");
     }
 
     private function getDialogInstance(Update $update): ?Dialog
@@ -117,18 +117,18 @@ final class DialogManager
     /** Forget Dialog state. */
     private function forgetDialogState(Dialog $dialog): void
     {
-        $this->storage->delete((string) $dialog->getChatId());
+        $this->storage->delete("{$this->bot->getName()}:{$dialog->getChatId()}");
     }
 
     /** Store all Dialog. */
     private function storeDialogState(Dialog $dialog): void
     {
-        $this->storage->set((string) $dialog->getChatId(), $dialog, $dialog->ttl());
+        $this->storage->set("{$this->bot->getName()}:{$dialog->getChatId()}", $dialog, $dialog->ttl());
     }
 
     /** Restore Dialog. */
     private function readDialogState(int $chatId): Dialog
     {
-        return $this->storage->get((string) $chatId);
+        return $this->storage->get("{$this->bot->getName()}:$chatId");
     }
 }
