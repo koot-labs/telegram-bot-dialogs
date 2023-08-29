@@ -1,5 +1,5 @@
 {
-    "name": "koot-labs/telegram-bot-dialogs",
+    "name": "alexstroganovru/telegram-bot-dialogs",
     "description": "Telegram Bot API PHP SDK extension that allows to implement dialogs in bots",
     "license": "MIT",
     "type": "library",
@@ -8,7 +8,7 @@
         "telegram",
         "laravel"
     ],
-    "homepage": "https://github.com/koot-labs/telegram-bot-dialogs",
+    "homepage": "https://github.com/alexstroganovru/telegram-bot-dialogs",
     "require": {
         "php": ">=8.0",
         "illuminate/support": "^5.5 || ^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0",
