@@ -81,9 +81,12 @@ final class DialogManager
             return;
         }
 
-        $dialog->isEnd()
-            ? $this->forgetDialogState($dialog)
-            : $this->storeDialogState($dialog);
+        if ($dialog->isEnd()) {
+            $this->forgetDialogState($dialog);
+            $dialog->proceed($update);
+        } else {
+            $this->storeDialogState($dialog);
+        }
     }
 
     /** Whether an active Dialog exist for a given Update. */

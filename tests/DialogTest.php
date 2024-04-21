@@ -4,16 +4,18 @@ namespace KootLabs\TelegramBotDialogs\Tests;
 
 use KootLabs\TelegramBotDialogs\Dialog;
 use KootLabs\TelegramBotDialogs\Exceptions\InvalidDialogStep;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use function PHPUnit\Framework\assertSame;
 
-/** @covers \KootLabs\TelegramBotDialogs\Dialog */
+#[CoversClass(\KootLabs\TelegramBotDialogs\Dialog::class)]
 final class DialogTest extends TestCase
 {
     use CreatesUpdate;
 
     private const RANDOM_CHAT_ID = 42;
 
-    /** @test */
+    #[Test]
     public function it_end_after_process_of_a_single_step_dialog(): void
     {
         $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {
@@ -28,7 +30,7 @@ final class DialogTest extends TestCase
         $this->assertTrue($dialog->isEnd());
     }
 
-    /** @test */
+    #[Test]
     public function it_end_after_process_of_a_multi_step_dialog(): void
     {
         $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {
@@ -47,7 +49,7 @@ final class DialogTest extends TestCase
         $this->assertTrue($dialog->isEnd());
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_custom_exception_when_method_not_defined(): void
     {
         $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {
@@ -59,7 +61,7 @@ final class DialogTest extends TestCase
         $dialog->start($this->buildUpdateOfRandomType());
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_custom_exception_when_method_not_defined_even_if_magic_call_defined(): void
     {
         $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {
@@ -75,7 +77,7 @@ final class DialogTest extends TestCase
         $dialog->start($this->buildUpdateOfRandomType());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_store_variables_between_steps(): void
     {
         $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {
@@ -96,7 +98,7 @@ final class DialogTest extends TestCase
         $dialog->proceed($this->buildUpdateOfRandomType());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_rejump_to_the_same_step(): void
     {
         $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {

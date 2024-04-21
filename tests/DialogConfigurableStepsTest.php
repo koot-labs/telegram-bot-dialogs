@@ -4,15 +4,17 @@ namespace KootLabs\TelegramBotDialogs\Tests;
 
 use KootLabs\TelegramBotDialogs\Dialog;
 use KootLabs\TelegramBotDialogs\Exceptions\InvalidDialogStep;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 
-/** @covers \KootLabs\TelegramBotDialogs\Dialog */
+#[CoversClass(\KootLabs\TelegramBotDialogs\Dialog::class)]
 final class DialogConfigurableStepsTest extends TestCase
 {
     use CreatesUpdate;
 
     private const RANDOM_CHAT_ID = 42;
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_when_step_does_not_have_name(): void
     {
         $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {

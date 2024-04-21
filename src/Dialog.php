@@ -61,7 +61,12 @@ abstract class Dialog
     {
          $currentStepIndex = $this->next;
 
+         if ($this->isStart()) {
+             $this->beforeAllStep($update);
+         }
+
         if ($this->isEnd()) {
+            $this->afterAllStep($update);
             return;
         }
 
@@ -103,11 +108,24 @@ abstract class Dialog
     }
 
     /**
-     * @experimental Run code before every step.
+     * @experimental Run code before all step. */
+    protected function beforeAllStep(Update $update): void
+    {
+        // override the method to add your logic here
+    }
+
+    /** @experimental Run code after all step. */
+    protected function afterAllStep(Update $update): void
+    {
+        // override the method to add your logic here
+    }
+
+    /** @experimental Run code before every step.
      * Return false in order to skip the step for the current Update, Dialog state will not be changed.
      */
     protected function beforeEveryStep(Update $update, int $step): bool
     {
+        // add experimental Dialog::beforeAllStep
         // override the method to add your logic here
         return true;
     }
@@ -146,6 +164,14 @@ abstract class Dialog
     {
         unset($this->memory[$key]);
     }
+
+
+    /** Check if Dialog started */
+    final public function isStart(): bool
+    {
+        return $this->next === 0;
+    }
+
 
     /** Check if Dialog ended */
     final public function isEnd(): bool
