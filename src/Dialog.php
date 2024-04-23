@@ -68,8 +68,6 @@ abstract class Dialog
     {
         $currentStepIndex = $this->next;
 
-        $currentStepIndex = $this->next;
-
         if ($this->isStart()) {
             $this->beforeAllStep($update);
         }
