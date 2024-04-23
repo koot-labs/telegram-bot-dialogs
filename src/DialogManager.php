@@ -6,6 +6,7 @@ use KootLabs\TelegramBotDialogs\Storages\Store;
 use Telegram\Bot\Api;
 use Telegram\Bot\Objects\Message;
 use Telegram\Bot\Objects\Update;
+use Illuminate\Support\Collection;
 
 final class DialogManager
 {
@@ -42,11 +43,9 @@ final class DialogManager
             return null;
         }
 
-        $message = $update->getMessage();
-        assert($message instanceof \Telegram\Bot\Objects\Message);
-        $chatId = $message->chat->id;
+        $key = $this->generateDialogKey($update);
 
-        $dialog = $this->readDialogState($chatId);
+        $dialog = $this->readDialogState($key);
         $dialog->setBot($this->bot);
 
         return $dialog;
@@ -67,8 +66,7 @@ final class DialogManager
         $dialog->proceed($update);
 
         if ($dialog->isEnd()) {
-            $this->store->delete($dialog->getChatId());
-            $dialog->proceed($update);
+            $this->store->delete($dialog->getDialogKey());
         } else {
             $this->storeDialogState($dialog);
         }
@@ -77,20 +75,25 @@ final class DialogManager
     /** Whether Dialog exist for a given Update. */
     public function exists(Update $update): bool
     {
-        $message = $update->getMessage();
-        $chatId = $message instanceof Message ? $message->chat->id : null;
-        return $chatId && $this->store->has($chatId);
+        $key = $this->generateDialogKey($update);
+
+        return $key && $this->store->has($key);
     }
 
     /** Store all Dialog. */
     private function storeDialogState(Dialog $dialog): void
     {
-        $this->store->set($dialog->getChatId(), $dialog, $dialog->ttl());
+        $this->store->set($dialog->getDialogKey(), $dialog, $dialog->ttl());
     }
 
     /** Restore Dialog. */
-    private function readDialogState(int $chatId): Dialog
+    private function readDialogState($key): Dialog
     {
-        return $this->store->get($chatId);
+        return $this->store->get($key);
+    }
+
+    private function generateDialogKey(Update $update): string
+    {
+        return implode('-', [$update->getMessage()->from->id,  $update->getChat()->id]);
     }
 }

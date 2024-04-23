@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace KootLabs\TelegramBotDialogs;
 
@@ -9,7 +10,9 @@ use Telegram\Bot\Objects\Update;
 
 abstract class Dialog
 {
-    protected int $chat_id;
+    protected int $chatId;
+
+    protected int $userId;
 
     /** @var array<string, mixed> Key-value storage to store data between steps. */
     protected array $memory = [];
@@ -29,9 +32,13 @@ abstract class Dialog
     /** @var int|null Index of the next step that set manually using jump() method. */
     private ?int $afterProceedJumpToIndex = null;
 
-    public function __construct(int $chatId, Api $bot = null)
+    public function __construct(Update $update, Api $bot = null)
     {
-        $this->chat_id = $chatId;
+        $message = $update->getMessage();
+
+        $this->chatId = $message->chat->id;
+        $this->userId = $message->from->id;
+
         if ($bot) {
             $this->bot = $bot;
         }
@@ -59,14 +66,9 @@ abstract class Dialog
      */
     final public function proceed(Update $update): void
     {
-         $currentStepIndex = $this->next;
-
-         if ($this->isStart()) {
-             $this->beforeAllStep($update);
-         }
+        $currentStepIndex = $this->next;
 
         if ($this->isEnd()) {
-            $this->afterAllStep($update);
             return;
         }
 
@@ -105,22 +107,9 @@ abstract class Dialog
         }
     }
 
-    /** @experimental Run code before all step. */
-    protected function beforeAllStep(Update $update): void
-    {
-        // override the method to add your logic here
-    }
-
-    /** @experimental Run code after all step. */
-    protected function afterAllStep(Update $update): void
-    {
-        // override the method to add your logic here
-    }
-
     /** @experimental Run code before every step. */
     protected function beforeEveryStep(Update $update, int $step): void
     {
-        // add experimental Dialog::beforeAllStep
         // override the method to add your logic here
     }
 
@@ -159,14 +148,6 @@ abstract class Dialog
         unset($this->memory[$key]);
     }
 
-
-    /** Check if Dialog started */
-    final public function isStart(): bool
-    {
-        return $this->next === 0;
-    }
-
-
     /** Check if Dialog ended */
     final public function isEnd(): bool
     {
@@ -174,9 +155,14 @@ abstract class Dialog
     }
 
     /** Returns Telegram Chat ID */
-    final public function getChatId(): int
+    final public function getChatId(): ?int
     {
-        return $this->chat_id;
+        return $this->chatId;
+    }
+
+    final public function getUserId(): ?int
+    {
+        return $this->userId;
     }
 
     /** Get a number of seconds to store state of the Dialog after latest activity on it. */
@@ -191,7 +177,7 @@ abstract class Dialog
      */
     private function proceedConfiguredStep(array $stepConfig, Update $update, int $currentStepIndex): void
     {
-        if (!isset($stepConfig['name'])) {
+        if (! isset($stepConfig['name'])) {
             throw new InvalidDialogStep('Configurable Dialog step does not contain required “name” value.');
         }
 
@@ -200,17 +186,17 @@ abstract class Dialog
         if (isset($stepConfig['response'])) {
             $params = [
                 'chat_id' => $this->getChatId(),
-                'text' => $stepConfig['response'],
+                'text'    => $stepConfig['response'],
             ];
 
-            if (!empty($stepConfig['options'])) {
+            if (! empty($stepConfig['options'])) {
                 $params = array_merge($params, $stepConfig['options']);
             }
 
             $this->bot->sendMessage($params);
         }
 
-        if (!empty($stepConfig['jump'])) {
+        if (! empty($stepConfig['jump'])) {
             $this->jump($stepConfig['jump']);
         }
 
@@ -225,9 +211,15 @@ abstract class Dialog
     public function __serialize(): array
     {
         return [
-            'chat_id' => $this->getChatId(),
-            'next' => $this->next,
+            'chatId' => $this->getChatId(),
+            'userId' => $this->getUserId(),
+            'next'   => $this->next,
             'memory' => $this->memory,
         ];
+    }
+
+    public function getDialogKey(): string
+    {
+        return implode('-', [$this->getUserId(), $this->getChatId()]);
     }
 }
