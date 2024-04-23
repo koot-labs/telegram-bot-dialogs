@@ -68,7 +68,14 @@ abstract class Dialog
     {
         $currentStepIndex = $this->next;
 
+        $currentStepIndex = $this->next;
+
+        if ($this->isStart()) {
+            $this->beforeAllStep($update);
+        }
+
         if ($this->isEnd()) {
+            $this->afterAllStep($update);
             return;
         }
 
@@ -107,9 +114,22 @@ abstract class Dialog
         }
     }
 
+    /** @experimental Run code before all step. */
+    protected function beforeAllStep(Update $update): void
+    {
+        // override the method to add your logic here
+    }
+
+    /** @experimental Run code after all step. */
+    protected function afterAllStep(Update $update): void
+    {
+        // override the method to add your logic here
+    }
+
     /** @experimental Run code before every step. */
     protected function beforeEveryStep(Update $update, int $step): void
     {
+        // add experimental Dialog::beforeAllStep
         // override the method to add your logic here
     }
 
@@ -146,6 +166,12 @@ abstract class Dialog
     final protected function forget(string $key): void
     {
         unset($this->memory[$key]);
+    }
+
+    /** Check if Dialog started */
+    final public function isStart(): bool
+    {
+        return $this->next === 0;
     }
 
     /** Check if Dialog ended */
