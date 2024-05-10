@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace KootLabs\TelegramBotDialogs;
 
 use KootLabs\TelegramBotDialogs\Storages\Store;
+use Psr\SimpleCache\CacheInterface;
 use Telegram\Bot\Api;
 use Telegram\Bot\Objects\Update;
 
@@ -14,9 +15,9 @@ final class DialogManager
     private Api $bot;
 
     /** Storage to store Dialog state between requests. */
-    private Store $store;
+    private Store | CacheInterface $store;
 
-    public function __construct(Api $bot, Store $store)
+    public function __construct(Api $bot, Store | CacheInterface $store)
     {
         $this->bot = $bot;
         $this->store = $store;
