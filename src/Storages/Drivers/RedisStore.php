@@ -31,7 +31,7 @@ final class RedisStore implements Store
     {
         $value = $this->redis->get($this->decorateKey($key));
 
-        return $value !== null ? $this->unserialize($value) : null;
+        return $value !== null ? $this->unserialize($value) : $default;
     }
 
     /** @inheritDoc */
