@@ -35,16 +35,18 @@ final class RedisStore implements Store
     }
 
     /** @inheritDoc */
-    public function set(string $key, mixed $value, null|int|\DateInterval $ttl = null): bool
+    public function set(string $key, mixed $value, null | int | \DateInterval $ttl = null): bool
     {
         $ttl = $ttl === 0 ? -1 : $ttl;
         $this->redis->setEx($this->decorateKey($key), $ttl, $this->serialize($value));
+        return true;
     }
 
     /** @inheritDoc */
     public function delete(string $key): bool
     {
         $this->redis->del($this->decorateKey($key));
+        return true;
     }
 
     /** @inheritDoc */
@@ -77,7 +79,7 @@ final class RedisStore implements Store
     /** Serialize the value. */
     private function serialize(mixed $value): string | int | float
     {
-        return is_numeric($value) && !in_array($value, [\INF, -\INF], true) && !is_nan($value)
+        return is_numeric($value) && !in_array($value, [\INF, -\INF], true) && !is_nan((float) $value)
             ? $value
             : serialize($value);
     }
