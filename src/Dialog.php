@@ -26,7 +26,7 @@ abstract class Dialog
     /** @var \Telegram\Bot\Api Associated Bot instance that will perform API calls. */
     protected Api $bot;
 
-    /** @var list<string|array<array-key, string|bool>> List of steps. */
+    /** @var list<string|array{name: string, response: string, options:array}> List of method to execute. The order defines the sequence */
     protected array $steps = [];
 
     /** @var int Index of the next step. */
@@ -219,7 +219,7 @@ abstract class Dialog
                 'text' => $stepConfig['response'],
             ];
 
-            if (! empty($stepConfig['options'])) {
+            if (! empty($stepConfig['options']) && is_array($stepConfig['options'])) {
                 $params = array_merge($params, $stepConfig['options']);
             }
 

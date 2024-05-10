@@ -14,6 +14,7 @@ use Telegram\Bot\Objects\Update;
  */
 final class HelloExampleDialog extends Dialog
 {
+    /** @var list<string> List of method to execute. The order defines the sequence */
     protected array $steps = ['sayHello', 'empathyReply', 'sayBye'];
 
     public function sayHello(Update $update): void

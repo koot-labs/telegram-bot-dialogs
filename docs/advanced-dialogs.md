@@ -7,6 +7,7 @@ You can define default text answers for your dialog steps. For this you have to 
 ```php
 final class HelloDialog extends Dialog
 {
+    /** @var list<string|array{name: string, response: string, options:array}> List of method to execute. The order defines the sequence */
     protected array $steps = [
         [
             'name' => 'hello',
