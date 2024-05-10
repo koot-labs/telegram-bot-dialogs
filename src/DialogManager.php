@@ -1,12 +1,12 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace KootLabs\TelegramBotDialogs;
 
 use KootLabs\TelegramBotDialogs\Storages\Store;
 use Telegram\Bot\Api;
-use Telegram\Bot\Objects\Message;
 use Telegram\Bot\Objects\Update;
-use Illuminate\Support\Collection;
 
 final class DialogManager
 {

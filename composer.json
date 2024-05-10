@@ -45,7 +45,8 @@
         }
     },
     "scripts": {
-        "cs": "phpunit",
+        "cs": "@cs:fix",
+        "cs:fix": "php-cs-fixer fix --allow-risky=yes",
         "test": "phpunit"
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace KootLabs\TelegramBotDialogs;
@@ -78,7 +79,7 @@ abstract class Dialog
         }
 
         if (! array_key_exists($currentStepIndex, $this->steps)) {
-            throw new InvalidDialogStep("Undefined step with index $currentStepIndex.");
+            throw new InvalidDialogStep("Undefined step with index {$currentStepIndex}.");
         }
         $stepNameOrConfig = $this->steps[$currentStepIndex];
 
@@ -210,7 +211,7 @@ abstract class Dialog
         if (isset($stepConfig['response'])) {
             $params = [
                 'chat_id' => $this->getChatId(),
-                'text'    => $stepConfig['response'],
+                'text' => $stepConfig['response'],
             ];
 
             if (! empty($stepConfig['options'])) {
@@ -237,7 +238,7 @@ abstract class Dialog
         return [
             'chatId' => $this->getChatId(),
             'userId' => $this->getUserId(),
-            'next'   => $this->next,
+            'next' => $this->next,
             'memory' => $this->memory,
         ];
     }

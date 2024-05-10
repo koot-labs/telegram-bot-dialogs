@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace KootLabs\TelegramBotDialogs\Laravel;
 
@@ -14,7 +16,7 @@ final class DialogsServiceProvider extends ServiceProvider implements Deferrable
     /** @inheritDoc */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/config/telegramdialogs.php', 'telegramdialogs');
+        $this->mergeConfigFrom(__DIR__ . '/config/telegramdialogs.php', 'telegramdialogs');
 
         $this->offerPublishing();
         $this->registerBindings();
@@ -25,7 +27,7 @@ final class DialogsServiceProvider extends ServiceProvider implements Deferrable
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/config/telegramdialogs.php' => config_path('telegramdialogs.php'),
+                __DIR__ . '/config/telegramdialogs.php' => config_path('telegramdialogs.php'),
             ], 'telegram-config');
         }
     }
