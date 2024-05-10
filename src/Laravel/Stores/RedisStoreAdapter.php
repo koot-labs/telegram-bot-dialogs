@@ -7,6 +7,7 @@ namespace KootLabs\TelegramBotDialogs\Laravel\Stores;
 use Illuminate\Contracts\Redis\Connection;
 use KootLabs\TelegramBotDialogs\Storages\Store;
 
+/** @api */
 final class RedisStoreAdapter implements Store
 {
     private Connection $redis;
@@ -17,30 +18,30 @@ final class RedisStoreAdapter implements Store
     }
 
     /** @inheritDoc */
-    public function set(string | int $key, mixed $value, int $ttl): void
+    public function get(string $key, mixed $default = null): mixed
+    {
+        $value = $this->redis->get($this->decorateKey($key));
+
+        return $value !== null ? $this->unserialize($value) : $default;
+    }
+
+    /** @inheritDoc */
+    public function set(string $key, mixed $value, null | int | \DateInterval $ttl = null): bool
     {
         $ttl = $ttl === 0 ? -1 : $ttl;
         $this->redis->setEx($this->decorateKey($key), $ttl, $this->serialize($value));
     }
 
     /** @inheritDoc */
-    public function get(string | int $key): mixed
-    {
-        $value = $this->redis->get($this->decorateKey($key));
-
-        return $value !== null ? $this->unserialize($value) : null;
-    }
-
-    /** @inheritDoc */
-    public function has(int | string $key): bool
-    {
-        return (bool) $this->redis->exists($this->decorateKey($key));
-    }
-
-    /** @inheritDoc */
-    public function delete(string | int $key): void
+    public function delete(string $key): bool
     {
         $this->redis->del($this->decorateKey($key));
+    }
+
+    /** @inheritDoc */
+    public function has(string $key): bool
+    {
+        return (bool) $this->redis->exists($this->decorateKey($key));
     }
 
     /** Serialize the value. */
