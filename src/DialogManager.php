@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace KootLabs\TelegramBotDialogs;
 
+use KootLabs\TelegramBotDialogs\Objects\BotInitiatedUpdate;
 use KootLabs\TelegramBotDialogs\Storages\Store;
 use Psr\SimpleCache\CacheInterface;
 use Telegram\Bot\Api;
@@ -40,15 +41,34 @@ final class DialogManager
     }
 
     /**
+     * Initiate a new Dialog from server side (e.g. by cron).
+     * Note, a User firstly should start a chat with a bot (bot can't initiate a chat — this is TG Bot API limitation).
+     * @api
+     * @experimental
+     * @throws \Telegram\Bot\Exceptions\TelegramSDKException
+     */
+    public function startNewDialogInitiatedByBot(Dialog $dialog): void
+    {
+        $this->activate($dialog);
+
+        $this->proceed(new BotInitiatedUpdate($dialog));
+
+        $dialog->isEnd()
+            ? $this->forgetDialogState($dialog)
+            : $this->storeDialogState($dialog);
+    }
+
+    /**
      * @api
      * Run next step of the active Dialog.
      * This is a thin wrapper for {@see \KootLabs\TelegramBotDialogs\Dialog::proceed}
      * to store and restore Dialog state between request-response calls.
+     * @throws \Telegram\Bot\Exceptions\TelegramSDKException
      */
     public function proceed(Update $update): void
     {
         $dialog = $this->getDialogInstance($update);
-        if ($dialog === null) {
+        if (! $dialog instanceof Dialog) {
             return;
         }
 

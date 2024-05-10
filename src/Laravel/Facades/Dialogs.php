@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @api
- * @mixin \KootLabs\TelegramBotDialogs\DialogManager
+ * @method static \KootLabs\TelegramBotDialogs\DialogManager setBot(\Telegram\Bot\Api $bot)
+ * @method static void activate(\KootLabs\TelegramBotDialogs\Dialog $dialog)
+ * @method static void proceed(\Telegram\Bot\Objects\Update $update)
  */
 final class Dialogs extends Facade
 {
