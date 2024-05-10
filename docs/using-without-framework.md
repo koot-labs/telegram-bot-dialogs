@@ -15,7 +15,7 @@ $redisStore = new RedisStore('127.0.0.1', 6379);
 
 $dialogManager = new DialogManager($bot, $redisStore);
 
-$dialog = new HelloExampleDialog($bot->getWebhookUpdate(), $bot);
+$dialog = new HelloExampleDialog($bot->getWebhookUpdate()->getChat()->id, $bot);
 $dialogManager->activate($dialog);
 $dialogManager->proceed($dialog);
 ```

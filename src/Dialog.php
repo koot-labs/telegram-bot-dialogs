@@ -11,9 +11,11 @@ use Telegram\Bot\Objects\Update;
 
 abstract class Dialog
 {
-    protected int $chatId;
+    /** @var int if of the Chat the Dialog is bounded to */
+    protected int $chat_id;
 
-    protected int $userId;
+    /** @var int|null if of the User the Dialog is bounded to. Makes sense for multiuser chats only. */
+    protected int|null $user_id;
 
     /** @var array<string, mixed> Key-value storage to store data between steps. */
     protected array $memory = [];
@@ -33,12 +35,15 @@ abstract class Dialog
     /** @var int|null Index of the next step that set manually using jump() method. */
     private ?int $afterProceedJumpToIndex = null;
 
-    public function __construct(Update $update, Api $bot = null)
+    /**
+     * @param int $chatId
+     * @param \Telegram\Bot\Api|null $bot
+     * @param int|null $userId if specified, the Dialog will be bound to the user. Otherwise, it will be bound to the chat. Bounding to a user makes sense for multiuser chats only.
+     */
+    public function __construct(int $chatId, Api $bot = null, int $userId = null)
     {
-        $message = $update->getMessage();
-
-        $this->chatId = $message->chat->id;
-        $this->userId = $message->from->id;
+        $this->chat_id = $chatId;
+        $this->user_id = $userId;
 
         if ($bot instanceof Api) {
             $this->bot = $bot;
@@ -128,7 +133,6 @@ abstract class Dialog
     /** @experimental Run code before every step. */
     protected function beforeEveryStep(Update $update, int $step): void
     {
-        // add experimental Dialog::beforeAllStep
         // override the method to add your logic here
     }
 
@@ -180,14 +184,9 @@ abstract class Dialog
     }
 
     /** Returns Telegram Chat ID */
-    final public function getChatId(): ?int
+    final public function getChatId(): int
     {
-        return $this->chatId;
-    }
-
-    final public function getUserId(): ?int
-    {
-        return $this->userId;
+        return $this->chat_id;
     }
 
     /** Get a number of seconds to store state of the Dialog after latest activity on it. */
@@ -236,8 +235,8 @@ abstract class Dialog
     public function __serialize(): array
     {
         return [
-            'chatId' => $this->getChatId(),
-            'userId' => $this->getUserId(),
+            'chat_id' => $this->chat_id,
+            'user_id' => $this->user_id,
             'next' => $this->next,
             'memory' => $this->memory,
         ];
@@ -246,6 +245,6 @@ abstract class Dialog
     /** @internal This method is a subject for changes in further releases < 1.0 */
     final public function getDialogKey(): string
     {
-        return implode('-', [$this->getUserId(), $this->getChatId()]);
+        return implode('-', array_filter([$this->user_id, $this->getChatId()]));
     }
 }
