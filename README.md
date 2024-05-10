@@ -153,10 +153,10 @@ final class TelegramWebhookController
 
 ## ToDo
 
-- Add AI API support (e.g. [LUIS](https://www.luis.ai/), [Dataflow](https://cloud.google.com/dataflow))
-- Improve documentation and examples
-- Improve stability and DX for channel bots
-- Improve test coverage
+- [ ] Add AI API support (e.g. [LUIS](https://www.luis.ai/), [Dataflow](https://cloud.google.com/dataflow))
+- [x] Add documentation and examples
+- [x] Support for channel bots
+- [ ] Improve test coverage
 
 
 ## Backward compatibility promise
