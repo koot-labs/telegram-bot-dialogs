@@ -243,7 +243,8 @@ abstract class Dialog
         ];
     }
 
-    public function getDialogKey(): string
+    /** @internal This method is a subject for changes in further releases < 1.0 */
+    final public function getDialogKey(): string
     {
         return implode('-', [$this->getUserId(), $this->getChatId()]);
     }

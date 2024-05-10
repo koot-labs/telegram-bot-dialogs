@@ -92,6 +92,7 @@ final class DialogManager
         return $this->store->get($key);
     }
 
+    /** @internal This method is a subject for changes in further releases < 1.0 */
     private function generateDialogKey(Update $update): string
     {
         return implode('-', [$update->getMessage()->from->id,  $update->getChat()->id]);
