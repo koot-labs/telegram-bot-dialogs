@@ -1,5 +1,7 @@
 [![CI](https://github.com/koot-labs/telegram-bot-dialogs/actions/workflows/ci.yml/badge.svg)](https://github.com/koot-labs/telegram-bot-dialogs/actions/workflows/ci.yml)
 [![Backward compatibility check](https://github.com/koot-labs/telegram-bot-dialogs/actions/workflows/backward-compatibility-check.yml/badge.svg)](https://github.com/koot-labs/telegram-bot-dialogs/actions/workflows/backward-compatibility-check.yml)
+[![Type coverage](https://shepherd.dev/github/koot-labs/telegram-bot-dialogs/coverage.svg)](https://shepherd.dev/github/koot-labs/telegram-bot-dialogs)
+[![Psalm level](https://shepherd.dev/github/koot-labs/telegram-bot-dialogs/level.svg)](https://shepherd.dev/github/koot-labs/telegram-bot-dialogs)
 
 <p align="center"><img src="https://user-images.githubusercontent.com/5278175/176997422-79e5c4c1-ff43-438e-b30e-651bb8e17bcf.png" alt="Dialogs" width="400"></p>
 
