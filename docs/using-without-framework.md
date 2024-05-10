@@ -24,9 +24,10 @@ $store = new Psr16Cache(new FilesystemAdapter('', 0, __DIR__.'/../dialogs-cache'
 
 $dialogManager = new DialogManager($bot, $store);
 
-$dialog = new HelloExampleDialog($bot->getWebhookUpdate()->getChat()->id, $bot);
+$update = $bot->getWebhookUpdate(); // if you are using webhook. If not, you can use $bot->getUpdates() instead
+$dialog = new HelloExampleDialog($update->getChat()->id, $bot);
 $dialogManager->activate($dialog);
-$dialogManager->proceed($dialog);
+$dialogManager->proceed($update);
 ```
 
 > [!IMPORTANT]  
