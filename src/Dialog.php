@@ -11,10 +11,10 @@ use Telegram\Bot\Objects\Update;
 
 abstract class Dialog
 {
-    /** @var int if of the Chat the Dialog is bounded to */
+    /** @var int id of the Chat the Dialog is bounded to */
     protected int $chat_id;
 
-    /** @var int|null if of the User the Dialog is bounded to. Makes sense for multiuser chats only. */
+    /** @var int|null id of the User the Dialog is bounded to. Makes sense for multiuser chats only. */
     protected int|null $user_id;
 
     /** @var array<string, mixed> Key-value storage to store data between steps. */
@@ -189,6 +189,12 @@ abstract class Dialog
         return $this->chat_id;
     }
 
+    /** @internal Method can be removed anytime. If you use it for your apps, please consider creating a PR to remove this note. */
+    final public function getUserId(): ?int
+    {
+        return $this->user_id;
+    }
+
     /** Get a number of seconds to store state of the Dialog after latest activity on it. */
     final public function ttl(): int
     {
@@ -240,11 +246,5 @@ abstract class Dialog
             'next' => $this->next,
             'memory' => $this->memory,
         ];
-    }
-
-    /** @internal This method is a subject for changes in further releases < 1.0 */
-    final public function getDialogKey(): string
-    {
-        return implode('-', array_filter([$this->user_id, $this->getChatId()]));
     }
 }

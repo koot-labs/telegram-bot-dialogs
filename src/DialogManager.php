@@ -39,13 +39,12 @@ final class DialogManager
 
     private function getDialogInstance(Update $update): ?Dialog
     {
-        if (! $this->exists($update)) {
+        $storeDialogKey = $this->findDialogKeyForStore($update);
+        if ($storeDialogKey === null) {
             return null;
         }
 
-        $key = $this->generateDialogKey($update);
-
-        $dialog = $this->readDialogState($key);
+        $dialog = $this->readDialogState($storeDialogKey);
         $dialog->setBot($this->bot);
 
         return $dialog;
@@ -66,35 +65,69 @@ final class DialogManager
         $dialog->proceed($update);
 
         if ($dialog->isEnd()) {
-            $this->store->delete($dialog->getDialogKey());
+            $this->store->delete($this->getDialogKey($dialog));
         } else {
             $this->storeDialogState($dialog);
         }
     }
 
+    /** @return non-empty-string|null */
+    private function findDialogKeyForStore(Update $update): ?string
+    {
+        $sharedDialogKey = $this->generateDialogKeySharedBetweenUsers($update);
+        if ($this->store->has($sharedDialogKey)) {
+            return $sharedDialogKey;
+        }
+
+        $userBoundedDialogKey = $this->generateDialogKeyUserBounded($update);
+        if ($this->store->has($userBoundedDialogKey)) {
+            return $userBoundedDialogKey;
+        }
+
+        return null;
+    }
+
     /** Whether Dialog exist for a given Update. */
     public function exists(Update $update): bool
     {
-        $key = $this->generateDialogKey($update);
-
-        return $key && $this->store->has($key);
+        return is_string($this->findDialogKeyForStore($update));
     }
 
     /** Store all Dialog. */
     private function storeDialogState(Dialog $dialog): void
     {
-        $this->store->set($dialog->getDialogKey(), $dialog, $dialog->ttl());
+        $this->store->set($this->getDialogKey($dialog), $dialog, $dialog->ttl());
     }
 
     /** Restore Dialog. */
-    private function readDialogState($key): Dialog
+    private function readDialogState(string $key): Dialog
     {
         return $this->store->get($key);
     }
 
     /** @internal This method is a subject for changes in further releases < 1.0 */
-    private function generateDialogKey(Update $update): string
+    private function generateDialogKeyUserBounded(Update $update): string
     {
-        return implode('-', array_filter([$update->getMessage()->from->id,  $update->getChat()->id]));
+        return implode('-', [
+            $update->getMessage()->from->id,
+            $update->getChat()->id,
+        ]);
+    }
+
+    /** @internal This method is a subject for changes in further releases < 1.0 */
+    private function generateDialogKeySharedBetweenUsers(Update $update): string
+    {
+        return implode('-', [
+            $update->getChat()->id,
+        ]);
+    }
+
+    /** @internal This method is a subject for changes in further releases < 1.0 */
+    private function getDialogKey(Dialog $dialog): string
+    {
+        return implode('-', array_filter([
+            $dialog->getChatId(),
+            $dialog->getUserId(),
+        ]));
     }
 }
