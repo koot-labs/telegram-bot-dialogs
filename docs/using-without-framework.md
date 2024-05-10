@@ -4,7 +4,7 @@
 2. Install `symfony/cache` via composer
 3. Install a storage (to store dialog states between requests) `composer require psr/simple-cache symfony/cache`: 
    - a. If you have Redis installed, you can use File driver (see example below)
-   - b. See `RedisAdapter` example below
+   - b. You have Redis installed: See `RedisAdapter` example below
 
 File storage example.
 ```php
