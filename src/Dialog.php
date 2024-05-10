@@ -18,11 +18,11 @@ abstract class Dialog
     /** @var array<string, mixed> Key-value storage to store data between steps. */
     protected array $memory = [];
 
-    /** @var \Telegram\Bot\Api Associated Bot instance that will perform API calls. */
-    protected Api $bot;
-
     /** Seconds to store state of the Dialog after latest activity on it. */
     protected int $ttl = 300;
+
+    /** @var \Telegram\Bot\Api Associated Bot instance that will perform API calls. */
+    protected Api $bot;
 
     /** @var list<string|array<array-key, string|bool>> List of steps. */
     protected array $steps = [];
@@ -40,7 +40,7 @@ abstract class Dialog
         $this->chatId = $message->chat->id;
         $this->userId = $message->from->id;
 
-        if ($bot) {
+        if ($bot instanceof Api) {
             $this->bot = $bot;
         }
     }
