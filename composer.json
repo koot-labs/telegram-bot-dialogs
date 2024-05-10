@@ -18,7 +18,8 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.54",
-        "phpunit/phpunit": "^10.5 || ^11.0"
+        "phpunit/phpunit": "^10.5 || ^11.0",
+        "vimeo/psalm": "^5.24"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -48,6 +49,9 @@
     "scripts": {
         "cs": "@cs:fix",
         "cs:fix": "php-cs-fixer fix --allow-risky=yes",
+        "psalm": "psalm",
+        "sa": "@psalm",
+        "sa:bl": "psalm --set-baseline=psalm-baseline.xml",
         "test": "phpunit"
     }
 }

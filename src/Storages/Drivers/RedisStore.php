@@ -6,6 +6,7 @@ namespace KootLabs\TelegramBotDialogs\Storages\Drivers;
 
 use KootLabs\TelegramBotDialogs\Storages\Store;
 
+/** @api */
 final class RedisStore implements Store
 {
     private \Redis $redis;

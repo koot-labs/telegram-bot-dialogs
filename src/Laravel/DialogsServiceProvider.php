@@ -11,6 +11,7 @@ use KootLabs\TelegramBotDialogs\DialogManager;
 use KootLabs\TelegramBotDialogs\Laravel\Stores\RedisStoreAdapter;
 use KootLabs\TelegramBotDialogs\Storages\Store;
 
+/** @api */
 final class DialogsServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /** @inheritDoc */

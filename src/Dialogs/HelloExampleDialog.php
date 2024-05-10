@@ -10,6 +10,7 @@ use Telegram\Bot\Objects\Update;
 /**
  * An example of Dialog class for demo purposes.
  * @internal
+ * @api
  */
 final class HelloExampleDialog extends Dialog
 {

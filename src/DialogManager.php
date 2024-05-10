@@ -24,7 +24,7 @@ final class DialogManager
     }
 
     /**
-     * Activate a new Dialog.
+     * @api Activate a new Dialog.
      * to start it - call {@see \KootLabs\TelegramBotDialogs\DialogManager::proceed}
      */
     public function activate(Dialog $dialog): void
@@ -32,7 +32,7 @@ final class DialogManager
         $this->storeDialogState($dialog);
     }
 
-    /** Use non-default Bot for API calls */
+    /** @api Use non-default Bot for API calls */
     public function setBot(Api $bot): void
     {
         $this->bot = $bot;
@@ -52,6 +52,7 @@ final class DialogManager
     }
 
     /**
+     * @api
      * Run next step of the active Dialog.
      * This is a thin wrapper for {@see \KootLabs\TelegramBotDialogs\Dialog::proceed}
      * to store and restore Dialog state between request-response calls.
@@ -88,7 +89,7 @@ final class DialogManager
         return null;
     }
 
-    /** Whether an active Dialog exist for a given Update. */
+    /** @api Whether an active Dialog exist for a given Update. */
     public function exists(Update $update): bool
     {
         return is_string($this->findDialogKeyForStore($update));
