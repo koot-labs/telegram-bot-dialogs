@@ -13,7 +13,7 @@ use Telegram\Bot\Objects\Update;
  */
 final class HelloExampleDialog extends Dialog
 {
-    protected array $steps = ['sayHello', 'sayOk', 'sayBye'];
+    protected array $steps = ['sayHello', 'empathyReply', 'sayBye'];
 
     public function sayHello(Update $update): void
     {
@@ -23,11 +23,11 @@ final class HelloExampleDialog extends Dialog
         ]);
     }
 
-    public function sayOk(Update $update): void
+    public function empathyReply(Update $update): void
     {
         $this->bot->sendMessage([
             'chat_id' => $this->getChatId(),
-            'text' => "I'm also OK :)",
+            'text' => "I’m {$update->message?->text}!",
         ]);
     }
 
