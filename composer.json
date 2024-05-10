@@ -32,10 +32,10 @@
         }
     },
     "config": {
-        "sort-packages": true,
         "allow-plugins": {
             "ergebnis/composer-normalize": false
-        }
+        },
+        "sort-packages": true
     },
     "extra": {
         "laravel": {
