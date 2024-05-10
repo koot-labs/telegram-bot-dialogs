@@ -8,6 +8,7 @@ use KootLabs\TelegramBotDialogs\Dialog;
 
 /**
  * @experimental
+ * @api
  * Used when needed to switch to another Dialog from the current one.
  */
 final class SwitchToAnotherDialog extends \LogicException implements DialogControlFlowException
