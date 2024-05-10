@@ -15,7 +15,7 @@ abstract class Dialog
     protected int $chat_id;
 
     /** @var int|null id of the User the Dialog is bounded to. Makes sense for multiuser chats only. */
-    protected int|null $user_id = null;
+    protected ?int $user_id = null;
 
     /** @var array<string, mixed> Key-value storage to store data between steps. */
     protected array $memory = [];
