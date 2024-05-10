@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace KootLabs\TelegramBotDialogs;
 
+use KootLabs\TelegramBotDialogs\Exceptions\ControlFlow\SwitchToAnotherDialog;
 use KootLabs\TelegramBotDialogs\Objects\BotInitiatedUpdate;
 use KootLabs\TelegramBotDialogs\Storages\Store;
 use Psr\SimpleCache\CacheInterface;
@@ -72,7 +73,14 @@ final class DialogManager
             return;
         }
 
-        $dialog->proceed($update);
+        try {
+            $dialog->proceed($update);
+        } catch (SwitchToAnotherDialog $exception) {
+            $this->forgetDialogState($dialog);
+            $this->activate($exception->nextDialog);
+            $this->proceed($update);
+            return;
+        }
 
         if ($dialog->isEnd()) {
             $this->forgetDialogState($dialog);
