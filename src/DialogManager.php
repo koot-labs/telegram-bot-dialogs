@@ -122,7 +122,10 @@ final class DialogManager
         ]);
     }
 
-    /** @internal This method is a subject for changes in further releases < 1.0 */
+    /**
+     * @internal This method is a subject for changes in further releases < 1.0
+     * @return non-empty-string
+     */
     private function generateDialogKeySharedBetweenUsers(Update $update): string
     {
         return implode('-', [
@@ -130,7 +133,10 @@ final class DialogManager
         ]);
     }
 
-    /** @internal This method is a subject for changes in further releases < 1.0 */
+    /**
+     * @internal This method is a subject for changes in further releases < 1.0
+     * @return non-empty-string
+     */
     private function getDialogKey(Dialog $dialog): string
     {
         return implode('-', array_filter([

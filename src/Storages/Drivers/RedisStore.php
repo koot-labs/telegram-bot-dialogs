@@ -38,7 +38,10 @@ final class RedisStore implements Store
     /** @inheritDoc */
     public function set(string $key, mixed $value, null | int | \DateInterval $ttl = null): bool
     {
-        $ttl = $ttl === 0 ? -1 : $ttl;
+        $ttl = in_array($ttl, [null, 0], true) ? -1 : $ttl;
+        if ($ttl instanceof \DateInterval) {
+            $ttl = (new \DateTime())->add($ttl)->getTimestamp() - time();
+        }
         $this->redis->setEx($this->decorateKey($key), $ttl, $this->serialize($value));
         return true;
     }

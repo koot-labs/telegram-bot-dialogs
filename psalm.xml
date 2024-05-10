@@ -27,4 +27,8 @@
         <UndefinedClass errorLevel="suppress"/>
         <PossiblyUnusedReturnValue errorLevel="suppress"/>
     </issueHandlers>
+
+    <enableExtensions>
+        <extension name="redis"/>
+    </enableExtensions>
 </psalm>
