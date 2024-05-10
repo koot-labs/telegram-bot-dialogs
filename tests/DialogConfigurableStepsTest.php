@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace KootLabs\TelegramBotDialogs\Tests;
 
@@ -17,7 +19,7 @@ final class DialogConfigurableStepsTest extends TestCase
     #[Test]
     public function it_throws_an_exception_when_step_does_not_have_name(): void
     {
-        $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {
+        $dialog = new class ($this->buildUpdateOfRandomType()) extends Dialog {
             protected array $steps = [
                 [
                     // 'name' => 'first',
