@@ -23,6 +23,13 @@ final class DialogManager
         $this->store = $store;
     }
 
+    /** @api Use non-default Bot for API calls */
+    public function setBot(Api $bot): self
+    {
+        $this->bot = $bot;
+        return $this;
+    }
+
     /**
      * @api Activate a new Dialog.
      * to start it - call {@see \KootLabs\TelegramBotDialogs\DialogManager::proceed}
@@ -30,25 +37,6 @@ final class DialogManager
     public function activate(Dialog $dialog): void
     {
         $this->storeDialogState($dialog);
-    }
-
-    /** @api Use non-default Bot for API calls */
-    public function setBot(Api $bot): void
-    {
-        $this->bot = $bot;
-    }
-
-    private function getDialogInstance(Update $update): ?Dialog
-    {
-        $storeDialogKey = $this->findDialogKeyForStore($update);
-        if ($storeDialogKey === null) {
-            return null;
-        }
-
-        $dialog = $this->readDialogState($storeDialogKey);
-        $dialog->setBot($this->bot);
-
-        return $dialog;
     }
 
     /**
@@ -93,6 +81,20 @@ final class DialogManager
     public function exists(Update $update): bool
     {
         return is_string($this->findDialogKeyForStore($update));
+    }
+
+    /** Get instance of the current active Dialog from a Storage. */
+    private function getDialogInstance(Update $update): ?Dialog
+    {
+        $storeDialogKey = $this->findDialogKeyForStore($update);
+        if ($storeDialogKey === null) {
+            return null;
+        }
+
+        $dialog = $this->readDialogState($storeDialogKey);
+        $dialog->setBot($this->bot);
+
+        return $dialog;
     }
 
     /** Forget Dialog state. */

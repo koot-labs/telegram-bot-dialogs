@@ -20,7 +20,7 @@ abstract class Dialog
     /** @var array<string, mixed> Key-value storage to store data between steps. */
     protected array $memory = [];
 
-    /** Seconds to store state of the Dialog after latest activity on it. */
+    /** @var int<-1, max> Seconds to store state of the Dialog after latest activity on it. */
     protected int $ttl = 300;
 
     /** @var \Telegram\Bot\Api Associated Bot instance that will perform API calls. */
