@@ -65,7 +65,7 @@ final class DialogManager
         $dialog->proceed($update);
 
         if ($dialog->isEnd()) {
-            $this->store->delete($this->getDialogKey($dialog));
+            $this->forgetDialogState($dialog);
         } else {
             $this->storeDialogState($dialog);
         }
@@ -87,10 +87,16 @@ final class DialogManager
         return null;
     }
 
-    /** Whether Dialog exist for a given Update. */
+    /** Whether an active Dialog exist for a given Update. */
     public function exists(Update $update): bool
     {
         return is_string($this->findDialogKeyForStore($update));
+    }
+
+    /** Forget Dialog state. */
+    private function forgetDialogState(Dialog $dialog): void
+    {
+        $this->store->delete($this->getDialogKey($dialog));
     }
 
     /** Store all Dialog. */
