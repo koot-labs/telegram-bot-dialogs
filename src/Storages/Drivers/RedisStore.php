@@ -6,7 +6,10 @@ namespace KootLabs\TelegramBotDialogs\Storages\Drivers;
 
 use KootLabs\TelegramBotDialogs\Storages\Store;
 
-/** @api */
+/**
+ * @api
+ * @deprecated Will be removed in v1.0. Please use PSR-16 implementations instead. {@see \Psr\SimpleCache\CacheInterface}
+ */
 final class RedisStore implements Store
 {
     private \Redis $redis;

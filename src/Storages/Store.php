@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace KootLabs\TelegramBotDialogs\Storages;
 
-/** Keep exiting methods compatible with {@see \Psr\SimpleCache\CacheInterface} to be able to use CacheInterface instead. */
+/**
+ * Keep exiting methods compatible with {@see \Psr\SimpleCache\CacheInterface} to be able to use CacheInterface instead.
+ * @deprecated Will be removed in v1.0. Please use PSR-16 implementations instead. {@see \Psr\SimpleCache\CacheInterface}
+ */
 interface Store
 {
     public const STORE_PREFIX = 'tg:dialog:';

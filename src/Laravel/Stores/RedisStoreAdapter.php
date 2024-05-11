@@ -7,7 +7,10 @@ namespace KootLabs\TelegramBotDialogs\Laravel\Stores;
 use Illuminate\Contracts\Redis\Connection;
 use KootLabs\TelegramBotDialogs\Storages\Store;
 
-/** @api */
+/**
+ * @api
+ * @deprecated This class will be removed in v1.0. Please use PSR-16 implementations instead ({@see \Illuminate\Contracts\Cache\Repository} implements PSR-16)
+ */
 final class RedisStoreAdapter implements Store
 {
     private Connection $redis;
