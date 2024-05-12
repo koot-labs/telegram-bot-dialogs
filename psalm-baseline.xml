@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="5.24.0@462c80e31c34e58cc4f750c656be3927e80e550e">
+  <file src="src/Dialog.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[afterAllStep]]></code>
+      <code><![CDATA[beforeAllStep]]></code>
+    </PossiblyUnusedMethod>
+  </file>
   <file src="src/Laravel/DialogsServiceProvider.php">
     <UndefinedFunction>
       <code><![CDATA[config_path('telegramdialogs.php')]]></code>
