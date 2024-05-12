@@ -8,6 +8,7 @@ use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 use KootLabs\TelegramBotDialogs\DialogManager;
+use KootLabs\TelegramBotDialogs\DialogRepository;
 
 /** @api */
 final class DialogsServiceProvider extends ServiceProvider implements DeferrableProvider
@@ -33,7 +34,7 @@ final class DialogsServiceProvider extends ServiceProvider implements Deferrable
 
     private function registerBindings(): void
     {
-        $this->app->when(DialogManager::class)
+        $this->app->when(DialogRepository::class)
             ->needs(\Psr\SimpleCache\CacheInterface::class)
             ->give(function (Container $app): \Illuminate\Contracts\Cache\Repository {
                 $config = $app->make('config');

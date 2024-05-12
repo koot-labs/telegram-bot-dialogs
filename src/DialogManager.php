@@ -6,7 +6,6 @@ namespace KootLabs\TelegramBotDialogs;
 
 use KootLabs\TelegramBotDialogs\Exceptions\ControlFlow\SwitchToAnotherDialog;
 use KootLabs\TelegramBotDialogs\Objects\BotInitiatedUpdate;
-use Psr\SimpleCache\CacheInterface;
 use Telegram\Bot\Api;
 use Telegram\Bot\Objects\Update;
 
@@ -17,12 +16,12 @@ final class DialogManager
     private Api $bot;
 
     /** Storage to store Dialog state between requests. */
-    private CacheInterface $store;
+    private DialogRepository $repository;
 
-    public function __construct(Api $bot, CacheInterface $store)
+    public function __construct(Api $bot, DialogRepository $repository)
     {
         $this->bot = $bot;
-        $this->store = $store;
+        $this->repository = $repository;
     }
 
     /** @api Use non-default Bot for API calls */
@@ -93,12 +92,12 @@ final class DialogManager
     private function findDialogKeyForStore(Update $update): ?string
     {
         $sharedDialogKey = $this->generateDialogKeySharedBetweenUsers($update);
-        if ($this->store->has($sharedDialogKey)) {
+        if ($this->repository->has($sharedDialogKey)) {
             return $sharedDialogKey;
         }
 
         $userBoundedDialogKey = $this->generateDialogKeyUserBounded($update);
-        if ($this->store->has($userBoundedDialogKey)) {
+        if ($this->repository->has($userBoundedDialogKey)) {
             return $userBoundedDialogKey;
         }
 
@@ -128,19 +127,19 @@ final class DialogManager
     /** Forget Dialog state. */
     private function forgetDialogState(Dialog $dialog): void
     {
-        $this->store->delete($this->getDialogKey($dialog));
+        $this->repository->forget($this->getDialogKey($dialog));
     }
 
     /** Store all Dialog. */
     private function storeDialogState(Dialog $dialog): void
     {
-        $this->store->set($this->getDialogKey($dialog), $dialog, $dialog->ttl());
+        $this->repository->put($this->getDialogKey($dialog), $dialog, $dialog->ttl());
     }
 
     /** Restore Dialog. */
     private function readDialogState(string $key): Dialog
     {
-        return $this->store->get($key);
+        return $this->repository->get($key);
     }
 
     /** @internal This method is a subject for changes in further releases < 1.0 */
