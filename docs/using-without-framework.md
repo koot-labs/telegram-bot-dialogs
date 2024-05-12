@@ -2,7 +2,7 @@
 
 1. Install the package via composer
 2. Install `symfony/cache` via composer
-3. Install a storage (to store dialog states between requests) `composer require psr/simple-cache symfony/cache`: 
+3. Install a PSR-16 storage (to store dialog states between requests), for example `composer require symfony/cache`: 
    - a. If you have Redis installed, you can use File driver (see example below)
    - b. You have Redis installed: See `RedisAdapter` example below
 
@@ -10,7 +10,6 @@ File storage example.
 ```php
 use KootLabs\TelegramBotDialogs\DialogManager;
 use KootLabs\TelegramBotDialogs\Dialogs\HelloExampleDialog;
-use KootLabs\TelegramBotDialogs\Storages\Drivers\RedisStore;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Psr16Cache;
 
@@ -20,14 +19,26 @@ require __DIR__.'/vendor/autoload.php';
 $token = '110201543:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw';
 $bot = new \Telegram\Bot\Api($token);
 
-$store = new Psr16Cache(new FilesystemAdapter('', 0, __DIR__.'/../dialogs-cache'));
-
+$store = new Psr16Cache(new FilesystemAdapter('', 0, __DIR__.'/store/'));
 $dialogManager = new DialogManager($bot, $store);
 
-$update = $bot->getWebhookUpdate(); // if you are using webhook. If not, you can use $bot->getUpdates() instead
-$dialog = new HelloExampleDialog($update->getChat()->id, $bot);
-$dialogManager->activate($dialog);
-$dialogManager->proceed($update);
+// A simplified example for updates polling. We recommend you using webhooks instead.
+$updates = $bot->getUpdates(['offset' => $store->get('latest_update_id') + 1]);
+
+foreach ($updates as $update) {
+    echo 'Received update: '.$update->update_id.PHP_EOL;
+    if (! $dialogManager->exists($update)) {
+        $dialog = new HelloExampleDialog($update->getChat()->id, $bot);
+        $dialogManager->activate($dialog);
+    }
+    $dialogManager->proceed($update);
+}
+
+if (isset($update)) {
+    $store->set('latest_update_id', $update->update_id);
+} else {
+    echo 'No updates received'.PHP_EOL;
+}
 ```
 
 > [!IMPORTANT]  
@@ -39,9 +50,10 @@ $dialogManager->proceed($update);
 > ([PDO](https://symfony.com/doc/current/components/cache/adapters/pdo_doctrine_dbal_adapter.html#pdo-doctrine-adapter)) are recommended.
 
 Init redis store example (if you have Redis installed):
-```php
-$redis = new \Redis();
-$redis->connect('127.0.0.1', 6379);
-$store = new \Symfony\Component\Cache\Adapter\RedisAdapter($redis);
+```diff
+-$store = new Psr16Cache(new FilesystemAdapter('', 0, __DIR__.'/store/'));
++$redis = new \Redis();
++$redis->connect('127.0.0.1', 6379);
++$store = new Psr16Cache(new \Symfony\Component\Cache\Adapter\RedisAdapter($redis));
 ```
 See [Redis Cache Adapter](https://symfony.com/doc/current/components/cache/adapters/redis_adapter.html#redis-adapter) for details.
