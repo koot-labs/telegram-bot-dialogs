@@ -7,7 +7,10 @@ namespace KootLabs\TelegramBotDialogs\Objects;
 use KootLabs\TelegramBotDialogs\Dialog;
 use Telegram\Bot\Objects\Update;
 
-/** @api */
+/**
+ * @api
+ * @experimental This class is experimental and may be removed anytime.
+ */
 final class BotInitiatedUpdate extends Update
 {
     public Dialog $dialog;
