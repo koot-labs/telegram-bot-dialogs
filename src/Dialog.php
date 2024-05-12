@@ -75,11 +75,11 @@ abstract class Dialog
         $currentStepIndex = $this->next;
 
         if ($this->isStart()) {
-            $this->beforeAllStep($update);
+            $this->beforeFirstStep($update);
         }
 
         if ($this->isEnd()) {
-            $this->afterAllStep($update);
+            $this->afterLastStep($update);
             return;
         }
 
@@ -118,14 +118,32 @@ abstract class Dialog
         }
     }
 
-    /** @experimental Run code before all step. */
+    /**
+     * @experimental Run code before all step.
+     * @deprecated Will be removed in v1.0. Please use beforeFirstStep() instead.
+     */
     protected function beforeAllStep(Update $update): void
     {
         // override the method to add your logic here
     }
 
-    /** @experimental Run code after all step. */
+    /**
+     * @experimental Run code after all step.
+     * @deprecated Will be removed in v1.0. Please use afterLastStep() instead.
+     */
     protected function afterAllStep(Update $update): void
+    {
+        // override the method to add your logic here
+    }
+
+    /** @experimental Run code before the first step. */
+    protected function beforeFirstStep(Update $update): void
+    {
+        // override the method to add your logic here
+    }
+
+    /** @experimental Run code after last step. */
+    protected function afterLastStep(Update $update): void
     {
         // override the method to add your logic here
     }
