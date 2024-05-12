@@ -8,8 +8,6 @@ use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 use KootLabs\TelegramBotDialogs\DialogManager;
-use KootLabs\TelegramBotDialogs\Laravel\Stores\RedisStoreAdapter;
-use KootLabs\TelegramBotDialogs\Storages\Store;
 
 /** @api */
 final class DialogsServiceProvider extends ServiceProvider implements DeferrableProvider
@@ -35,15 +33,26 @@ final class DialogsServiceProvider extends ServiceProvider implements Deferrable
 
     private function registerBindings(): void
     {
-        $this->app->singleton(Store::class, static function (Container $app): Store {
-            $config = $app->get('config');
-            $connection = $app->make('redis')->connection($config->get('telegramdialogs.stores.redis.connection'));
-            return new RedisStoreAdapter($connection);
-        });
+        $this->app->when(DialogManager::class)
+            ->needs(\Psr\SimpleCache\CacheInterface::class)
+            ->give(function (Container $app): \Illuminate\Contracts\Cache\Repository {
+                $config = $app->make('config');
+                $store = $app->make('cache')->store($config->get('telegramdialogs.cache_store'));
+                assert($store instanceof \Illuminate\Contracts\Cache\Repository);
 
-        $this->app->singleton(DialogManager::class, static function (Container $app): DialogManager {
-            return new DialogManager($app->make('telegram.bot'), $app->make(Store::class));
-        });
+                // @todo Find a way to set a custom cache prefix for the store (default is tg:dialog:). E.g.  create DialogRepository class that will have $store as dependency
+                // $prefix = $config->get('telegramdialogs.cache_prefix');
+                // if (is_string($prefix) && $prefix !== '' && method_exists($store, 'setPrefix')) {
+                //    $store->setPrefix($prefix);
+                // }
+
+                $tags = $config->get('telegramdialogs.cache_tag');
+                if ($tags !== '' && $tags !== [] && method_exists($store, 'tags')) {
+                    return $store->tags($config->get('telegramdialogs.cache_tag'));
+                }
+
+                return $store;
+            });
 
         $this->app->alias(DialogManager::class, 'telegram.dialogs');
     }
@@ -57,7 +66,6 @@ final class DialogsServiceProvider extends ServiceProvider implements Deferrable
         return [
             'telegram.dialogs',
             DialogManager::class,
-            Store::class,
         ];
     }
 }

@@ -6,20 +6,20 @@ namespace KootLabs\TelegramBotDialogs;
 
 use KootLabs\TelegramBotDialogs\Exceptions\ControlFlow\SwitchToAnotherDialog;
 use KootLabs\TelegramBotDialogs\Objects\BotInitiatedUpdate;
-use KootLabs\TelegramBotDialogs\Storages\Store;
 use Psr\SimpleCache\CacheInterface;
 use Telegram\Bot\Api;
 use Telegram\Bot\Objects\Update;
 
+/** @api */
 final class DialogManager
 {
     /** Bot instance to use for all API calls. */
     private Api $bot;
 
     /** Storage to store Dialog state between requests. */
-    private Store | CacheInterface $store;
+    private CacheInterface $store;
 
-    public function __construct(Api $bot, Store | CacheInterface $store)
+    public function __construct(Api $bot, CacheInterface $store)
     {
         $this->bot = $bot;
         $this->store = $store;
