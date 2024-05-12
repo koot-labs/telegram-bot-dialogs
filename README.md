@@ -96,8 +96,7 @@ final class HelloCommand extends Command
 
     public function handle(): void
     {
-        $bot = $this->getTelegram();
-        Dialogs::activate(new HelloExampleDialog($this->update->getChat()->id, $bot));
+        Dialogs::activate(new HelloExampleDialog($this->update->getChat()->id));
     }
 }
 ```
@@ -115,17 +114,13 @@ final class TelegramWebhookController
 {
     public function handle(DialogManager $dialogs, BotsManager $botsManager): void
     {
-        $bot = $botsManager->bot('your-bot-name');
         $update = $bot->commandsHandler(true);
 
-        // optional, for multi-bot applications only, when a given bot is not a default one
-        $dialogs->setBot($bot);
-
         $dialogs->exists($update)
-            ? $dialogs->proceed($update)
-            : $botsManager->bot('your-bot-name')->sendMessage([ // fallback message
+            ? $dialogs->proceed($update) // proceed an active dialog (activated in HelloCommand)
+            : $botsManager->sendMessage([ // fallback message
                 'chat_id' => $update->getChat()->id,
-                'text' => 'There is no active dialog at this moment.',
+                'text' => 'There is no active dialog at this moment. Type /hello to start a new dialog.',
             ]);
     }
 }
