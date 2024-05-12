@@ -67,6 +67,7 @@ final class DialogsServiceProvider extends ServiceProvider implements Deferrable
         return [
             'telegram.dialogs',
             DialogManager::class,
+            DialogRepository::class,
         ];
     }
 }
