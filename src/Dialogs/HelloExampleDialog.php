@@ -21,7 +21,7 @@ final class HelloExampleDialog extends Dialog
     {
         $this->bot->sendMessage([
             'chat_id' => $this->getChatId(),
-            'text' => 'Hello! How are you?',
+            'text' => '👋! How are you?',
         ]);
     }
 
@@ -29,7 +29,8 @@ final class HelloExampleDialog extends Dialog
     {
         $this->bot->sendMessage([
             'chat_id' => $this->getChatId(),
-            'text' => "I’m {$update->message?->text}!",
+            'text' => "I’m also {$update->message?->text}!",
+            'reply_to_message_id' => $update->message->messageId,
         ]);
     }
 
@@ -50,6 +51,7 @@ final class HelloExampleDialog extends Dialog
         $this->bot->sendMessage([
             'chat_id' => $this->getChatId(),
             'text' => 'Bye!',
+            'reply_to_message_id' => $update->message->messageId,
         ]);
     }
 }
