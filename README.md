@@ -155,10 +155,15 @@ final class TelegramWebhookController
 
 ## ToDo
 
-- [ ] Add AI API support (e.g. [LUIS](https://www.luis.ai/), [Dataflow](https://cloud.google.com/dataflow))
+Tasks to do for v1.0:
+
 - [x] Add documentation and examples
 - [x] Support for channel bots
 - [ ] Improve test coverage
+- [ ] Improve developer experience (cleaner API, better error handling)
+- [ ] Reach message type validation
+- [ ] Reach API to validate message types and content
+- [ ] Support `\Iterator`s and/or `\Generator`s for Dialog steps
 
 
 ## Backward compatibility promise
