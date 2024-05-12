@@ -30,7 +30,7 @@ final class HelloExampleDialog extends Dialog
         $this->bot->sendMessage([
             'chat_id' => $this->getChatId(),
             'text' => "I’m also {$update->message?->text}!",
-            'reply_to_message_id' => $update->message->messageId,
+            'reply_to_message_id' => $update->message?->messageId,
         ]);
     }
 
@@ -40,7 +40,7 @@ final class HelloExampleDialog extends Dialog
             $this->bot->sendMessage([
                 'chat_id' => $this->getChatId(),
                 'text' => 'OK, send me something — we will start again! 😀',
-                'reply_to_message_id' => $update->message->messageId,
+                'reply_to_message_id' => $update->message?->messageId,
             ]);
 
             $this->jump('sayHello');
