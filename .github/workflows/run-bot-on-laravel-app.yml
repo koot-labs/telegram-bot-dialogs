@@ -30,7 +30,7 @@ jobs:
       - name: Setup test Command
         run: cp -f ./tests/ci/console.php ../test-app-laravel/routes/console.php
 
-      - name: Execute PHP tests
+      - name: Run test command
         run: |
           cd ../test-app-laravel
           echo "You have 20sec to test @TestKootDialogsBot"
