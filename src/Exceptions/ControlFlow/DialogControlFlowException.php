@@ -7,6 +7,4 @@ namespace KootLabs\TelegramBotDialogs\Exceptions\ControlFlow;
 use KootLabs\TelegramBotDialogs\Exceptions\DialogException;
 
 /** @internal */
-interface DialogControlFlowException extends DialogException
-{
-}
+interface DialogControlFlowException extends DialogException {}
