@@ -155,7 +155,7 @@ Tasks to do for v1.0:
 - [x] Add documentation and examples
 - [x] Support for channel bots
 - [ ] Improve test coverage
-- [ ] Improve developer experience (cleaner API, better error handling)
+- [ ] Improve developer experience (cleaner API (similar method in Dialog and DialogManager))
 - [ ] Reach message type validation
 - [ ] Reach API to validate message types and content
 - [ ] Support `\Iterator`s and/or `\Generator`s for Dialog steps
