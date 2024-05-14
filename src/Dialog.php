@@ -74,7 +74,10 @@ abstract class Dialog
         $this->bot = $bot;
     }
 
-    /** Start Dialog from the begging. */
+    /**
+     * @deprecated Will be removed in v1.0.
+     * Start Dialog from the begging.
+     */
     final public function start(Update $update): void
     {
         $this->next = 0;
@@ -82,6 +85,8 @@ abstract class Dialog
     }
 
     /**
+     * @internal Should be called by {@see \KootLabs\TelegramBotDialogs\DialogManager::proceed},
+     * please do not call this method directly.
      * @throws \KootLabs\TelegramBotDialogs\Exceptions\InvalidDialogStep
      * @throws \Telegram\Bot\Exceptions\TelegramSDKException
      */

@@ -13,7 +13,7 @@ use KootLabs\TelegramBotDialogs\Dialog;
  */
 final class SwitchToAnotherDialog extends \LogicException implements DialogControlFlowException
 {
-    public ?Dialog $nextDialog = null;
+    public Dialog $nextDialog;
 
     private function __construct(Dialog $nextDialog)
     {

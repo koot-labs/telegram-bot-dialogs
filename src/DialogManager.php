@@ -147,8 +147,8 @@ final class DialogManager
     private function generateDialogKeyUserBounded(Update $update): string
     {
         return implode('-', [
-            $update->getMessage()->from->id,
             $update->getChat()->id,
+            $update->getMessage()->from->id,
         ]);
     }
 
