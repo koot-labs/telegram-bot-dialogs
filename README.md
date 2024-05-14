@@ -32,7 +32,7 @@ php artisan vendor:publish --tag="telegram-config"
 ```
 It will create `config/telegram.php` file that uses the following env variables:
  - `TELEGRAM_DIALOGS_CACHE_DRIVER`: `database` is default value
- - `TELEGRAM_DIALOGS_CACHE_TAG`: `tg_dialog_` is default value
+ - `TELEGRAM_DIALOGS_CACHE_PREFIX`: `tg_dialog_` is default value
 
 
 ## Usage
