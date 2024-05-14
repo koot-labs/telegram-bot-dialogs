@@ -24,7 +24,7 @@ final class DialogTest extends TestCase
         $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {
             protected array $steps = ['existingMethod'];
 
-            public function existingMethod() {}
+            public function existingMethod(): void {}
         };
 
         $dialog->start($this->buildUpdateOfRandomType());
@@ -38,9 +38,9 @@ final class DialogTest extends TestCase
         $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {
             protected array $steps = ['existingMethodA', 'existingMethodB'];
 
-            public function existingMethodA() {}
+            public function existingMethodA(): void {}
 
-            public function existingMethodB() {}
+            public function existingMethodB(): void {}
         };
 
         $dialog->start($this->buildUpdateOfRandomType());
@@ -81,12 +81,12 @@ final class DialogTest extends TestCase
         $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {
             protected array $steps = ['step1', 'step2'];
 
-            public function step1()
+            public function step1(): void
             {
                 $this->remember('key1', 'A');
             }
 
-            public function step2()
+            public function step2(): void
             {
                 assertSame('A', $this->memory['key1']); // hack to test protected method
             }
@@ -103,7 +103,7 @@ final class DialogTest extends TestCase
             public int $count = 0;
             protected array $steps = ['step1'];
 
-            public function step1()
+            public function step1(): void
             {
                 ++$this->count;
                 $this->jump('step1');
