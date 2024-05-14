@@ -126,11 +126,8 @@ final class TelegramWebhookController
 }
 ```
 
-
 ### `Dialog` class API
 
-- `start(\Telegram\Bot\Objects\Update $update)` - Start the dialog from the first step
-- `proceed(\Telegram\Bot\Objects\Update $update)` - Proceed the dialog to the next step
 - `isEnd()` - Check the end of the dialog
 - 🔐 `end()` - End dialog
 - 🔐 `jump(string $stepName)` - Jump to the particular step, where `$step` is the `public` method name
@@ -140,12 +137,18 @@ final class TelegramWebhookController
 
 ### `DialogManager` class API
 
-ℹ️ `Dialogs` [Facade](https://laravel.com/docs/master/facades) proxies calls to `DialogManager` class.
+`DialogManager` is in charge of:
+ - storing and recovering Dialog instances between steps/requests
+ - running Dialog steps (using Dialog public API)
+ - switching/activating Dialogs
 
-- `setBot(\Telegram\Bot\Api $bot)` - Use non-default Bot for API calls
-- `activate(\KootLabs\TelegramBotDialogs\Dialog $dialog)` - Activate a new Dialog (without running it)
-- `proceed(\Telegram\Bot\Objects\Update $update)` - Run the next step handler for the existing Dialog
-- `exists(\Telegram\Bot\Objects\Update $update)` - Check for existing Dialog
+For Laravel apps, the package provides `Dialogs` Facade, that proxies calls to `DialogManager` class.
+
+`DialogManager` public API:
+- `activate(\KootLabs\TelegramBotDialogs\Dialog $dialog)` - Activate a new Dialog (without running it). The same user/chat may have few open Dialogs, DialogManager should know which one is active.
+- `proceed(\Telegram\Bot\Objects\Update $update)` - Run the next step handler for the active Dialog (if exists)
+- `exists(\Telegram\Bot\Objects\Update $update)` - Check for existing Dialog for a given Update (based on chat_id and optional user_id)
+- `setBot(\Telegram\Bot\Api $bot)` - Use non-default Bot for Telegram Bot API calls
 
 
 ## ToDo
