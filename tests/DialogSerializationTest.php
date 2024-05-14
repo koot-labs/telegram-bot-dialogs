@@ -45,4 +45,20 @@ final class DialogSerializationTest extends TestCase
         $this->assertSame($dialog->ttl(), $unserializedDialog->ttl());
         $this->assertSame($dialog->isStart(), $unserializedDialog->isStart());
     }
+
+    #[Test]
+    public function it_can_unserialize_old_version_of_dialog_where_memory_of_array_type(): void
+    {
+        $dialog = new HelloExampleDialog(self::RANDOM_CHAT_ID, $this->createBotWithQueuedResponse());
+
+        $dialog->__unserialize([
+            'chat_id' => 42,
+            'user_id' => null,
+            'next' => 1,
+            'memory' => ['key' => 'value'],
+            'afterProceedJumpToIndex' => null,
+        ]);
+
+        $this->assertInstanceOf(HelloExampleDialog::class, $dialog);
+    }
 }

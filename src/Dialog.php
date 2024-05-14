@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace KootLabs\TelegramBotDialogs;
 
+use Illuminate\Support\Collection;
 use KootLabs\TelegramBotDialogs\Exceptions\InvalidDialogStep;
 use KootLabs\TelegramBotDialogs\Exceptions\UnexpectedUpdateType;
 use Telegram\Bot\Api;
@@ -11,22 +12,34 @@ use Telegram\Bot\Objects\Update;
 
 abstract class Dialog
 {
-    /** @var int id of the Chat the Dialog is bounded to */
+    /**
+     * @readonly
+     * @var int id of the Chat the Dialog is bounded to
+     */
     protected int $chat_id;
 
-    /** @var int|null id of the User the Dialog is bounded to. Makes sense for multiuser chats only. */
+    /**
+     * @readonly
+     * @var int|null id of the User the Dialog is bounded to. Makes sense for multiuser chats only.
+     */
     protected ?int $user_id = null;
 
-    /** @var array<string, mixed> Key-value storage to store data between steps. */
-    protected array $memory = [];
+    /** @var \Illuminate\Support\Collection<array-key, mixed> Key-value storage to store data between steps. */
+    protected Collection $memory;
 
-    /** @var int<-1, max> Seconds to store state of the Dialog after latest activity on it. */
+    /**
+     * @readonly
+     * @var int<-1, max> Seconds to store state of the Dialog after latest activity on it.
+     */
     protected int $ttl = 300;
 
     /** @var \Telegram\Bot\Api Associated Bot instance that will perform API calls. */
     protected Api $bot;
 
-    /** @var list<string|array{name: string, response: string, options:array}> List of method to execute. The order defines the sequence */
+    /**
+     * @readonly
+     * @var list<string|array{name: string, response: string, options:array}> List of method to execute. The order defines the sequence
+     */
     protected array $steps = [];
 
     /** @var int Index of the next step. */
@@ -44,6 +57,8 @@ abstract class Dialog
     {
         $this->chat_id = $chatId;
         $this->user_id = $userId;
+
+        $this->memory = new Collection();
 
         if ($bot instanceof Api) {
             $this->bot = $bot;
@@ -182,16 +197,22 @@ abstract class Dialog
         $this->next = count($this->steps);
     }
 
-    /** Remember information for next steps. */
+    /**
+     * @api Remember information for next steps.
+     * @deprecated Will be removed in v1.0. $this->memory is a Collection, please use it directly.
+     */
     final protected function remember(string $key, mixed $value): void
     {
-        $this->memory[$key] = $value;
+        $this->memory->put($key, $value);
     }
 
-    /** @api Forget information from next steps. */
+    /**
+     * @api Forget information from next steps.
+     * @deprecated Will be removed in v1.0. $this->memory is a Collection, please use it directly.
+     */
     final protected function forget(string $key): void
     {
-        unset($this->memory[$key]);
+        $this->memory->forget($key);
     }
 
     /** Check if Dialog started */
@@ -263,11 +284,28 @@ abstract class Dialog
     /** @return array<string, mixed> */
     public function __serialize(): array
     {
+        // serialize non-readonly properties only
         return [
             'chat_id' => $this->chat_id,
             'user_id' => $this->user_id,
             'next' => $this->next,
             'memory' => $this->memory,
+            'afterProceedJumpToIndex' => $this->afterProceedJumpToIndex,
         ];
+    }
+
+    /** @todo remove it in v1.0 */
+    public function __unserialize(array $data): void
+    {
+        // unserialize non-readonly properties only
+        $this->chat_id = $data['chat_id'];
+        $this->user_id = $data['user_id'];
+        $this->next = $data['next'];
+        $this->afterProceedJumpToIndex = $data['afterProceedJumpToIndex'];
+
+        // enforce migration from array to Collection, @todo remove it in v1.0
+        $this->memory = is_array($data['memory'])
+            ? collect($data['memory'])
+            : $data['memory'];
     }
 }
