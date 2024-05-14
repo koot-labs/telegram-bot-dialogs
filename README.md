@@ -19,18 +19,26 @@ PHP 8+ and Laravel features, focus on stability, better DX and readability.
 
 ## Installation
 
-You can easily install the package using Composer:
+You can install the package via Composer:
 
 ```shell
 composer require koot-labs/telegram-bot-dialogs
 ```
-Package requires PHP >= 8.0
+The package will automatically register itself.
+
+You can publish the config file with:
+```shell
+php artisan vendor:publish --tag="telegram-config"
+```
+It will create `config/telegram.php` file that uses the following env variables:
+ - `TELEGRAM_DIALOGS_CACHE_DRIVER`: `database` is default value
+ - `TELEGRAM_DIALOGS_CACHE_TAG`: `tg_dialog_` is default value
 
 
 ## Usage
 
 1. Create a Dialog class
-2. [Create a Telegram command](https://telegram-bot-sdk.readme.io/docs/commands-system) and start a Dialog from `Command::handle()`.
+2. [Create a Telegram command](https://telegram-bot-sdk.com/docs/guides/commands-system) to activate Dialog from the Command.
 3. Setup your controller class to proceed active Dialog on income webhook request.
 
 
@@ -45,7 +53,7 @@ use Telegram\Bot\Objects\Update;
 final class HelloDialog extends Dialog
 {
     /** @var list<string> List of method to execute. The order defines the sequence */
-    protected array $steps = ['sayHello', 'sayOk', 'sayBye'];
+    protected array $steps = ['sayHello', 'sayOk',];
 
     public function sayHello(Update $update): void
     {
@@ -59,16 +67,9 @@ final class HelloDialog extends Dialog
     {
         $this->bot->sendMessage([
             'chat_id' => $this->getChatId(),
-            'text' => "I'm also OK :)",
+            'text' => 'I’m also OK :)',
         ]);
-    }
-
-    public function sayBye(Update $update): void
-    {
-        $this->bot->sendMessage([
-            'chat_id' => $this->getChatId(),
-            'text' => 'Bye!',
-        ]);
+        
         $this->jump('sayHello');
     }
 }

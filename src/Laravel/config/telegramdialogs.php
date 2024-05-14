@@ -7,7 +7,7 @@ return [
      * Cache store that should be used to store Dialog states between steps/requests.
      * This can be the name of any store that is configured in config/cache.php ("stores" key).
      */
-    'cache_store' => env('TELEGRAM_DIALOGS_CACHE_DRIVER', 'redis'),
+    'cache_store' => env('TELEGRAM_DIALOGS_CACHE_DRIVER', 'database'),
 
     /*
      * If the cache driver you configured supports tags, you may specify a tag name here.
