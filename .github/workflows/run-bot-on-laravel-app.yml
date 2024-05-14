@@ -35,3 +35,5 @@ jobs:
           cd ../test-app-laravel
           echo "You have 20sec to test @TestKootDialogsBot"
           php artisan telegram:dialog:test 20
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
