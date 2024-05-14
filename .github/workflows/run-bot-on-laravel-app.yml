@@ -5,7 +5,7 @@ on:
 
 jobs:
 
-  tests:
+  laravel-test:
     runs-on: ubuntu-latest
 
     steps:
