@@ -1,0 +1,34 @@
+name: Run test bot on Laravel app
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+          extensions: curl, bcmath, libxml, mbstring, fileinfo
+          coverage: none
+
+      - name: Create Laravel app
+        run: |
+          cd ../
+          composer create-project laravel/laravel:^11.0 test-app-laravel
+          cd ./test-app-laravel
+          composer config repositories.0 '{"type": "path", "url": "../telegram-bot-dialogs/"}'
+          composer require "koot-labs/telegram-bot-dialogs:*@dev" --update-with-all-dependencies
+
+      - name: Setup test Command
+        run: cp -f ../telegram-bot-dialogs/tests/ci/console.php ./routes/console.php
+
+      - name: Execute PHP tests
+        run: php artisan telegram:dialog:test 20
