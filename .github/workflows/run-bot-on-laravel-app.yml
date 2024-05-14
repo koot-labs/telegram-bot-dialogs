@@ -28,7 +28,10 @@ jobs:
           composer require "koot-labs/telegram-bot-dialogs:*@dev" --update-with-all-dependencies
 
       - name: Setup test Command
-        run: cp -f ../telegram-bot-dialogs/tests/ci/console.php ./routes/console.php
+        run: cp -f ./tests/ci/console.php ../test-app-laravel/routes/console.php
 
       - name: Execute PHP tests
-        run: php artisan telegram:dialog:test 20
+        run: |
+          cd ../test-app-laravel
+          echo "You have 20sec to test @TestKootDialogsBot"
+          php artisan telegram:dialog:test 20
