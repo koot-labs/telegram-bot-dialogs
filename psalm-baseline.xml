@@ -11,4 +11,9 @@
       <code><![CDATA[config_path('telegramdialogs.php')]]></code>
     </UndefinedFunction>
   </file>
+  <file src="tests/ci/console.php">
+    <InvalidScope>
+      <code><![CDATA[$this]]></code>
+    </InvalidScope>
+  </file>
 </files>
