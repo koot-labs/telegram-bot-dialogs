@@ -34,26 +34,13 @@ final class DialogsServiceProvider extends ServiceProvider implements Deferrable
 
     private function registerBindings(): void
     {
-        $this->app->when(DialogRepository::class)
-            ->needs(\Psr\SimpleCache\CacheInterface::class)
-            ->give(function (Container $app): \Illuminate\Contracts\Cache\Repository {
-                $config = $app->make('config');
-                $store = $app->make('cache')->store($config->get('telegramdialogs.cache_store'));
-                assert($store instanceof \Illuminate\Contracts\Cache\Repository);
+        $this->app->bind(DialogRepository::class, function (Container $app): DialogRepository {
+            $config = $app->make('config');
+            $store = $app->make('cache')->store($config->get('telegramdialogs.cache_store'));
+            assert($store instanceof \Illuminate\Contracts\Cache\Repository);
 
-                // @todo Find a way to set a custom cache prefix for the store (default is tg:dialog:). E.g.  create DialogRepository class that will have $store as dependency
-                // $prefix = $config->get('telegramdialogs.cache_prefix');
-                // if (is_string($prefix) && $prefix !== '' && method_exists($store, 'setPrefix')) {
-                //    $store->setPrefix($prefix);
-                // }
-
-                $tags = $config->get('telegramdialogs.cache_tag');
-                if ($tags !== '' && $tags !== [] && method_exists($store, 'tags')) {
-                    return $store->tags($config->get('telegramdialogs.cache_tag'));
-                }
-
-                return $store;
-            });
+            return new DialogRepository($store, $config->get('telegramdialogs.cache_prefix'));
+        });
 
         $this->app->alias(DialogManager::class, 'telegram.dialogs');
     }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace KootLabs\TelegramBotDialogs\Tests;
 
 use KootLabs\TelegramBotDialogs\DialogManager;
+use KootLabs\TelegramBotDialogs\DialogRepository;
 use KootLabs\TelegramBotDialogs\Dialogs\HelloExampleDialog;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -23,7 +24,7 @@ final class DialogManagerTest extends TestCase
     {
         return new DialogManager(
             new Api('fake-token'),
-            new Psr16Cache(new ArrayAdapter()), // use array/in-memory store
+            new DialogRepository(new Psr16Cache(new ArrayAdapter()), 'some_prefix_'), // use array/in-memory store
         );
     }
 
