@@ -92,7 +92,7 @@ final class HelloCommand extends Command
     protected $name = 'hello';
 
     /** @var string Command description */
-    protected $description = 'Just say "Hello" and ask few questions';
+    protected $description = 'Just say "Hello" and ask few questions in a dialog mode.';
 
     public function handle(): void
     {
