@@ -11,12 +11,4 @@
       <code><![CDATA[config_path('telegramdialogs.php')]]></code>
     </UndefinedFunction>
   </file>
-  <file src="src/Laravel/Stores/RedisStoreAdapter.php">
-    <UndefinedInterfaceMethod>
-      <code><![CDATA[del]]></code>
-      <code><![CDATA[exists]]></code>
-      <code><![CDATA[get]]></code>
-      <code><![CDATA[setEx]]></code>
-    </UndefinedInterfaceMethod>
-  </file>
 </files>
