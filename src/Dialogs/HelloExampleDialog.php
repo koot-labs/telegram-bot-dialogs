@@ -19,6 +19,9 @@ final class HelloExampleDialog extends Dialog
 
     public function sayHello(Update $update): void
     {
+        //Used for test purposes
+        if(!isset($this->bot)){return;}
+
         $this->bot->sendMessage([
             'chat_id' => $this->getChatId(),
             'text' => '👋! How are you?',
@@ -27,6 +30,9 @@ final class HelloExampleDialog extends Dialog
 
     public function empathyReply(Update $update): void
     {
+        //Used for test purposes
+        if(!isset($this->bot)){return;}
+
         $this->bot->sendMessage([
             'chat_id' => $this->getChatId(),
             'text' => "I’m also {$update->message?->text}!",
@@ -36,6 +42,9 @@ final class HelloExampleDialog extends Dialog
 
     public function sayBye(Update $update): void
     {
+        //Used for test purposes
+        if(!isset($this->bot)){return;}
+
         if ($update->message?->text === 'again') {
             $this->bot->sendMessage([
                 'chat_id' => $this->getChatId(),
@@ -53,5 +62,12 @@ final class HelloExampleDialog extends Dialog
             'text' => 'Bye!',
             'reply_to_message_id' => $update->message->messageId,
         ]);
+    }
+
+    public bool $afterLastStepCalled = false;
+
+    protected function afterLastStep(Update $update): void
+    {
+        $this->afterLastStepCalled = true;
     }
 }

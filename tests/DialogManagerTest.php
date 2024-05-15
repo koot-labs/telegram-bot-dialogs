@@ -82,4 +82,18 @@ final class DialogManagerTest extends TestCase
 
         $this->assertFalse($existResult);
     }
+
+    #[Test]
+    public function it_executes_afterLastStep_function_when_dialog_ends(): void
+    {
+        $dialogManager = $this->instantiateDialogManager();
+        $dialog = new HelloExampleDialog(self::RANDOM_CHAT_ID);
+
+        $dialogManager->activate($dialog);
+        $dialog->proceed(new Update(['message' => ['chat' => ['id' => self::RANDOM_CHAT_ID]]]));
+        $dialog->proceed(new Update(['message' => ['chat' => ['id' => self::RANDOM_CHAT_ID]]]));
+        $dialog->proceed(new Update(['message' => ['chat' => ['id' => self::RANDOM_CHAT_ID]]]));
+
+        $this->assertTrue($dialog->afterLastStepCalled, 'afterLastStep() should be called when the dialog ends');
+    }
 }
