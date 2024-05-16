@@ -29,6 +29,7 @@ final class PassiveTestDialog extends Dialog
 
     public function step3(Update $update): void
     {
+        $this->jump("step2");
         return;
     }
 

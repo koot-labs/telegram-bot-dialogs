@@ -99,11 +99,6 @@ abstract class Dialog
             $this->beforeFirstStep($update);
         }
 
-        if ($this->isEnd()) {
-            $this->afterLastStep($update);
-            return;
-        }
-
         if (! array_key_exists($currentStepIndex, $this->steps)) {
             throw new InvalidDialogStep("Undefined step with index {$currentStepIndex}.");
         }
@@ -127,6 +122,10 @@ abstract class Dialog
             }
         } else {
             throw new InvalidDialogStep('Unknown format of the step.');
+        }
+
+        if ($this->isLastStep()) {
+            $this->afterLastStep($update);
         }
 
         // Step forward only if did not change inside the step handler
@@ -220,6 +219,12 @@ abstract class Dialog
     final public function isStart(): bool
     {
         return $this->next === 0;
+    }
+
+    /** Check if Dialog on the last step */
+    final public function isLastStep(): bool
+    {
+        return $this->next == count($this->steps) - 1;
     }
 
     /** Check if Dialog ended */
