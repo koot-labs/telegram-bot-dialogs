@@ -54,11 +54,4 @@ final class HelloExampleDialog extends Dialog
             'reply_to_message_id' => $update->message->messageId,
         ]);
     }
-
-    public bool $afterLastStepCalled = false;
-
-    protected function afterLastStep(Update $update): void
-    {
-        $this->afterLastStepCalled = true;
-    }
 }
