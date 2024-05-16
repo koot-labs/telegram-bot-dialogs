@@ -2,6 +2,12 @@ name: Run test bot on Laravel app
 
 on:
   workflow_dispatch:
+    inputs:
+      seconds:
+        type: number
+        default: 60
+        description: Number of seconds to run the bot (a number between 1 and 300)
+        required: true
 
 jobs:
 
@@ -9,6 +15,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Validate inputs
+        run: |
+          if [[ ${{ inputs.seconds }} -lt 1 || ${{ inputs.seconds }} -gt 300 ]]; then
+            echo "The 'seconds' value is out of range (1-300). Please provide a correct value."
+            exit 1
+          fi
+
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -19,10 +32,10 @@ jobs:
           extensions: curl, bcmath, libxml, mbstring, fileinfo
           coverage: none
 
-      - name: Create Laravel app
+      - name: Create a Laravel app
         run: |
           cd ../
-          composer create-project laravel/laravel:^11.0 test-app-laravel
+          composer create-project laravel/laravel test-app-laravel
           cd ./test-app-laravel
           composer config repositories.0 '{"type": "path", "url": "../telegram-bot-dialogs/"}'
           composer require "koot-labs/telegram-bot-dialogs:*@dev" --update-with-all-dependencies
@@ -33,7 +46,7 @@ jobs:
       - name: Run test command
         run: |
           cd ../test-app-laravel
-          echo "You have 20sec to test @TestKootDialogsBot"
-          php artisan telegram:dialog:test 20
+          echo "You have ${{ inputs.seconds }}sec to test @TestKootDialogsBot"
+          php artisan telegram:dialog:test ${{ inputs.seconds }}
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
