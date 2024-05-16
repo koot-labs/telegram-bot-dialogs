@@ -46,7 +46,7 @@ jobs:
       - name: Run test command
         run: |
           cd ../test-app-laravel
-          echo "You have ${{ inputs.tags }}sec to test @TestKootDialogsBot"
-          php artisan telegram:dialog:test ${{ inputs.tags }}
+          echo "You have ${{ inputs.seconds }}sec to test @TestKootDialogsBot"
+          php artisan telegram:dialog:test ${{ inputs.seconds }}
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
