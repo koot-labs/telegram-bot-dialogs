@@ -26,7 +26,8 @@ Artisan::command('telegram:dialog:test {ttl=10}', function (DialogManager $dialo
             } else {
                 $botsManager->sendMessage([ // fallback message
                     'chat_id' => $update->getChat()->id,
-                    'text' => 'There is no active dialog at this moment. You can also start a new dialog by typing "hello bot" in the chat.',
+                    'text' => 'There is no active dialog at this moment. You can also start a new dialog by typing <code>hello bot</code> in the chat.',
+                    'parse_mode' => 'HTML',
                 ]);
             }
         }
