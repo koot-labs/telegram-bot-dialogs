@@ -148,7 +148,7 @@ final class DialogManager
      * @internal This method is a subject for changes in further releases < 1.0
      * @return non-empty-string
      */
-    private function generateDialogKey($chatId, $userId = null): string
+    private function generateDialogKey(int $chatId, ?int $userId = null): string
     {
         return implode('-', array_filter([
             $chatId,
