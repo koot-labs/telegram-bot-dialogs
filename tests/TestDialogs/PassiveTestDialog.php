@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace KootLabs\TelegramBotDialogs\Dialogs;
+namespace KootLabs\TelegramBotDialogs\Tests\TestDialogs;
 
 use KootLabs\TelegramBotDialogs\Dialog;
-use KootLabs\TelegramBotDialogs\Tests\Exceptions\ItWorks;
 use Telegram\Bot\Objects\Update;
 
 /**
@@ -33,8 +32,9 @@ final class PassiveTestDialog extends Dialog
         return;
     }
 
+    /** @inheritDoc */
     protected function afterLastStep(Update $update): void
     {
-        throw new ItWorks("afterLastStep() called when the dialog ends");
+        throw new \LogicException(__METHOD__." is called for testing purposes.");
     }
 }

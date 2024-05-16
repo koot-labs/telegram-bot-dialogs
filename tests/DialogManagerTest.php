@@ -7,8 +7,7 @@ namespace KootLabs\TelegramBotDialogs\Tests;
 use KootLabs\TelegramBotDialogs\DialogManager;
 use KootLabs\TelegramBotDialogs\DialogRepository;
 use KootLabs\TelegramBotDialogs\Dialogs\HelloExampleDialog;
-use KootLabs\TelegramBotDialogs\Dialogs\PassiveTestDialog;
-use KootLabs\TelegramBotDialogs\Tests\Exceptions\ItWorks;
+use KootLabs\TelegramBotDialogs\Tests\TestDialogs\PassiveTestDialog;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
@@ -95,7 +94,8 @@ final class DialogManagerTest extends TestCase
         $dialog->proceed(new Update(['message' => ['chat' => ['id' => self::RANDOM_CHAT_ID]]]));
         $dialog->proceed(new Update(['message' => ['chat' => ['id' => self::RANDOM_CHAT_ID]]]));
 
-        $this->expectException(ItWorks::class);
+        $this->expectException(\LogicException::class);
+
         $dialog->proceed(new Update(['message' => ['chat' => ['id' => self::RANDOM_CHAT_ID]]]));
     }
 }
