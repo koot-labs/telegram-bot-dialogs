@@ -7,6 +7,8 @@ namespace KootLabs\TelegramBotDialogs\Tests;
 use KootLabs\TelegramBotDialogs\DialogManager;
 use KootLabs\TelegramBotDialogs\DialogRepository;
 use KootLabs\TelegramBotDialogs\Dialogs\HelloExampleDialog;
+use KootLabs\TelegramBotDialogs\Dialogs\PassiveTestDialog;
+use KootLabs\TelegramBotDialogs\Tests\Exceptions\ItWorks;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
@@ -81,5 +83,19 @@ final class DialogManagerTest extends TestCase
         ]));
 
         $this->assertFalse($existResult);
+    }
+
+    #[Test]
+    public function it_throws_custom_exception_when_afterLastStep_called_in_dialog_end(): void
+    {
+        $dialogManager = $this->instantiateDialogManager();
+        $dialog = new PassiveTestDialog(self::RANDOM_CHAT_ID);
+
+        $dialogManager->activate($dialog);
+        $dialog->proceed(new Update(['message' => ['chat' => ['id' => self::RANDOM_CHAT_ID]]]));
+        $dialog->proceed(new Update(['message' => ['chat' => ['id' => self::RANDOM_CHAT_ID]]]));
+
+        $this->expectException(ItWorks::class);
+        $dialog->proceed(new Update(['message' => ['chat' => ['id' => self::RANDOM_CHAT_ID]]]));
     }
 }

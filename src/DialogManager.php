@@ -91,12 +91,14 @@ final class DialogManager
     /** @return non-empty-string|null */
     private function findDialogKeyForStore(Update $update): ?string
     {
-        $sharedDialogKey = $this->generateDialogKeySharedBetweenUsers($update);
-        if ($this->repository->has($sharedDialogKey)) {
-            return $sharedDialogKey;
+        //As for 1-1 personal chat and multi-user chat, where bot should treat all users messages as one dialog
+        $chatBoundedDialogKey = $this->generateDialogKey($update->getChat()->id);
+        if ($this->repository->has($chatBoundedDialogKey)) {
+            return $chatBoundedDialogKey;
         }
 
-        $userBoundedDialogKey = $this->generateDialogKeyUserBounded($update);
+        //As for multi-user chat, where bot should treat all messages of every user as separate dialog
+        $userBoundedDialogKey = $this->generateDialogKey($update->getChat()->id, $update->getMessage()->from->id);
         if ($this->repository->has($userBoundedDialogKey)) {
             return $userBoundedDialogKey;
         }
@@ -142,24 +144,16 @@ final class DialogManager
         return $this->repository->get($key);
     }
 
-    /** @internal This method is a subject for changes in further releases < 1.0 */
-    private function generateDialogKeyUserBounded(Update $update): string
-    {
-        return implode('-', [
-            $update->getChat()->id,
-            $update->getMessage()->from->id,
-        ]);
-    }
-
     /**
      * @internal This method is a subject for changes in further releases < 1.0
      * @return non-empty-string
      */
-    private function generateDialogKeySharedBetweenUsers(Update $update): string
+    private function generateDialogKey(int $chatId, ?int $userId = null): string
     {
-        return implode('-', [
-            $update->getChat()->id,
-        ]);
+        return implode('-', array_filter([
+            $chatId,
+            $userId,
+        ]));
     }
 
     /**
@@ -168,9 +162,9 @@ final class DialogManager
      */
     private function getDialogKey(Dialog $dialog): string
     {
-        return implode('-', array_filter([
+        return $this->generateDialogKey(
             $dialog->getChatId(),
             $dialog->getUserId(),
-        ]));
+        );
     }
 }
