@@ -41,6 +41,17 @@ final class DialogManager
     }
 
     /**
+     * @api Deactivate existing Dialog.
+     */
+    public function deactivate(Update $update): void
+    {
+        $dialog = $this->getDialogInstance($update);
+        if(isset($dialog)){
+            $this->forgetDialogState($dialog);
+        }
+    }
+
+    /**
      * Initiate a new Dialog from server side (e.g. by cron).
      * Note, a User firstly should start a chat with a bot (bot can't initiate a chat — this is TG Bot API limitation).
      * @api
