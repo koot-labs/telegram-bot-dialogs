@@ -79,7 +79,7 @@ final class HelloDialog extends Dialog
 ### 2. Create a Telegram command
 
 To initiate a dialog please use `DialogManager` (or, if you use Laravel, `Dialogs` Facade) — it will care about storing and recovering `Dialog` instance state between steps/requests.
-To execute the first and next steps please call `Dialogs::procceed()` method with update object as an argument.
+To execute the first and next steps please call `Dialogs::proceed()` method with update object as an argument.
 Also, it is possible to use dialogs with Telegram commands and DI through type hinting.
 
 ```php
