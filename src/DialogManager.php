@@ -41,12 +41,12 @@ final class DialogManager
     }
 
     /**
-     * @api Deactivate existing Dialog.
+     * @api Remove current active Dialog from a Storage.
      */
-    public function deactivate(Update $update): void
+    public function forgetActiveDialog(Update $update): void
     {
         $dialog = $this->getDialogInstance($update);
-        if(isset($dialog)){
+        if ($dialog instanceof Dialog) {
             $this->forgetDialogState($dialog);
         }
     }
