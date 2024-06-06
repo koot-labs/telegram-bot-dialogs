@@ -44,7 +44,7 @@ final class HelloExampleDialog extends Dialog
         if (! $callbackQuery instanceof CallbackQuery || !str_starts_with($callbackQuery->data, 'MOOD:')) {
             $this->bot->sendMessage([
                 'chat_id' => $this->getChatId(),
-                'text' => 'Please answer the question by selecting one of the options from the inline keyboard below.',
+                'text' => 'Please answer the question by selecting one of the options from the inline keyboard above.',
             ]);
             // repeat step again
             throw new UnexpectedUpdateType('callbackQuery expected');
