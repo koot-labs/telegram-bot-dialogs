@@ -8,7 +8,7 @@ It’s possible to use the package in 2 ways:
 > [!IMPORTANT]  
 > Note, this example uses Artisan command for testing purposes only.
 > It’s not recommended to use this approach in production.
-> Instead, please use a Controller that listens income webhooks.
+> Instead, please use a Controller that listens to income webhooks.
 
 ```php
 // routes/console.php

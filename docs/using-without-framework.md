@@ -9,6 +9,7 @@
 File storage example.
 ```php
 use KootLabs\TelegramBotDialogs\DialogManager;
+use KootLabs\TelegramBotDialogs\DialogRepository;
 use KootLabs\TelegramBotDialogs\Dialogs\HelloExampleDialog;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Psr16Cache;
@@ -20,7 +21,7 @@ $token = '110201543:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw';
 $bot = new \Telegram\Bot\Api($token);
 
 $store = new Psr16Cache(new FilesystemAdapter('', 0, __DIR__.'/store/'));
-$dialogManager = new DialogManager($bot, $store);
+$dialogManager = new DialogManager($bot, new DialogRepository($store));
 
 // A simplified example for updates polling. We recommend you using webhooks instead.
 $updates = $bot->getUpdates(['offset' => $store->get('latest_update_id') + 1]);
