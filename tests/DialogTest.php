@@ -152,4 +152,33 @@ final class DialogTest extends TestCase
         $this->expectException(\LogicException::class);
         $dialog->proceed($this->buildUpdateOfRandomType());
     }
+
+    #[Test]
+    public function it_throws_custom_exception_when_afterLastStep_called_when_end_is_called_in_the_last_step(): void
+    {
+        $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {
+            protected array $steps = ['step1', 'step2'];
+
+            public function step1(): void
+            {
+                return;
+            }
+
+            public function step2(): void
+            {
+                $this->end();
+                return;
+            }
+
+            protected function afterLastStep(Update $update): void
+            {
+                throw new \LogicException(__METHOD__." is called for testing purposes.");
+            }
+        };
+
+        $dialog->proceed($this->buildUpdateOfRandomType());
+
+        $this->expectException(\LogicException::class);
+        $dialog->proceed($this->buildUpdateOfRandomType());
+    }
 }

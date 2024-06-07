@@ -209,10 +209,16 @@ abstract class Dialog
         }
     }
 
-    /** Move Dialog’s cursor to the end. */
+    /**
+     * Move Dialog’s cursor to the end.
+     * If called in step, this step and all flow after it will be completed, then dialog will be forgotten.
+     * Works the same if called in last step.
+     */
     final public function end(): void
     {
-        $this->next = count($this->steps);
+        if(!$this->isLastStep()) {
+            $this->next = count($this->steps);
+        }
     }
 
     /**
