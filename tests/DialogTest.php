@@ -107,7 +107,7 @@ final class DialogTest extends TestCase
             public function step1(): void
             {
                 ++$this->count;
-                $this->jump('step1');
+                $this->nextStep('step1');
             }
         };
 
@@ -136,7 +136,7 @@ final class DialogTest extends TestCase
 
             public function step3(): void
             {
-                $this->jump("step2");
+                $this->nextStep("step2");
                 return;
             }
 

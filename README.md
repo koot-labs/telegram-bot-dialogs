@@ -70,7 +70,7 @@ final class HelloDialog extends Dialog
             'text' => 'I’m also OK :)',
         ]);
         
-        $this->jump('sayHello');
+        $this->nextStep('sayHello');
     }
 }
 ```
@@ -131,7 +131,7 @@ final class TelegramWebhookController
 
 - `isEnd()` - Check the end of the dialog
 - 🔐 `end()` - End dialog
-- 🔐 `jump(string $stepName)` - Jump to the particular step, where `$step` is the `public` method name
+- 🔐 `nextStep(string $stepName)` - Jump to the particular step, where `$step` is the `public` method name
 - 🔐 `memory` - Laravel Collection to store intermediate data between steps
 
 

@@ -83,7 +83,7 @@ final class HelloExampleDialog extends Dialog
                 'reply_to_message_id' => $update->message?->messageId,
             ]);
 
-            $this->jump('sayHello');
+            $this->nextStep('sayHello');
 
             return;
         }

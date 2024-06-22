@@ -47,7 +47,7 @@ abstract class Dialog
     /** @var int Index of the next step. */
     protected int $next = 0;
 
-    /** @var int|null Index of the next step that set manually using jump() method. */
+    /** @var int|null Index of the next step that set manually using nextStep() method. */
     private ?int $afterProceedJumpToIndex = null;
 
     /**
@@ -184,6 +184,7 @@ abstract class Dialog
     /**
      * Jump to the particular step of the Dialog.
      * This step will be executed in the next proceed iteration.
+     * @deprecated Use nextStep()
      */
     final protected function jump(string $stepName): void
     {
@@ -193,6 +194,15 @@ abstract class Dialog
                 break;
             }
         }
+    }
+
+    /**
+     * Set the step to be proceeded in the next iteration.
+     * @api
+     */
+    final protected function nextStep(string $stepName): void
+    {
+        $this->jump($stepName);
     }
 
     /**
@@ -305,7 +315,7 @@ abstract class Dialog
         }
 
         if (! empty($stepConfig['jump'])) {
-            $this->jump($stepConfig['jump']);
+            $this->nextStep($stepConfig['jump']);
         }
 
         $this->afterEveryStep($update, $currentStepIndex);
