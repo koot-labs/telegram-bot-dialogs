@@ -6,6 +6,7 @@ namespace KootLabs\TelegramBotDialogs\Tests;
 
 use KootLabs\TelegramBotDialogs\Dialog;
 use KootLabs\TelegramBotDialogs\Exceptions\InvalidDialogStep;
+use Telegram\Bot\Objects\Update;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 
@@ -115,5 +116,69 @@ final class DialogTest extends TestCase
         $dialog->proceed($this->buildUpdateOfRandomType());
 
         $this->assertSame(3, $dialog->count);
+    }
+
+    #[Test]
+    public function it_throws_custom_exception_when_afterLastStep_called_in_dialog_end(): void
+    {
+        $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {
+            protected array $steps = ['step1', 'step2', 'step3'];
+
+            public function step1(): void
+            {
+                return;
+            }
+
+            public function step2(): void
+            {
+                return;
+            }
+
+            public function step3(): void
+            {
+                $this->jump("step2");
+                return;
+            }
+
+            protected function afterLastStep(Update $update): void
+            {
+                throw new \LogicException(__METHOD__." is called for testing purposes.");
+            }
+        };
+
+        $dialog->proceed($this->buildUpdateOfRandomType());
+        $dialog->proceed($this->buildUpdateOfRandomType());
+
+        $this->expectException(\LogicException::class);
+        $dialog->proceed($this->buildUpdateOfRandomType());
+    }
+
+    #[Test]
+    public function it_throws_custom_exception_when_afterLastStep_called_when_end_is_called_in_the_last_step(): void
+    {
+        $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {
+            protected array $steps = ['step1', 'step2'];
+
+            public function step1(): void
+            {
+                return;
+            }
+
+            public function step2(): void
+            {
+                $this->end();
+                return;
+            }
+
+            protected function afterLastStep(Update $update): void
+            {
+                throw new \LogicException(__METHOD__." is called for testing purposes.");
+            }
+        };
+
+        $dialog->proceed($this->buildUpdateOfRandomType());
+
+        $this->expectException(\LogicException::class);
+        $dialog->proceed($this->buildUpdateOfRandomType());
     }
 }

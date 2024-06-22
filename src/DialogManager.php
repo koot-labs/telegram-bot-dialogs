@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace KootLabs\TelegramBotDialogs;
 
 use KootLabs\TelegramBotDialogs\Exceptions\ControlFlow\SwitchToAnotherDialog;
+use KootLabs\TelegramBotDialogs\Exceptions\ControlFlow\SwitchToAnotherStep;
 use KootLabs\TelegramBotDialogs\Objects\BotInitiatedUpdate;
 use Telegram\Bot\Api;
 use Telegram\Bot\Objects\Update;
@@ -84,6 +85,8 @@ final class DialogManager
         }
 
         try {
+            $dialog->proceed($update);
+        } catch (SwitchToAnotherStep $exception) {
             $dialog->proceed($update);
         } catch (SwitchToAnotherDialog $exception) {
             $this->forgetDialogState($dialog);

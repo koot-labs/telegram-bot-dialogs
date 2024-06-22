@@ -7,6 +7,7 @@ namespace KootLabs\TelegramBotDialogs;
 use Illuminate\Support\Collection;
 use KootLabs\TelegramBotDialogs\Exceptions\InvalidDialogStep;
 use KootLabs\TelegramBotDialogs\Exceptions\UnexpectedUpdateType;
+use KootLabs\TelegramBotDialogs\Exceptions\ControlFlow\SwitchToAnotherStep;
 use Telegram\Bot\Api;
 use Telegram\Bot\Objects\Update;
 
@@ -180,7 +181,10 @@ abstract class Dialog
         // override the method to add your logic here
     }
 
-    /** Jump to the particular step of the Dialog. */
+    /**
+     * Jump to the particular step of the Dialog.
+     * This step will be executed in the next proceed iteration.
+     */
     final protected function jump(string $stepName): void
     {
         foreach ($this->steps as $index => $value) {
@@ -191,10 +195,30 @@ abstract class Dialog
         }
     }
 
-    /** Move Dialog’s cursor to the end. */
+    /**
+     * Switch to the particular step of the Dialog.
+     * This step will be executed at once with new proceed iteration.
+     */
+    final protected function switch(string $stepName): void
+    {
+        foreach ($this->steps as $index => $value) {
+            if ($value === $stepName || (is_array($value) && $value['name'] === $stepName)) {
+                $this->next = $index;
+                throw new SwitchToAnotherStep();
+            }
+        }
+    }
+
+    /**
+     * Move Dialog’s cursor to the end.
+     * If called in step, this step and all flow after it will be completed, then dialog will be forgotten.
+     * Works the same if called in last step.
+     */
     final public function end(): void
     {
-        $this->next = count($this->steps);
+        if(!$this->isLastStep()) {
+            $this->next = count($this->steps);
+        }
     }
 
     /**
@@ -274,6 +298,10 @@ abstract class Dialog
             }
 
             $this->bot->sendMessage($params);
+        }
+
+        if (! empty($stepConfig['switch'])) {
+            $this->switch($stepConfig['switch']);
         }
 
         if (! empty($stepConfig['jump'])) {

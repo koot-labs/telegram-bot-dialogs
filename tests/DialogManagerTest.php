@@ -85,17 +85,13 @@ final class DialogManagerTest extends TestCase
     }
 
     #[Test]
-    public function it_throws_custom_exception_when_afterLastStep_called_in_dialog_end(): void
+    public function it_throws_custom_exception_when_switch_to_another_step(): void
     {
         $dialogManager = $this->instantiateDialogManager();
         $dialog = new PassiveTestDialog(self::RANDOM_CHAT_ID);
 
         $dialogManager->activate($dialog);
-        $dialog->proceed(new Update(['message' => ['chat' => ['id' => self::RANDOM_CHAT_ID]]]));
-        $dialog->proceed(new Update(['message' => ['chat' => ['id' => self::RANDOM_CHAT_ID]]]));
-
         $this->expectException(\LogicException::class);
-
         $dialog->proceed(new Update(['message' => ['chat' => ['id' => self::RANDOM_CHAT_ID]]]));
     }
 }
