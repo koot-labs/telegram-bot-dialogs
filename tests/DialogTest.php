@@ -124,25 +124,18 @@ final class DialogTest extends TestCase
         $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {
             protected array $steps = ['step1', 'step2', 'step3'];
 
-            public function step1(): void
-            {
-                return;
-            }
+            public function step1(): void {}
 
-            public function step2(): void
-            {
-                return;
-            }
+            public function step2(): void {}
 
             public function step3(): void
             {
                 $this->nextStep("step2");
-                return;
             }
 
             protected function afterLastStep(Update $update): void
             {
-                throw new \LogicException(__METHOD__." is called for testing purposes.");
+                throw new \LogicException(__METHOD__ . " is called for testing purposes.");
             }
         };
 
@@ -159,20 +152,16 @@ final class DialogTest extends TestCase
         $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {
             protected array $steps = ['step1', 'step2'];
 
-            public function step1(): void
-            {
-                return;
-            }
+            public function step1(): void {}
 
             public function step2(): void
             {
                 $this->end();
-                return;
             }
 
             protected function afterLastStep(Update $update): void
             {
-                throw new \LogicException(__METHOD__." is called for testing purposes.");
+                throw new \LogicException(__METHOD__ . " is called for testing purposes.");
             }
         };
 

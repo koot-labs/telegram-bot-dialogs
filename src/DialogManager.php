@@ -41,9 +41,7 @@ final class DialogManager
         $this->storeDialogState($dialog);
     }
 
-    /**
-     * @api Remove current active Dialog from a Storage.
-     */
+    /** @api Remove the current active Dialog from a Storage. */
     public function forgetActiveDialog(Update $update): void
     {
         $dialog = $this->getDialogInstance($update);
@@ -105,13 +103,13 @@ final class DialogManager
     /** @return non-empty-string|null */
     private function findDialogKeyForStore(Update $update): ?string
     {
-        //As for 1-1 personal chat and multi-user chat, where bot should treat all users messages as one dialog
+        // As for 1-1 personal chat and multi-user chat, where bot should treat all users messages as one dialog
         $chatBoundedDialogKey = $this->generateDialogKey($update->getChat()->id);
         if ($this->repository->has($chatBoundedDialogKey)) {
             return $chatBoundedDialogKey;
         }
 
-        //As for multi-user chat, where bot should treat all messages of every user as separate dialog
+        // As for multi-user chat, where bot should treat all messages of every user as separate dialog
         $userBoundedDialogKey = $this->generateDialogKey($update->getChat()->id, $update->getMessage()->from->id);
         if ($this->repository->has($userBoundedDialogKey)) {
             return $userBoundedDialogKey;

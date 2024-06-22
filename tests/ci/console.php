@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Support\Facades\Artisan;
 use KootLabs\TelegramBotDialogs\DialogManager;
 use KootLabs\TelegramBotDialogs\Dialogs\HelloExampleDialog;
@@ -7,7 +9,7 @@ use Telegram\Bot\BotsManager;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
 Artisan::command('telegram:dialog:test {ttl=10}', function (DialogManager $dialogs, BotsManager $botsManager, int $ttl): void {
-    $this->info("Listening for Telegram Bot updates for $ttl seconds...");
+    $this->info("Listening for Telegram Bot updates for {$ttl} seconds...");
 
     $end = microtime(true) + $ttl;
 

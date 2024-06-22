@@ -52,7 +52,7 @@ final class HelloExampleDialog extends Dialog
 
         $this->bot->answerCallbackQuery(['callback_query_id' => $update->callbackQuery->id, 'cache_time' => 2]);
 
-        $userMood = substr($update->callbackQuery->data, strlen('MOOD:'));
+        $userMood = mb_substr($update->callbackQuery->data, mb_strlen('MOOD:'));
         $this->memory->put('userMood', $userMood);
 
         $this->bot->sendMessage([

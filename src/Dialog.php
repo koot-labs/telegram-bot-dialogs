@@ -22,7 +22,7 @@ abstract class Dialog
     /**
      * @readonly
      * @var int|null id of the User the Dialog is bounded to.
-     * Should be set only for multi-user chat dialogs, where bot should treat messages of every user as separate dialog.
+     *               Should be set only for multi-user chat dialogs, where bot should treat messages of every user as a separate dialog.
      */
     protected ?int $user_id = null;
 

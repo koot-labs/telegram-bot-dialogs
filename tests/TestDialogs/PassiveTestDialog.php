@@ -14,27 +14,26 @@ use Telegram\Bot\Objects\Update;
  */
 final class PassiveTestDialog extends Dialog
 {
-    /** @var list<string> List of method to execute. The order defines the sequence */
+    /** @var list<string|array{name: string, switch: string}> List of method to execute. The order defines the sequence */
     protected array $steps = [
         [
             'name' => 'step1',
             'switch' => 'step2',
         ],
-        'step2', 'step3', 'step4'];
+        'step2',
+        'step3',
+        'step4',
+    ];
 
     public function step2(Update $update): void
     {
         $this->switch("step4");
-        return;
     }
 
-    public function step3(Update $update): void
-    {
-        return;
-    }
+    public function step3(Update $update): void {}
 
     public function step4(Update $update): void
     {
-        throw new \LogicException(__METHOD__." is called for testing purposes.");
+        throw new \LogicException(__METHOD__ . " is called for testing purposes.");
     }
 }
