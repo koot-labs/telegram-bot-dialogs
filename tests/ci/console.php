@@ -19,15 +19,20 @@ Artisan::command('telegram:dialog:test {ttl=10}', function (DialogManager $dialo
 
         /** @var \Telegram\Bot\Objects\Update $update */
         foreach ($updates as $update) {
+            $chatId = $update->getChat()->get('id');
+            if (! is_int($chatId)) {
+                continue; // unprocessable Update instance
+            }
+
             if ($dialogs->exists($update)) {
                 $dialogs->proceed($update);
             } elseif (str_contains($update->getMessage()?->text, 'hello bot') || $update->getMessage()?->text === '/start') {
-                $dialog = new HelloExampleDialog($update->getChat()->id);
+                $dialog = new HelloExampleDialog($chatId);
                 $dialogs->activate($dialog);
                 $dialogs->proceed($update);
             } else {
                 $botsManager->sendMessage([ // fallback message
-                    'chat_id' => $update->getChat()->id,
+                    'chat_id' => $chatId,
                     'text' => 'There is no active dialog at this moment. You can also start a new dialog by typing <code>hello bot</code> in the chat.',
                     'parse_mode' => 'HTML',
                 ]);
