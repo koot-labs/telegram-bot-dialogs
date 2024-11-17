@@ -103,11 +103,9 @@ final class DialogManager
     /** @return non-empty-string|null */
     private function findDialogKeyForStore(Update $update): ?string
     {
-        if (! $update->getChat()->has('id'))
-        {
-            return null;
-        } else {
-            $chatId = $update->getChat()->get('id');
+        $chatId = $update->getChat()->get('id');
+        if (! is_int($chatId)) {
+            return null; // Chat id is not available in the Update
         }
 
         // As for 1-1 personal chat and multi-user chat, where bot should treat all users messages as one dialog
