@@ -120,6 +120,7 @@ final class DialogManagerTest extends TestCase
         yield 'callback_query' => ['private/callback_query--data.json'];
         yield 'edited_message' => ['private/edited_message.json'];
         yield 'animation' => ['private/message--animation.json'];
+        yield 'article-chosen' => ['private/message--article-chosen.json'];
         yield 'audio' => ['private/message--audio.json'];
         yield 'command' => ['private/message--command.json'];
         yield 'contact' => ['private/message--contact.json'];
@@ -137,6 +138,9 @@ final class DialogManagerTest extends TestCase
         yield 'video' => ['private/message--video.json'];
         yield 'video_note' => ['private/message--video_note.json'];
         yield 'voice' => ['private/message--voice.json'];
+        yield 'bot-restarted' => ['private/my_chat_member--bot-restarted.json'];
+        yield 'bot-kicked' => ['private/my_chat_member--kicked.json'];
+        yield 'bot-unkicked' => ['private/my_chat_member--unkicked.json'];
     }
 
     private function createUpdateFromFixture(string $relativeFilepath): Update
