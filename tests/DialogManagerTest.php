@@ -9,6 +9,7 @@ use KootLabs\TelegramBotDialogs\DialogRepository;
 use KootLabs\TelegramBotDialogs\Dialogs\HelloExampleDialog;
 use KootLabs\TelegramBotDialogs\Tests\TestDialogs\PassiveTestDialog;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Psr16Cache;
@@ -93,5 +94,53 @@ final class DialogManagerTest extends TestCase
         $dialogManager->activate($dialog);
         $this->expectException(\LogicException::class);
         $dialog->proceed(new Update(['message' => ['chat' => ['id' => self::RANDOM_CHAT_ID]]]));
+    }
+
+    #[Test]
+    #[DataProvider('privateChatUpdatesWithExtractableChatIdProvider')]
+    public function it_founds_dialog_for_appropriate_private_chat_updates(string $fixtureFilePathForFollowingUpUpdate): void
+    {
+        $dialogManager = $this->instantiateDialogManager();
+        $initialUpdate = $this->createUpdateFromFixture('private/message--text.json');
+        $followingUpUpdate = $this->createUpdateFromFixture($fixtureFilePathForFollowingUpUpdate);
+        $dialog = new PassiveTestDialog($initialUpdate->getChat()->id);
+        $dialogManager->activate($dialog);
+
+        $dialogIsFound = $dialogManager->exists($followingUpUpdate);
+
+        $this->assertTrue($dialogIsFound);
+    }
+
+    /** @return \Generator<non-empty-string, array{0: non-empty-string}> */
+    public static function privateChatUpdatesWithExtractableChatIdProvider(): \Generator
+    {
+        yield 'callback_query' => ['private/callback_query--data.json'];
+        yield 'edited_message' => ['private/edited_message.json'];
+        yield 'animation' => ['private/message--animation.json'];
+        yield 'audio' => ['private/message--audio.json'];
+        yield 'command' => ['private/message--command.json'];
+        yield 'contact' => ['private/message--contact.json'];
+        yield 'document' => ['private/message--document.json'];
+        yield 'emoji' => ['private/message--emoji.json'];
+        yield 'location' => ['private/message--location.json'];
+        yield 'location_live_0' => ['private/message--location_live_0.json'];
+        yield 'location_live_1' => ['private/message--location_live_1.json'];
+        yield 'photo' => ['private/message--photo.json'];
+        yield 'poll' => ['private/message--poll.json'];
+        yield 'sticker' => ['private/message--sticker.json'];
+        yield 'text' => ['private/message--text.json'];
+        yield 'reply' => ['private/message--text-with-reply.json'];
+        yield 'venue' => ['private/message--venue.json'];
+        yield 'video' => ['private/message--video.json'];
+        yield 'video_note' => ['private/message--video_note.json'];
+        yield 'voice' => ['private/message--voice.json'];
+    }
+
+    private function createUpdateFromFixture(string $relativeFilepath): Update
+    {
+        $fixture = file_get_contents(__DIR__ . "/_fixtures/{$relativeFilepath}");
+        $fixture = json_decode($fixture, true, 512, \JSON_THROW_ON_ERROR);
+
+        return new Update($fixture);
     }
 }

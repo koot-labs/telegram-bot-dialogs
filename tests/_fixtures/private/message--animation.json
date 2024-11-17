@@ -1,0 +1,43 @@
+{
+    "update_id": 276740240,
+    "message": {
+        "message_id": 100,
+        "from": {
+            "id": 4444,
+            "is_bot": false,
+            "first_name": "Firstname",
+            "last_name": "Lastname",
+            "language_code": "en"
+        },
+        "chat": {
+            "id": 4444,
+            "first_name": "Firstname",
+            "last_name": "Lastname",
+            "type": "private"
+        },
+        "date": 1663189200,
+        "animation": {
+            "file_name": "teddy-hug.mp4",
+            "mime_type": "video/mp4",
+            "duration": 4,
+            "width": 232,
+            "height": 232,
+            "file_id": "CgACAgQAAxkBAAIKxWLCAt-3fU1Xn0OCezIjmpAMhsPMAAIIAwACqw4dUzgVFjQdT4IvKQQ",
+            "file_unique_id": "AgADCAMAAqsOHVM",
+            "file_size": 109962
+        },
+        "document": {
+            "file_name": "teddy-hug.mp4",
+            "mime_type": "video/mp4",
+            "file_id": "CgACAgQAAxkBAAIKxWLCAt-3fU1Xn0OCezIjmpAMhsPMAAIIAwACqw4dUzgVFjQdT4IvKQQ",
+            "file_unique_id": "AgADCAMAAqsOHVM",
+            "file_size": 109962
+        },
+        "via_bot": {
+            "id": 140267078,
+            "is_bot": true,
+            "first_name": "Tenor GIF Search",
+            "username": "gif"
+        }
+    }
+}

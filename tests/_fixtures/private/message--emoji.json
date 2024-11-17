@@ -1,0 +1,21 @@
+{
+    "update_id": 276740240,
+    "message": {
+        "message_id": 100,
+        "from": {
+            "id": 4444,
+            "is_bot": false,
+            "first_name": "Firstname",
+            "last_name": "Lastname",
+            "language_code": "en"
+        },
+        "chat": {
+            "id": 4444,
+            "first_name": "Firstname",
+            "last_name": "Lastname",
+            "type": "private"
+        },
+        "date": 1663189200,
+        "text": "😇"
+    }
+}

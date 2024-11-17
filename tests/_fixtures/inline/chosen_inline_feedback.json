@@ -1,0 +1,15 @@
+{
+    "update_id": 276740240,
+    "chosen_inline_result": {
+        "from": {
+            "id": 4444,
+            "is_bot": false,
+            "first_name": "Firstname",
+            "last_name": "Lastname",
+            "language_code": "en"
+        },
+        "inline_message_id": "AgAAAIUkAAA6EUp57JGuW7uP5UQ",
+        "query": "Searc",
+        "result_id": "630be93f64670"
+    }
+}

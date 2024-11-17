@@ -1,0 +1,35 @@
+{
+    "update_id": 276740240,
+    "message": {
+        "message_id": 100,
+        "from": {
+            "id": 4444,
+            "is_bot": false,
+            "first_name": "Firstname",
+            "last_name": "Lastname",
+            "language_code": "en"
+        },
+        "chat": {
+            "id": 4444,
+            "first_name": "Firstname",
+            "last_name": "Lastname",
+            "type": "private"
+        },
+        "date": 1663189200,
+        "document": {
+            "file_name": "document.png",
+            "mime_type": "image/png",
+            "thumb": {
+                "file_id": "AAMCAgADGQEAAgrLYsIEq3USDM1Pn9lGmxcmkcD9pOwAAj8dAAKCShBKX8eAwioZOa0BAAdtAAMpBA",
+                "file_unique_id": "AQADPx0AAoJKEEpx",
+                "file_size": 8180,
+                "width": 320,
+                "height": 207
+            },
+            "file_id": "BQACAgIAAxkBAAIKy2LCBKt1EgzNT595RpsXJpHA_aTsAAI_HQACgkoQSl_HgMIqGTmtKQQ",
+            "file_unique_id": "AgADPx0AAoJKEEo",
+            "file_size": 495948
+        },
+        "caption": "Caption"
+    }
+}

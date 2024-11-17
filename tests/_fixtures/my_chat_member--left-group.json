@@ -1,0 +1,38 @@
+{
+    "update_id": 276740005,
+    "my_chat_member": {
+        "chat": {
+            "id": -77777777,
+            "title": "Bots party",
+            "type": "group",
+            "all_members_are_administrators": true
+        },
+        "from": {
+            "id": 4444,
+            "is_bot": false,
+            "first_name": "Firstname",
+            "last_name": "Lastname",
+            "username": "my_username",
+            "language_code": "en"
+        },
+        "date": 1656768003,
+        "old_chat_member": {
+            "user": {
+                "id": 807,
+                "is_bot": true,
+                "first_name": "My Bot",
+                "username": "MyBot"
+            },
+            "status": "member"
+        },
+        "new_chat_member": {
+            "user": {
+                "id": 807,
+                "is_bot": true,
+                "first_name": "My Bot",
+                "username": "MyBot"
+            },
+            "status": "left"
+        }
+    }
+}

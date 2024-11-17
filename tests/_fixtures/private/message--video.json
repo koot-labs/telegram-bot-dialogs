@@ -1,0 +1,38 @@
+{
+    "update_id": 276740240,
+    "message": {
+        "message_id": 100,
+        "from": {
+            "id": 4444,
+            "is_bot": false,
+            "first_name": "Firstname",
+            "last_name": "Lastname",
+            "language_code": "en"
+        },
+        "chat": {
+            "id": 4444,
+            "first_name": "Firstname",
+            "last_name": "Lastname",
+            "type": "private"
+        },
+        "date": 1663189200,
+        "video": {
+            "duration": 2,
+            "width": 3840,
+            "height": 2160,
+            "file_name": "IMG_0000.mp4",
+            "mime_type": "video/mp4",
+            "thumb": {
+                "file_id": "AAMCAgADGQEBBgrbYsIS60VIFTIkOCMzt9aHq_hVzi0AAl8dAAKCShBKQg-x23bqkREBAAdtAAMpBA",
+                "file_unique_id": "AQADXx0AAoJKEEpy",
+                "file_size": 5500,
+                "width": 320,
+                "height": 180
+            },
+            "file_id": "BAACAgIAAxkBAAIK00LCEutFSBUyJDgjM7fWh6v4Vc4tAAJfHQACgkoQSkIPsdt26pERKQQ",
+            "file_unique_id": "AgADXx0AAoJKEEo",
+            "file_size": 9157483
+        },
+        "caption": "Caption"
+    }
+}

@@ -1,0 +1,38 @@
+{
+    "update_id": 276740240,
+    "message": {
+        "message_id": 100,
+        "from": {
+            "id": 4444,
+            "is_bot": false,
+            "first_name": "Firstname",
+            "last_name": "Lastname",
+            "language_code": "en"
+        },
+        "chat": {
+            "id": 4444,
+            "first_name": "Firstname",
+            "last_name": "Lastname",
+            "type": "private"
+        },
+        "date": 1663189200,
+        "sticker": {
+            "width": 512,
+            "height": 512,
+            "emoji": "🤩",
+            "set_name": "DoctorBubonic",
+            "is_animated": true,
+            "is_video": false,
+            "thumb": {
+                "file_id": "AAMCAgADGQEAAgrJYsID63kEXWpQDLkbfdDTAAF3IhbBAAIVAQACIjeOBMdrvao0Qs8AAQEAB20AAykE",
+                "file_unique_id": "AQADFQEAAiI3jgRy",
+                "file_size": 5508,
+                "width": 128,
+                "height": 128
+            },
+            "file_id": "CAACAgIAAxkBAAIKyWLCA-t5BF1qUAy5G33Q0wABdyIWwQACFQEAAiI3jgTHa72qNELPAAEpBA",
+            "file_unique_id": "AgADFQEAAiI3jgQ",
+            "file_size": 16223
+        }
+    }
+}

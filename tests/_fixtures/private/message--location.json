@@ -1,0 +1,24 @@
+{
+    "update_id": 276741462,
+    "message": {
+        "message_id": 100,
+        "from": {
+            "id": 4444,
+            "is_bot": false,
+            "first_name": "Firstname",
+            "last_name": "Lastname",
+            "language_code": "en"
+        },
+        "chat": {
+            "id": 4444,
+            "first_name": "Firstname",
+            "last_name": "Lastname",
+            "type": "private"
+        },
+        "date": 1660157815,
+        "location": {
+            "latitude": 51.800009,
+            "longitude": 26.500004
+        }
+    }
+}

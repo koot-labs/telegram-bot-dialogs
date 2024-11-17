@@ -1,0 +1,43 @@
+{
+    "update_id": 276740240,
+    "message": {
+        "message_id": 100,
+        "from": {
+            "id": 4444,
+            "is_bot": false,
+            "first_name": "Firstname",
+            "last_name": "Lastname",
+            "language_code": "en"
+        },
+        "chat": {
+            "id": 4444,
+            "first_name": "Firstname",
+            "last_name": "Lastname",
+            "type": "private"
+        },
+        "date": 1663189200,
+        "audio": {
+            "duration": 203,
+            "file_name": "8_Piano_Pieces,_Op_76_8_Capriccio.mp3",
+            "mime_type": "audio/mpeg",
+            "title": "8 Piano Pieces, Op. 76 - 8. Capriccio. Grazioso ed un poco vivace..",
+            "performer": "Johannes Brahms",
+            "thumb": {
+                "file_id": "AAMCBAADGQEAA4pjC9x_cok_p-lg6xf1MiqNKi2b_AACIQQAAiBOnQGblpv2_vGoxgEAB20AAykE",
+                "file_unique_id": "AQADIQQAAiBOnQFy",
+                "file_size": 4772,
+                "width": 100,
+                "height": 100
+            },
+            "file_id": "CQACAgQAAxkBAAOKYwvcf3KJP6fpYOsX9TIqjSotm_wAAiEEAAIgTp0Bm5ab9v7xqMYpBA",
+            "file_unique_id": "AgADIQQAAiBOnQE",
+            "file_size": 3251391
+        },
+        "via_bot": {
+            "id": 214871303,
+            "is_bot": true,
+            "first_name": "Classical Music",
+            "username": "music"
+        }
+    }
+}
