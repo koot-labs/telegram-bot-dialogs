@@ -17,6 +17,18 @@ The Original package [is not maintained anymore](https://github.com/koot-labs/te
 The goal of the fork is to maintain the package compatible with the latest [Telegram Bot API PHP SDK](https://github.com/irazasyed/telegram-bot-sdk),
 PHP 8+ and Laravel features, focus on stability, better DX and readability.
 
+## Scope of the package
+
+Any bot app basically listens to Updates from Telegram API
+(using your webhook endpoint or by pulling these updates on any trigger, e.g. cron) and sends messages back.
+
+This package helps to implement a dialog mode for your bot:
+For a given Update, check whether the Update belongs to an already activated Dialog and if there is, run the next step of the Dialog.
+
+This package doesn't solve the problem to activate Dialogs for a given Update—you need to implement this logic in your app.
+Different apps may have different strategies to activate Dialogs (e.g. by commands, by message content, by user_id, etc.).
+The package provides an API to activate Dialogs and run the next step for the active Dialog.
+
 
 ## Installation
 
@@ -79,8 +91,13 @@ final class HelloDialog extends Dialog
 }
 ```
 
-
 ### 2. Create a Telegram command
+
+> [!IMPORTANT]
+> Note, Telegram command is just one of examples of triggers that can activate Dialog.
+> You can use any other trigger to activate Dialog (e.g. by message content, by user_id, etc.).
+> If a user already initiated a chat with your bot,
+> you can activate a Dialog anytime from your server (e.g. by cron), see `\KootLabs\TelegramBotDialogs\Objects\BotInitiatedUpdate`.
 
 To initiate a dialog please use `DialogManager` (or, if you use Laravel, `Dialogs` Facade) — it will care about storing and recovering `Dialog` instance state between steps/requests.
 To execute the first and next steps please call `Dialogs::proceed()` method with update object as an argument.
