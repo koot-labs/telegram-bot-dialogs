@@ -103,14 +103,28 @@ final class DialogManager
     /** @return non-empty-string|null */
     private function findDialogKeyForStore(Update $update): ?string
     {
+        if (! $update->getChat()->has('id'))
+        {
+            return null;
+        } else {
+            $chatId = $update->getChat()->get('id');
+        }
+
         // As for 1-1 personal chat and multi-user chat, where bot should treat all users messages as one dialog
-        $chatBoundedDialogKey = $this->generateDialogKey($update->getChat()->id);
+        $chatBoundedDialogKey = $this->generateDialogKey($chatId);
         if ($this->repository->has($chatBoundedDialogKey)) {
             return $chatBoundedDialogKey;
         }
 
+        if (! $update->getMessage()->has('from'))
+        {
+            return null;
+        } else {
+            $userId = $update->getMessage()->get('from')->get('id');
+        }
+
         // As for multi-user chat, where bot should treat all messages of every user as separate dialog
-        $userBoundedDialogKey = $this->generateDialogKey($update->getChat()->id, $update->getMessage()->from->id);
+        $userBoundedDialogKey = $this->generateDialogKey($chatId, $userId);
         if ($this->repository->has($userBoundedDialogKey)) {
             return $userBoundedDialogKey;
         }
