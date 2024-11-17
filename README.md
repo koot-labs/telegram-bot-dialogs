@@ -13,7 +13,7 @@ The extension for [Telegram Bot API PHP SDK](https://github.com/irazasyed/telegr
 
 ## About this fork
 
-Original package is not maintained anymore and does not support Telegram Bot API PHP SDK v3.
+The Original package [is not maintained anymore](https://github.com/koot-labs/telegram-bot-dialogs/commit/e9c7667e56e419a7053125b40c473ce4b8d7f9c8) and does not support Telegram Bot API PHP SDK v3.
 The goal of the fork is to maintain the package compatible with the latest [Telegram Bot API PHP SDK](https://github.com/irazasyed/telegram-bot-sdk),
 PHP 8+ and Laravel features, focus on stability, better DX and readability.
 
@@ -25,22 +25,25 @@ You can install the package via Composer:
 ```shell
 composer require koot-labs/telegram-bot-dialogs
 ```
-The package will automatically register itself.
 
-You can publish the config file with:
-```shell
-php artisan vendor:publish --tag="telegram-config"
-```
-It will create `config/telegram.php` file that uses the following env variables:
- - `TELEGRAM_DIALOGS_CACHE_DRIVER`: `database` is default value
- - `TELEGRAM_DIALOGS_CACHE_PREFIX`: `tg_dialog_` is default value
+### Laravel
+While this [**package is framework-agnostic**](./docs/using-without-framework.md):
+there are some additional features for Laravel.
 
+1. It automatically registers the service provider `\KootLabs\TelegramBotDialogs\Laravel\DialogsServiceProvider`
+2. You can publish the config file with:
+    ```shell
+    php artisan vendor:publish --tag="telegram-config"
+    ```
+    It will create `config/telegram.php` file that uses the following env variables:
+     - `TELEGRAM_DIALOGS_CACHE_DRIVER`: `database` is default value
+     - `TELEGRAM_DIALOGS_CACHE_PREFIX`: `tg_dialog_` is default value
 
 ## Usage
 
 1. Create a Dialog class
 2. [Create a Telegram command](https://telegram-bot-sdk.com/docs/guides/commands-system) to activate Dialog from the Command.
-3. Setup your controller class to proceed active Dialog on income webhook request.
+3. Setup your controller class to process active Dialog on income webhook request.
 
 
 ### 1. Create a Dialog class
@@ -159,7 +162,7 @@ Tasks to do for v1.0:
 - [x] Add documentation and examples
 - [x] Support for channel bots
 - [ ] Improve test coverage
-- [ ] Improve developer experience (cleaner API (similar method in Dialog and DialogManager))
+- [ ] Improve developer experience (cleaner API (similar method in `Dialog` and `DialogManager`))
 - [ ] Reach message type validation
 - [ ] Reach API to validate message types and content
 - [ ] Support `\Iterator`s and/or `\Generator`s for Dialog steps
@@ -167,7 +170,7 @@ Tasks to do for v1.0:
 
 ## Backward compatibility promise
 
-Dialogs package uses [Semver 2.0](https://semver.org/). This means that versions are tagged with MAJOR.MINOR.PATCH.
+The package uses [Semver 2.0](https://semver.org/). This means that versions are tagged with MAJOR.MINOR.PATCH.
 Only a new major version will be allowed to break backward compatibility (BC).
 
 Classes marked as `@experimental` or `@internal` are not included in our backward compatibility promise.
@@ -175,4 +178,4 @@ You are also not guaranteed that the value returned from a method is always the 
 You are guaranteed that the data type will not change.
 
 PHP 8 introduced [named arguments](https://wiki.php.net/rfc/named_params), which increased the cost and reduces flexibility for package maintainers.
-The names of the arguments for methods in Dialogs is not included in our BC promise.
+The names of the arguments for methods in the package are not included in our BC promise.
