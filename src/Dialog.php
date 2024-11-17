@@ -226,7 +226,7 @@ abstract class Dialog
      */
     final public function end(): void
     {
-        if(!$this->isLastStep()) {
+        if (!$this->isLastStep()) {
             $this->next = count($this->steps);
         }
     }

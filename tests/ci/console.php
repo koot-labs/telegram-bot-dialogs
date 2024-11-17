@@ -13,7 +13,7 @@ Artisan::command('telegram:dialog:test {ttl=10}', function (DialogManager $dialo
 
     $end = microtime(true) + $ttl;
 
-    while(microtime(true) < $end) {
+    while (microtime(true) < $end) {
         $updates = Telegram::commandsHandler();
         $updates = is_array($updates) ? $updates : [$updates];
 
