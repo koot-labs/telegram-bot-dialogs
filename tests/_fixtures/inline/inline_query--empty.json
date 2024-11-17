@@ -1,0 +1,16 @@
+{
+    "update_id": 276740240,
+    "inline_query": {
+        "id": "8739816971774219999",
+        "from": {
+            "id": 4444,
+            "is_bot": false,
+            "first_name": "Firstname",
+            "last_name": "Lastname",
+            "language_code": "en"
+        },
+        "chat_type": "group",
+        "query": "",
+        "offset": ""
+    }
+}

@@ -1,0 +1,43 @@
+{
+    "update_id": 276740240,
+    "callback_query": {
+        "id": 101,
+        "from": {
+            "id": 4444,
+            "is_bot": false,
+            "first_name": "Firstname",
+            "last_name": "Lastname",
+            "language_code": "en"
+        },
+        "message": {
+            "message_id": 100,
+            "from": {
+                "id": 807,
+                "is_bot": true,
+                "first_name": "My Bot",
+                "username": "MyBot"
+            },
+            "chat": {
+                "id": 4444,
+                "first_name": "Firstname",
+                "last_name": "Lastname",
+                "type": "private"
+            },
+            "date": 1663189200,
+            "text": "Welcome onboard! Do you need any help?",
+            "reply_markup": {
+                "inline_keyboard": [
+                    [
+                        {
+                            "text": "Show help",
+                            "callback_data": "show_help"
+                        }
+                    ]
+                ]
+            },
+            "has_protected_content": true
+        },
+        "chat_instance": "518754671600000000",
+        "data": "show_help"
+    }
+}

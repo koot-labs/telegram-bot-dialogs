@@ -1,0 +1,39 @@
+{
+    "update_id": 276740240,
+    "message": {
+        "message_id": 100,
+        "from": {
+            "id": 4444,
+            "is_bot": false,
+            "first_name": "Firstname",
+            "last_name": "Lastname",
+            "language_code": "en"
+        },
+        "chat": {
+            "id": 4444,
+            "first_name": "Firstname",
+            "last_name": "Lastname",
+            "type": "private"
+        },
+        "date": 1663189200,
+        "poll": {
+            "id": "5336847480640241840",
+            "question": "How are you?",
+            "options": [
+                {
+                    "text": "OK",
+                    "voter_count": 0
+                },
+                {
+                    "text": "Fine",
+                    "voter_count": 0
+                }
+            ],
+            "total_voter_count": 0,
+            "is_closed": false,
+            "is_anonymous": true,
+            "type": "regular",
+            "allows_multiple_answers": false
+        }
+    }
+}

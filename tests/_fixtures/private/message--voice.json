@@ -1,0 +1,27 @@
+{
+    "update_id": 276740240,
+    "message": {
+        "message_id": 100,
+        "from": {
+            "id": 4444,
+            "is_bot": false,
+            "first_name": "Firstname",
+            "last_name": "Lastname",
+            "language_code": "en"
+        },
+        "chat": {
+            "id": 4444,
+            "first_name": "Firstname",
+            "last_name": "Lastname",
+            "type": "private"
+        },
+        "date": 1663189200,
+        "voice": {
+            "duration": 1,
+            "mime_type": "audio/ogg",
+            "file_id": "AwACAgIBBxkBAAIK42LCE9NGkLsKaqU1DNtwDNHp1CggAAJlHQACgkoQSiE9vwrzXYIlKQQ",
+            "file_unique_id": "AgADZR0BBoJKEEo",
+            "file_size": 7966
+        }
+    }
+}
