@@ -19,24 +19,29 @@ Artisan::command('telegram:dialog:test {ttl=10}', function (DialogManager $dialo
 
         /** @var \Telegram\Bot\Objects\Update $update */
         foreach ($updates as $update) {
-            $chatId = $update->getChat()->get('id');
-            if (! is_int($chatId)) {
-                continue; // unprocessable Update instance
-            }
-
+            // 1. continue active Dialog (if any)
             if ($dialogs->exists($update)) {
                 $dialogs->proceed($update);
-            } elseif (str_contains($update->getMessage()?->text, 'hello bot') || $update->getMessage()?->text === '/start') {
+                continue;
+            }
+
+            $chatId = $update->getChat()->get('id');
+            $message = $update->getMessage();
+
+            // 2. start new Dialog (if activation triggered)
+            if ($message instanceof \Telegram\Bot\Objects\Message && ($message->text === '/start' || str_contains($message->text, 'hello bot'))) {
                 $dialog = new HelloExampleDialog($chatId);
                 $dialogs->activate($dialog);
                 $dialogs->proceed($update);
-            } else {
-                $botsManager->sendMessage([ // fallback message
-                    'chat_id' => $chatId,
-                    'text' => 'There is no active dialog at this moment. You can also start a new dialog by typing <code>hello bot</code> in the chat.',
-                    'parse_mode' => 'HTML',
-                ]);
+                continue;
             }
+
+            // 3. send fallback message (it throws an exception if a user blocked/kicked the bot)
+            $botsManager->sendMessage([ // fallback message
+                'chat_id' => $chatId,
+                'text' => 'There is no active dialog at this moment. You can also start a new dialog by typing <code>hello bot</code> in the chat.',
+                'parse_mode' => 'HTML',
+            ]);
         }
 
         // Sleep for 0.2 seconds to prevent the loop from running too fast
