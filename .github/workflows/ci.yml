@@ -41,7 +41,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           extensions: ${{ env.extensions }}
-          coverage: none
+          coverage: pcov
 
       - name: Install composer dependencies
         uses: ramsey/composer-install@v3
@@ -49,4 +49,11 @@ jobs:
           composer-options: "--prefer-dist --no-scripts"
 
       - name: Execute PHP tests
-        run: composer test
+        run: composer test -- --coverage-clover=coverage.xml
+
+      - name: Send PHP code coverage report to Codecov.io
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: phpunit

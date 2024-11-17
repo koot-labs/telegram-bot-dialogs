@@ -11,12 +11,15 @@ use KootLabs\TelegramBotDialogs\Tests\TestDialogs\PassiveTestDialog;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\UsesClass;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Psr16Cache;
 use Telegram\Bot\Api;
 use Telegram\Bot\Objects\Update;
 
 #[CoversClass(\KootLabs\TelegramBotDialogs\DialogManager::class)]
+#[UsesClass(\KootLabs\TelegramBotDialogs\Dialog::class)]
+#[UsesClass(\KootLabs\TelegramBotDialogs\DialogRepository::class)]
 final class DialogManagerTest extends TestCase
 {
     private const RANDOM_CHAT_ID = 42;

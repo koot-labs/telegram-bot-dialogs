@@ -11,6 +11,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Telegram\Bot\Objects\Update;
 
 #[CoversClass(\KootLabs\TelegramBotDialogs\Dialog::class)]
+#[CoversClass(\KootLabs\TelegramBotDialogs\Dialogs\HelloExampleDialog::class)]
 final class DialogSerializationTest extends TestCase
 {
     use FakeBot;
