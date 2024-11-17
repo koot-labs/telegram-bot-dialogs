@@ -14,7 +14,7 @@ use Telegram\Bot\Objects\Update;
  */
 final class PassiveTestDialog extends Dialog
 {
-    /** @var list<string|array{name: string, switch: string}> List of method to execute. The order defines the sequence */
+    /** @var list<non-empty-string|array{name: string, switch: non-empty-string}> List of method to execute. The order defines the sequence */
     protected array $steps = [
         [
             'name' => 'step1',

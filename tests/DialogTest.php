@@ -23,6 +23,7 @@ final class DialogTest extends TestCase
     public function it_end_after_process_of_a_single_step_dialog(): void
     {
         $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {
+            /** @var list<non-empty-string> */
             protected array $steps = ['existingMethod'];
 
             public function existingMethod(): void {}
@@ -37,6 +38,7 @@ final class DialogTest extends TestCase
     public function it_end_after_process_of_a_multi_step_dialog(): void
     {
         $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {
+            /** @var list<non-empty-string> */
             protected array $steps = ['existingMethodA', 'existingMethodB'];
 
             public function existingMethodA(): void {}
@@ -54,6 +56,7 @@ final class DialogTest extends TestCase
     public function it_throws_custom_exception_when_method_not_defined(): void
     {
         $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {
+            /** @var list<non-empty-string> */
             protected array $steps = ['unknownMethodName'];
         };
 
@@ -66,6 +69,7 @@ final class DialogTest extends TestCase
     public function it_throws_custom_exception_when_method_not_defined_even_if_magic_call_defined(): void
     {
         $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {
+            /** @var list<non-empty-string> */
             protected array $steps = ['unknownMethodName'];
 
             public function __call(string $method, array $args) {}
@@ -80,6 +84,7 @@ final class DialogTest extends TestCase
     public function it_can_store_variables_between_steps(): void
     {
         $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {
+            /** @var list<non-empty-string> */
             protected array $steps = ['step1', 'step2'];
 
             public function step1(): void
@@ -102,6 +107,8 @@ final class DialogTest extends TestCase
     {
         $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {
             public int $count = 0;
+
+            /** @var list<non-empty-string> */
             protected array $steps = ['step1'];
 
             public function step1(): void
@@ -122,6 +129,7 @@ final class DialogTest extends TestCase
     public function it_throws_custom_exception_when_afterLastStep_called_in_dialog_end(): void
     {
         $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {
+            /** @var list<non-empty-string> */
             protected array $steps = ['step1', 'step2', 'step3'];
 
             public function step1(): void {}
@@ -150,6 +158,7 @@ final class DialogTest extends TestCase
     public function it_throws_custom_exception_when_afterLastStep_called_when_end_is_called_in_the_last_step(): void
     {
         $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {
+            /** @var list<non-empty-string> */
             protected array $steps = ['step1', 'step2'];
 
             public function step1(): void {}
