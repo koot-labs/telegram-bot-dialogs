@@ -103,11 +103,10 @@ final class DialogManager
     /** @return non-empty-string|null */
     private function findDialogKeyForStore(Update $update): ?string
     {
-        if (! $update->getChat()->has('id'))
-        {
+        $chatId = $update->getChat()->get('id');
+        if (! is_int($chatId)) {
+            // Update doesn't have a Chat ID, so it's not possible to find a Dialog.
             return null;
-        } else {
-            $chatId = $update->getChat()->get('id');
         }
 
         // As for 1-1 personal chat and multi-user chat, where bot should treat all users messages as one dialog
@@ -116,14 +115,14 @@ final class DialogManager
             return $chatBoundedDialogKey;
         }
 
-        if (! $update->getMessage()->has('from'))
-        {
+        $message = $update->getMessage();
+        if (! $message instanceof \Telegram\Bot\Objects\Message) {
             return null;
-        } else {
-            $userId = $update->getMessage()->get('from')->get('id');
         }
 
-        // As for multi-user chat, where bot should treat all messages of every user as separate dialog
+        $userId = $message->from?->id;
+
+        // As for multi-user chat, where bot should treat all messages of every user as a separate dialog
         $userBoundedDialogKey = $this->generateDialogKey($chatId, $userId);
         if ($this->repository->has($userBoundedDialogKey)) {
             return $userBoundedDialogKey;
