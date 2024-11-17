@@ -18,8 +18,13 @@ final class DialogRepository
         $this->prefix = $prefix;
     }
 
-    public function put(string $key, Dialog $dialog, \DateTime | int $seconds): void
+    /** Store a Dialog in a cache. */
+    public function put(string $key, Dialog $dialog, \DateTime | \DateInterval | int $seconds): void
     {
+        if ($seconds instanceof \DateTime) {
+            $seconds = max(0, $seconds->getTimestamp() - time());
+        }
+
         $this->cache->set($this->prefixKey($key), serialize($dialog), $seconds);
     }
 
