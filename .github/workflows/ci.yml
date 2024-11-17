@@ -52,6 +52,7 @@ jobs:
         run: composer test -- --coverage-clover=coverage.xml
 
       - name: Send PHP code coverage report to Codecov.io
+        if: ${{ !cancelled() }}
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
