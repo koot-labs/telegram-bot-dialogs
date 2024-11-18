@@ -114,14 +114,12 @@ final class DialogManager
             return $chatBoundedDialogKey;
         }
 
-        if (! $update->getMessage()->has('from'))
-        {
+        $userId = $update->getMessage()->get('from')?->id;
+        if (! is_int($userId)) {
             return null;
-        } else {
-            $userId = $update->getMessage()->get('from')->get('id');
         }
 
-        // As for multi-user chat, where bot should treat all messages of every user as separate dialog
+        // As for multi-user chat, where bot should treat all messages of every user as a separate dialog
         $userBoundedDialogKey = $this->generateDialogKey($chatId, $userId);
         if ($this->repository->has($userBoundedDialogKey)) {
             return $userBoundedDialogKey;
