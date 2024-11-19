@@ -314,8 +314,13 @@ abstract class Dialog
             $this->switch($stepConfig['switch']);
         }
 
+        // @deprecated Use nextStep
         if (! empty($stepConfig['jump'])) {
             $this->nextStep($stepConfig['jump']);
+        }
+
+        if (! empty($stepConfig['nextStep'])) {
+            $this->nextStep($stepConfig['nextStep']);
         }
 
         $this->afterEveryStep($update, $currentStepIndex);
