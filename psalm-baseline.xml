@@ -7,6 +7,9 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[afterAllStep]]></code>
       <code><![CDATA[beforeAllStep]]></code>
+      <code><![CDATA[end]]></code>
+      <code><![CDATA[isEnd]]></code>
+      <code><![CDATA[isStart]]></code>
       <code><![CDATA[proceed]]></code>
     </PossiblyUnusedMethod>
   </file>

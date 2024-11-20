@@ -20,8 +20,8 @@ Artisan::command('telegram:dialog:test {ttl=10}', function (DialogManager $dialo
         /** @var \Telegram\Bot\Objects\Update $update */
         foreach ($updates as $update) {
             // 1. continue active Dialog (if any)
-            if ($dialogs->exists($update)) {
-                $dialogs->proceed($update);
+            if ($dialogs->hasActiveDialog($update)) {
+                $dialogs->processUpdate($update);
                 continue;
             }
 
@@ -32,7 +32,7 @@ Artisan::command('telegram:dialog:test {ttl=10}', function (DialogManager $dialo
             if ($message instanceof \Telegram\Bot\Objects\Message && ($message->text === '/start' || str_contains($message->text, 'hello bot'))) {
                 $dialog = new HelloExampleDialog($chatId);
                 $dialogs->activate($dialog);
-                $dialogs->proceed($update);
+                $dialogs->processUpdate($update);
                 continue;
             }
 

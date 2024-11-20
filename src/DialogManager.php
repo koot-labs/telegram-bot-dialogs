@@ -34,38 +34,54 @@ final class DialogManager
 
     /**
      * @api Activate a new Dialog.
-     * to start it - call {@see \KootLabs\TelegramBotDialogs\DialogManager::proceed}
+     * to start it - call {@see \KootLabs\TelegramBotDialogs\DialogManager::processUpdate}
      */
     public function activate(Dialog $dialog): void
     {
-        $this->storeDialogState($dialog);
+        $this->persistDialog($dialog);
     }
 
     /** @api Remove the current active Dialog from a Storage. */
     public function forgetActiveDialog(Update $update): void
     {
-        $dialog = $this->getDialogInstance($update);
+        $dialog = $this->resolveActiveDialog($update);
         if ($dialog instanceof Dialog) {
-            $this->forgetDialogState($dialog);
+            $this->forgetDialog($dialog);
         }
     }
 
     /**
-     * Initiate a new Dialog from server side (e.g. by cron).
+     * Initiate a new Dialog from the server side (e.g., by cron).
      * Note, a User firstly should start a chat with a bot (bot can't initiate a chat — this is TG Bot API limitation).
      * @api
      * @experimental
      * @throws \Telegram\Bot\Exceptions\TelegramSDKException
      */
-    public function startNewDialogInitiatedByBot(Dialog $dialog): void
+    public function initiateDialog(Dialog $dialog): void
     {
         $this->activate($dialog);
 
-        $this->proceed(new BotInitiatedUpdate($dialog));
+        $this->processUpdate(new BotInitiatedUpdate($dialog));
 
-        $dialog->isEnd()
-            ? $this->forgetDialogState($dialog)
-            : $this->storeDialogState($dialog);
+        $dialog->isComplete()
+            ? $this->forgetDialog($dialog)
+            : $this->persistDialog($dialog);
+    }
+
+    /** @deprecated Replaced by initiateDialog() and will be removed in v1.0 */
+    public function startNewDialogInitiatedByBot(Dialog $dialog): void
+    {
+        $this->initiateDialog($dialog);
+    }
+
+    /**
+     * @deprecated Replaced by processUpdate().
+     * @api
+     * @throws \Telegram\Bot\Exceptions\TelegramSDKException
+     */
+    public function proceed(Update $update): void
+    {
+        $this->processUpdate($update);
     }
 
     /**
@@ -75,9 +91,9 @@ final class DialogManager
      * @throws \Telegram\Bot\Exceptions\TelegramSDKException
      * @api
      */
-    public function proceed(Update $update): void
+    public function processUpdate(Update $update): void
     {
-        $dialog = $this->getDialogInstance($update);
+        $dialog = $this->resolveActiveDialog($update);
         if (! $dialog instanceof Dialog) {
             return;
         }
@@ -87,21 +103,21 @@ final class DialogManager
         } catch (SwitchToAnotherStep $exception) {
             $dialog->executeStep($update);
         } catch (SwitchToAnotherDialog $exception) {
-            $this->forgetDialogState($dialog);
+            $this->forgetDialog($dialog);
             $this->activate($exception->nextDialog);
-            $this->proceed($update);
+            $this->processUpdate($update);
             return;
         }
 
-        if ($dialog->isEnd()) {
-            $this->forgetDialogState($dialog);
+        if ($dialog->isComplete()) {
+            $this->forgetDialog($dialog);
         } else {
-            $this->storeDialogState($dialog);
+            $this->persistDialog($dialog);
         }
     }
 
     /** @return non-empty-string|null */
-    private function findDialogKeyForStore(Update $update): ?string
+    private function resolveDialogKey(Update $update): ?string
     {
         $chatId = $update->getChat()->get('id');
         if (! is_int($chatId)) {
@@ -131,37 +147,46 @@ final class DialogManager
     /** @api Whether an active Dialog exist for a given Update. */
     public function exists(Update $update): bool
     {
-        return is_string($this->findDialogKeyForStore($update));
+        return is_string($this->resolveDialogKey($update));
+    }
+
+    /**
+     * @api Whether an active Dialog exist for a given Update.
+     * Alias for the {@see \KootLabs\TelegramBotDialogs\DialogManager::exists}
+     */
+    public function hasActiveDialog(Update $update): bool
+    {
+        return $this->exists($update);
     }
 
     /** Get instance of the current active Dialog from a Storage. */
-    private function getDialogInstance(Update $update): ?Dialog
+    private function resolveActiveDialog(Update $update): ?Dialog
     {
-        $storeDialogKey = $this->findDialogKeyForStore($update);
+        $storeDialogKey = $this->resolveDialogKey($update);
         if ($storeDialogKey === null) {
             return null;
         }
 
-        $dialog = $this->readDialogState($storeDialogKey);
+        $dialog = $this->retrieveDialog($storeDialogKey);
         $dialog->setBot($this->bot);
 
         return $dialog;
     }
 
     /** Forget Dialog state. */
-    private function forgetDialogState(Dialog $dialog): void
+    private function forgetDialog(Dialog $dialog): void
     {
         $this->repository->forget($this->getDialogKey($dialog));
     }
 
     /** Store all Dialog. */
-    private function storeDialogState(Dialog $dialog): void
+    private function persistDialog(Dialog $dialog): void
     {
         $this->repository->put($this->getDialogKey($dialog), $dialog, $dialog->ttl());
     }
 
     /** Restore Dialog. */
-    private function readDialogState(string $key): Dialog
+    private function retrieveDialog(string $key): Dialog
     {
         return $this->repository->get($key);
     }

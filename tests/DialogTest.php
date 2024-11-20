@@ -31,7 +31,7 @@ final class DialogTest extends TestCase
 
         $dialog->start($this->buildUpdateOfRandomType());
 
-        $this->assertTrue($dialog->isEnd());
+        $this->assertTrue($dialog->isComplete());
     }
 
     #[Test]
@@ -49,7 +49,7 @@ final class DialogTest extends TestCase
         $dialog->start($this->buildUpdateOfRandomType());
         $dialog->executeStep($this->buildUpdateOfRandomType());
 
-        $this->assertTrue($dialog->isEnd());
+        $this->assertTrue($dialog->isComplete());
     }
 
     #[Test]
@@ -165,7 +165,7 @@ final class DialogTest extends TestCase
 
             public function step2(): void
             {
-                $this->end();
+                $this->complete();
             }
 
             protected function afterLastStep(Update $update): void

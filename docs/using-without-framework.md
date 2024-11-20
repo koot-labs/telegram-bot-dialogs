@@ -2,11 +2,12 @@
 
 1. Install the package via composer
 2. Install `symfony/cache` via composer
-3. Install a PSR-16 storage (to store dialog states between requests), for example `composer require symfony/cache`: 
+3. Install a PSR-16 storage (to store dialog states between requests), for example `composer require symfony/cache`:
    - a. If you have Redis installed, you can use File driver (see example below)
    - b. You have Redis installed: See `RedisAdapter` example below
 
 File storage example.
+
 ```php
 use KootLabs\TelegramBotDialogs\DialogManager;
 use KootLabs\TelegramBotDialogs\DialogRepository;
@@ -16,7 +17,7 @@ use Symfony\Component\Cache\Psr16Cache;
 
 require __DIR__.'/vendor/autoload.php';
 
-/** @todo replace by your token, {@see https://core.telegram.org/bots#6-botfather} */ 
+/** @todo replace by your token, {@see https://core.telegram.org/bots#6-botfather} */
 $token = '110201543:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw';
 $bot = new \Telegram\Bot\Api($token);
 
@@ -28,11 +29,11 @@ $updates = $bot->getUpdates(['offset' => $store->get('latest_update_id') + 1]);
 
 foreach ($updates as $update) {
     echo 'Received update: '.$update->update_id.PHP_EOL;
-    if (! $dialogManager->exists($update)) {
+    if (! $dialogManager->hasActiveDialog($update)) {
         $dialog = new HelloExampleDialog($update->getChat()->id, $bot);
         $dialogManager->activate($dialog);
     }
-    $dialogManager->proceed($update);
+    $dialogManager->processUpdate($update);
 }
 
 if (isset($update)) {
@@ -42,7 +43,7 @@ if (isset($update)) {
 }
 ```
 
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > a note for this example: The overhead of filesystem IO (FilesystemAdapter) often makes this adapter one of the slower choices.
 > If throughput is paramount, the in-memory adapters (
 > [Apcu](https://symfony.com/doc/current/components/cache/adapters/apcu_adapter.html#apcu-adapter),

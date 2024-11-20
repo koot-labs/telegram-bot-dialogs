@@ -138,8 +138,8 @@ final class TelegramWebhookController
     {
         $update = $bot->commandsHandler(true);
 
-        $dialogs->exists($update)
-            ? $dialogs->proceed($update) // proceed an active dialog (activated in HelloCommand)
+        $dialogs->hasActiveDialog($update)
+            ? $dialogs->processUpdate($update) // proceed an active dialog (activated in HelloCommand)
             : $botsManager->sendMessage([ // fallback message
                 'chat_id' => $update->getChat()->id,
                 'text' => 'There is no active dialog at this moment. Type /hello to start a new dialog.',
@@ -150,11 +150,31 @@ final class TelegramWebhookController
 
 ### `Dialog` class API
 
-- `isEnd()` - Check the end of the dialog
-- 🔐 `end()` - End dialog
-- 🔐 `nextStep(string $stepName)` - Jump to the particular step, where `$step` is the `public` method name
-- 🔐 `memory` - Laravel Collection to store intermediate data between steps
+```php
+abstract class Dialog
+{
+    // Navigation
+    public function nextStep(string $stepName): void
+    public function switchToStep(string $stepName): void
+    public function complete(): void
 
+    // State Management
+    public function isAtStart(): bool
+    public function isLastStep(): bool
+    public function isComplete(): bool
+
+    // Lifecycle Hooks
+    protected function beforeEveryStep(Update $update, int $stepIndex): void
+    protected function afterEveryStep(Update $update, int $stepIndex): void
+    protected function beforeFirstStep(Update $update): void
+    protected function afterLastStep(Update $update): void
+
+    // Properties Access
+    public function getChatId(): int
+    public function getUserId(): ?int
+    public function ttl(): int
+}
+```
 
 ### `DialogManager` class API
 
@@ -166,10 +186,10 @@ final class TelegramWebhookController
 For Laravel apps, the package provides `Dialogs` Facade, that proxies calls to `DialogManager` class.
 
 `DialogManager` public API:
-- `activate(\KootLabs\TelegramBotDialogs\Dialog $dialog)` - Activate a new Dialog (without running it). The same user/chat may have few open Dialogs, DialogManager should know which one is active.
-- `proceed(\Telegram\Bot\Objects\Update $update)` - Run the next step handler for the active Dialog (if exists)
-- `exists(\Telegram\Bot\Objects\Update $update)` - Check for existing Dialog for a given Update (based on chat_id and optional user_id)
-- `setBot(\Telegram\Bot\Api $bot)` - Use non-default Bot for Telegram Bot API calls
+- `activate(\KootLabs\TelegramBotDialogs\Dialog $dialog)` - Activate a new Dialog (without running it). The same user/chat may have few open Dialogs; DialogManager should know which one is active.
+- `processUpdate(\Telegram\Bot\Objects\Update $update)` - Run the next step handler for the active Dialog (if exists)
+- `hasActiveDialog(\Telegram\Bot\Objects\Update $update)` - Check for existing Dialog for a given Update (based on `chat_id` and optional `user_id`)
+- `setBot(\Telegram\Bot\Api $bot)` - Use non-default Bot for Telegram Bot API calls (useful for multi-bot apps)
 
 
 ## ToDo
@@ -178,8 +198,8 @@ Tasks to do for v1.0:
 
 - [x] Add documentation and examples
 - [x] Support for channel bots
-- [ ] Improve test coverage
-- [ ] Improve developer experience (cleaner API (similar method in `Dialog` and `DialogManager`))
+- [x] Improve test coverage
+- [x] Improve developer experience (cleaner API (similar method in `Dialog` and `DialogManager`))
 - [ ] Reach message type validation
 - [ ] Reach API to validate message types and content
 - [ ] Support `\Iterator`s and/or `\Generator`s for Dialog steps

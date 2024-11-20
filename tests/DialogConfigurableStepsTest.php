@@ -58,9 +58,9 @@ final class DialogConfigurableStepsTest extends TestCase
                 ],
             ];
 
-            protected function afterEveryStep(Update $update, int $step): void
+            protected function afterEveryStep(Update $update, int $stepIndex): void
             {
-                $this->stepsExecuted[] = $step;
+                $this->stepsExecuted[] = $stepIndex;
             }
         };
 
@@ -98,9 +98,9 @@ final class DialogConfigurableStepsTest extends TestCase
                 ],
             ];
 
-            protected function afterEveryStep(Update $update, int $step): void
+            protected function afterEveryStep(Update $update, int $stepIndex): void
             {
-                $this->stepsExecuted[] = $step;
+                $this->stepsExecuted[] = $stepIndex;
             }
         };
 
@@ -129,7 +129,7 @@ final class DialogConfigurableStepsTest extends TestCase
 
         $dialog->executeStep($this->buildUpdateOfRandomType());
 
-        $this->assertTrue($dialog->isEnd());
+        $this->assertTrue($dialog->isComplete());
     }
 
     #[Test]
@@ -147,12 +147,12 @@ final class DialogConfigurableStepsTest extends TestCase
                 ],
             ];
 
-            protected function beforeEveryStep(Update $update, int $step): void
+            protected function beforeEveryStep(Update $update, int $stepIndex): void
             {
                 $this->beforeStepCalled = true;
             }
 
-            protected function afterEveryStep(Update $update, int $step): void
+            protected function afterEveryStep(Update $update, int $stepIndex): void
             {
                 $this->afterStepCalled = true;
             }

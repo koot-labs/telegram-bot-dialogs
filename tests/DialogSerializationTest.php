@@ -29,7 +29,7 @@ final class DialogSerializationTest extends TestCase
         $this->assertSame($dialog->getChatId(), $unserializedDialog->getChatId());
         $this->assertSame($dialog->getUserId(), $unserializedDialog->getUserId());
         $this->assertSame($dialog->ttl(), $unserializedDialog->ttl());
-        $this->assertSame($dialog->isStart(), $unserializedDialog->isStart());
+        $this->assertSame($dialog->isAtStart(), $unserializedDialog->isStart());
     }
 
     #[Test]
@@ -44,7 +44,7 @@ final class DialogSerializationTest extends TestCase
         $this->assertSame($dialog->getChatId(), $unserializedDialog->getChatId());
         $this->assertSame($dialog->getUserId(), $unserializedDialog->getUserId());
         $this->assertSame($dialog->ttl(), $unserializedDialog->ttl());
-        $this->assertSame($dialog->isStart(), $unserializedDialog->isStart());
+        $this->assertSame($dialog->isAtStart(), $unserializedDialog->isStart());
     }
 
     #[Test]
