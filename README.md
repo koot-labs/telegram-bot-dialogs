@@ -113,7 +113,10 @@ final class HelloDialog extends Dialog
 
 ### 2. Setup Webhook Handler
 
-#### 2.1. Setting up Commands
+In this example, the Dialog is activated by a command.
+You can also activate dialogs based on other triggers (like a Update/Message type, or a work inside a Message).
+
+#### 2.1. Setting up a Telegram Command
 Create a command to activate your dialog:
 
 ```php
@@ -133,7 +136,7 @@ final class HelloCommand extends Command
 }
 ```
 
-### 2.2. Controller Setup
+#### 2.2. Webhook Handler Setup
 
 Handle webhook updates in your controller:
 
@@ -141,7 +144,7 @@ Handle webhook updates in your controller:
 use Telegram\Bot\BotsManager;
 use KootLabs\TelegramBotDialogs\DialogManager;
 
-final class TelegramWebhookController
+final class TelegramWebhookHandler
 {
     public function handle(DialogManager $dialogs, BotsManager $botsManager): void
     {
@@ -165,25 +168,25 @@ final class TelegramWebhookController
 abstract class Dialog
 {
     // Navigation
-    public function nextStep(string $stepName): void
-    public function switchToStep(string $stepName): void
-    public function complete(): void
+    public function nextStep(string $stepName): void;
+    public function switchToStep(string $stepName): void;
+    public function complete(): void;
 
     // State Management
-    public function isAtStart(): bool
-    public function isLastStep(): bool
-    public function isComplete(): bool
+    public function isAtStart(): bool;
+    public function isLastStep(): bool;
+    public function isComplete(): bool;
 
     // Lifecycle Hooks
-    protected function beforeEveryStep(Update $update, int $stepIndex): void
-    protected function afterEveryStep(Update $update, int $stepIndex): void
-    protected function beforeFirstStep(Update $update): void
-    protected function afterLastStep(Update $update): void
+    protected function beforeEveryStep(Update $update, int $stepIndex): void;
+    protected function afterEveryStep(Update $update, int $stepIndex): void;
+    protected function beforeFirstStep(Update $update): void;
+    protected function afterLastStep(Update $update): void;
 
     // Properties Access
-    public function getChatId(): int
-    public function getUserId(): ?int
-    public function ttl(): int
+    public function getChatId(): int;
+    public function getUserId(): ?int;
+    public function ttl(): int;
 }
 ```
 
