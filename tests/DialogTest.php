@@ -29,7 +29,7 @@ final class DialogTest extends TestCase
             public function existingMethod(): void {}
         };
 
-        $dialog->start($this->buildUpdateOfRandomType());
+        $dialog->performStep($this->buildUpdateOfRandomType());
 
         $this->assertTrue($dialog->isCompleted());
     }
@@ -46,7 +46,7 @@ final class DialogTest extends TestCase
             public function existingMethodB(): void {}
         };
 
-        $dialog->start($this->buildUpdateOfRandomType());
+        $dialog->performStep($this->buildUpdateOfRandomType());
         $dialog->performStep($this->buildUpdateOfRandomType());
 
         $this->assertTrue($dialog->isCompleted());
@@ -62,7 +62,7 @@ final class DialogTest extends TestCase
 
         $this->expectException(InvalidDialogStep::class);
 
-        $dialog->start($this->buildUpdateOfRandomType());
+        $dialog->performStep($this->buildUpdateOfRandomType());
     }
 
     #[Test]
@@ -77,7 +77,7 @@ final class DialogTest extends TestCase
 
         $this->expectException(InvalidDialogStep::class);
 
-        $dialog->start($this->buildUpdateOfRandomType());
+        $dialog->performStep($this->buildUpdateOfRandomType());
     }
 
     #[Test]
@@ -89,12 +89,12 @@ final class DialogTest extends TestCase
 
             public function step1(): void
             {
-                $this->remember('key1', 'A');
+                $this->memory->put('key1', 'A');
             }
 
             public function step2(): void
             {
-                assertSame('A', $this->memory['key1']); // hack to test protected method
+                assertSame('A', $this->memory->get('key1')); // hack to test protected method
             }
         };
 

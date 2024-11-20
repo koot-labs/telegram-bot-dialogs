@@ -26,10 +26,11 @@ final class DialogSerializationTest extends TestCase
 
         $unserializedDialog = unserialize(serialize($dialog));
 
+        $this->assertInstanceOf(HelloExampleDialog::class, $unserializedDialog);
         $this->assertSame($dialog->getChatId(), $unserializedDialog->getChatId());
         $this->assertSame($dialog->getUserId(), $unserializedDialog->getUserId());
         $this->assertSame($dialog->getTtl(), $unserializedDialog->getTtl());
-        $this->assertSame($dialog->isAtStart(), $unserializedDialog->isStart());
+        $this->assertSame($dialog->isAtStart(), $unserializedDialog->isAtStart());
     }
 
     #[Test]
@@ -41,25 +42,10 @@ final class DialogSerializationTest extends TestCase
 
         $unserializedDialog = unserialize(serialize($dialog));
 
+        $this->assertInstanceOf(HelloExampleDialog::class, $unserializedDialog);
         $this->assertSame($dialog->getChatId(), $unserializedDialog->getChatId());
         $this->assertSame($dialog->getUserId(), $unserializedDialog->getUserId());
         $this->assertSame($dialog->getTtl(), $unserializedDialog->getTtl());
-        $this->assertSame($dialog->isAtStart(), $unserializedDialog->isStart());
-    }
-
-    #[Test]
-    public function it_can_unserialize_old_version_of_dialog_where_memory_of_array_type(): void
-    {
-        $dialog = new HelloExampleDialog(self::RANDOM_CHAT_ID, $this->createBotWithQueuedResponse());
-
-        $dialog->__unserialize([
-            'chat_id' => 42,
-            'user_id' => null,
-            'next' => 1,
-            'memory' => ['key' => 'value'],
-            'afterProceedJumpToIndex' => null,
-        ]);
-
-        $this->assertInstanceOf(HelloExampleDialog::class, $dialog);
+        $this->assertSame($dialog->isAtStart(), $unserializedDialog->isAtStart());
     }
 }

@@ -54,7 +54,6 @@ final class DialogManager
      * Initiate a new Dialog from the server side (e.g., by cron).
      * Note, a User firstly should start a chat with a bot (bot can't initiate a chat — this is TG Bot API limitation).
      * @api
-     * @experimental
      * @throws \Telegram\Bot\Exceptions\TelegramSDKException
      */
     public function initiateDialog(Dialog $dialog): void
@@ -66,22 +65,6 @@ final class DialogManager
         $dialog->isCompleted()
             ? $this->forgetDialog($dialog)
             : $this->persistDialog($dialog);
-    }
-
-    /** @deprecated Replaced by initiateDialog() and will be removed in v1.0 */
-    public function startNewDialogInitiatedByBot(Dialog $dialog): void
-    {
-        $this->initiateDialog($dialog);
-    }
-
-    /**
-     * @deprecated Replaced by processUpdate().
-     * @api
-     * @throws \Telegram\Bot\Exceptions\TelegramSDKException
-     */
-    public function proceed(Update $update): void
-    {
-        $this->processUpdate($update);
     }
 
     /**
