@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @api
- * @method static \KootLabs\TelegramBotDialogs\DialogManager setBot(\Telegram\Bot\Api $bot)
- * @method static void activate(\KootLabs\TelegramBotDialogs\Dialog $dialog)
- * @method static void proceed(\Telegram\Bot\Objects\Update $update)
+ * @method static void activate(\KootLabs\TelegramBotDialogs\Dialog $dialog) Activate a given Dialog, so processUpdate() will execute it.
+ * @method static void processUpdate(\Telegram\Bot\Objects\Update $update) Pass Update into the active Dialog (if any) to process it.
+ * @method static \KootLabs\TelegramBotDialogs\DialogManager setBot(\Telegram\Bot\Api $bot) Change the Bot instance to use for API calls.
  */
 final class Dialogs extends Facade
 {

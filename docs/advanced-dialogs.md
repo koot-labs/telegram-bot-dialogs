@@ -23,7 +23,7 @@ use KootLabs\TelegramBotDialogs\Dialog;
 
 final class WelcomeDialog extends Dialog
 {
-    /** 
+    /**
      * @var list<string|array{
      *   name: string,
      *   response?: string,
@@ -36,14 +36,14 @@ final class WelcomeDialog extends Dialog
     protected array $steps = [
         // Simple method name
         'introduction',
-        
+
         // Configured step with default response
         [
             'name' => 'greeting',
             'response' => 'Hello! How can I help you today?',
             'options' => ['parse_mode' => 'HTML'],
         ],
-        
+
         // Step with flow control
         [
             'name' => 'menu',
@@ -103,14 +103,14 @@ protected array $steps = [
         'response' => 'Welcome!',
         'nextStep' => 'menu',  // Equivalent to $this->nextStep('menu')
     ],
-    
+
     // Switch to another step immediately
     [
         'name' => 'help',
         'response' => 'Showing help...',
         'switch' => 'help_details',  // Equivalent to $this->switchToStep('help_details')
     ],
-    
+
     // End dialog after step
     [
         'name' => 'goodbye',
@@ -176,6 +176,8 @@ final class SurveyDialog extends Dialog
 Create steps that generate responses dynamically:
 
 ```php
+use KootLabs\TelegramBotDialogs\Dialog;
+
 final class WeatherDialog extends Dialog
 {
     protected array $steps = ['askLocation', 'showWeather'];
@@ -185,6 +187,13 @@ final class WeatherDialog extends Dialog
     {
         parent::__construct($chatId);
         $this->weatherService = $weatherService;
+    }
+
+    public function askLocation(): void {
+        $this->bot->sendMessage([
+            'chat_id' => $this->getChatId(),
+            'text' => 'Can you please share your location?',
+        ]);
     }
 
     public function showWeather(Update $update): void
