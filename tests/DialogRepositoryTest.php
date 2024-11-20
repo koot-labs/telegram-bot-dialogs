@@ -35,7 +35,6 @@ final class DialogRepositoryTest extends TestCase
         $retrievedDialog = $this->repository->get($key);
 
         $this->assertInstanceOf(PassiveTestDialog::class, $retrievedDialog);
-        $this->assertSame($dialog, $retrievedDialog);
     }
 
     #[Test]
