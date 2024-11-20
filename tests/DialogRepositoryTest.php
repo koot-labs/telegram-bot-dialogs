@@ -113,6 +113,6 @@ final class DialogRepositoryTest extends TestCase
 
         $this->repository->put($key, $dialog, 1);
 
-        $this->assertTrue($this->cache->has($this->prefix.$key));
+        $this->assertTrue($this->cache->has($this->prefix . $key));
     }
 }
