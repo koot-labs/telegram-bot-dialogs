@@ -174,27 +174,21 @@ final class DialogManager
         return $this->repository->get($key);
     }
 
-    /**
-     * @internal This method is a subject for changes in further releases < 1.0
-     * @return non-empty-string
-     */
-    private function generateDialogKey(int $chatId, ?int $userId = null): string
-    {
-        return implode('-', array_filter([
-            $chatId,
-            $userId,
-        ]));
-    }
-
-    /**
-     * @internal This method is a subject for changes in further releases < 1.0
-     * @return non-empty-string
-     */
+    /** @return non-empty-string */
     private function getDialogKey(Dialog $dialog): string
     {
         return $this->generateDialogKey(
             $dialog->getChatId(),
             $dialog->getUserId(),
         );
+    }
+
+    /** @return non-empty-string */
+    private function generateDialogKey(int $chatId, ?int $userId = null): string
+    {
+        return implode('-', array_filter([
+            $chatId,
+            $userId,
+        ]));
     }
 }

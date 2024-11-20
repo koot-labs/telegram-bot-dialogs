@@ -1,9 +1,263 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
+  <file src="src/Dialog.php">
+    <InvalidOperand>
+      <code><![CDATA[$stepConfig['options']]]></code>
+    </InvalidOperand>
+    <PossiblyUndefinedArrayOffset>
+      <code><![CDATA[$stepConfig['options']]]></code>
+    </PossiblyUndefinedArrayOffset>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[$bot]]></code>
+    </PropertyNotSetInConstructor>
+    <RedundantConditionGivenDocblockType>
+      <code><![CDATA[is_string($stepNameOrConfig)]]></code>
+      <code><![CDATA[isset($stepConfig['end']) && $stepConfig['end'] === true]]></code>
+    </RedundantConditionGivenDocblockType>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($stepConfig['nextStep'])]]></code>
+      <code><![CDATA[empty($stepConfig['switch'])]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/DialogManager.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[implode('-', array_filter([
+            $chatId,
+            $userId,
+        ]))]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[non-empty-string]]></code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="src/Dialogs/HelloExampleDialog.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$callbackQuery->data]]></code>
+      <code><![CDATA[$update->callbackQuery->data]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullPropertyFetch>
+      <code><![CDATA[$update->callbackQuery->data]]></code>
+      <code><![CDATA[$update->callbackQuery->id]]></code>
+    </PossiblyNullPropertyFetch>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[HelloExampleDialog]]></code>
+    </PropertyNotSetInConstructor>
+  </file>
   <file src="src/Laravel/DialogsServiceProvider.php">
     <UndefinedFunction>
       <code><![CDATA[config_path('telegramdialogs.php')]]></code>
     </UndefinedFunction>
+  </file>
+  <file src="tests/DialogConfigurableStepsTest.php">
+    <NonInvariantDocblockPropertyType>
+      <code><![CDATA[$steps]]></code>
+      <code><![CDATA[$steps]]></code>
+      <code><![CDATA[$steps]]></code>
+      <code><![CDATA[$steps]]></code>
+      <code><![CDATA[$steps]]></code>
+    </NonInvariantDocblockPropertyType>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[class (self::RANDOM_CHAT_ID) extends Dialog {
+            /** @inheritDoc */
+            protected array $steps = [
+                [
+                    // 'name' => 'first',
+                    'response' => 'Hello!',
+                ],
+            ];
+        }]]></code>
+      <code><![CDATA[class (self::RANDOM_CHAT_ID, $bot) extends Dialog {
+            /** @inheritDoc */
+            protected array $steps = [
+                [
+                    'name' => 'first',
+                    'end' => true,
+                ],
+                [
+                    'name' => 'second',
+                ],
+            ];
+        }]]></code>
+      <code><![CDATA[class (self::RANDOM_CHAT_ID, $bot) extends Dialog {
+            public array $stepsExecuted = [];
+
+            /** @inheritDoc */
+            protected array $steps = [
+                [
+                    'name' => 'first',
+                    'switch' => 'third',
+                ],
+                [
+                    'name' => 'second',
+                ],
+                [
+                    'name' => 'third',
+                ],
+            ];
+
+            protected function afterEveryStep(Update $update, int $stepIndex): void
+            {
+                $this->stepsExecuted[] = $stepIndex;
+            }
+        }]]></code>
+      <code><![CDATA[class (self::RANDOM_CHAT_ID, $bot) extends Dialog {
+            public array $stepsExecuted = [];
+
+            protected array $steps = [
+                [
+                    'name' => 'first',
+                    'nextStep' => 'third',
+                ],
+                [
+                    'name' => 'second',
+                ],
+                [
+                    'name' => 'third',
+                ],
+            ];
+
+            protected function afterEveryStep(Update $update, int $stepIndex): void
+            {
+                $this->stepsExecuted[] = $stepIndex;
+            }
+        }]]></code>
+      <code><![CDATA[class (self::RANDOM_CHAT_ID, $bot) extends Dialog {
+            public bool $beforeStepCalled = false;
+            public bool $afterStepCalled = false;
+
+            /** @inheritDoc */
+            protected array $steps = [
+                [
+                    'name' => 'first',
+                ],
+            ];
+
+            protected function beforeEveryStep(Update $update, int $stepIndex): void
+            {
+                $this->beforeStepCalled = true;
+            }
+
+            protected function afterEveryStep(Update $update, int $stepIndex): void
+            {
+                $this->afterStepCalled = true;
+            }
+        }]]></code>
+    </PropertyNotSetInConstructor>
+    <RedundantConditionGivenDocblockType>
+      <code><![CDATA[assertSame]]></code>
+    </RedundantConditionGivenDocblockType>
+  </file>
+  <file src="tests/DialogManagerTest.php">
+    <PossiblyFalseArgument>
+      <code><![CDATA[$fixture]]></code>
+    </PossiblyFalseArgument>
+  </file>
+  <file src="tests/DialogRepositoryTest.php">
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[$cache]]></code>
+      <code><![CDATA[$repository]]></code>
+    </PropertyNotSetInConstructor>
+  </file>
+  <file src="tests/DialogTest.php">
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[class (self::RANDOM_CHAT_ID) extends Dialog {
+            /** @var list<non-empty-string> */
+            protected array $steps = ['existingMethod'];
+
+            public function existingMethod(): void {}
+        }]]></code>
+      <code><![CDATA[class (self::RANDOM_CHAT_ID) extends Dialog {
+            /** @var list<non-empty-string> */
+            protected array $steps = ['existingMethodA', 'existingMethodB'];
+
+            public function existingMethodA(): void {}
+
+            public function existingMethodB(): void {}
+        }]]></code>
+      <code><![CDATA[class (self::RANDOM_CHAT_ID) extends Dialog {
+            /** @var list<non-empty-string> */
+            protected array $steps = ['step1', 'step2', 'step3'];
+
+            public function step1(): void {}
+
+            public function step2(): void {}
+
+            public function step3(): void
+            {
+                $this->nextStep("step2");
+            }
+
+            protected function afterLastStep(Update $update): void
+            {
+                throw new \LogicException(__METHOD__ . " is called for testing purposes.");
+            }
+        }]]></code>
+      <code><![CDATA[class (self::RANDOM_CHAT_ID) extends Dialog {
+            /** @var list<non-empty-string> */
+            protected array $steps = ['step1', 'step2'];
+
+            public function step1(): void
+            {
+                $this->memory->put('key1', 'A');
+            }
+
+            public function step2(): void
+            {
+                assertSame('A', $this->memory->get('key1')); // hack to test protected method
+            }
+        }]]></code>
+      <code><![CDATA[class (self::RANDOM_CHAT_ID) extends Dialog {
+            /** @var list<non-empty-string> */
+            protected array $steps = ['step1', 'step2'];
+
+            public function step1(): void {}
+
+            public function step2(): void
+            {
+                $this->complete();
+            }
+
+            protected function afterLastStep(Update $update): void
+            {
+                throw new \LogicException(__METHOD__ . " is called for testing purposes.");
+            }
+        }]]></code>
+      <code><![CDATA[class (self::RANDOM_CHAT_ID) extends Dialog {
+            /** @var list<non-empty-string> */
+            protected array $steps = ['unknownMethodName'];
+
+            public function __call(string $method, array $args) {}
+        }]]></code>
+      <code><![CDATA[class (self::RANDOM_CHAT_ID) extends Dialog {
+            /** @var list<non-empty-string> */
+            protected array $steps = ['unknownMethodName'];
+        }]]></code>
+      <code><![CDATA[class (self::RANDOM_CHAT_ID) extends Dialog {
+            public int $count = 0;
+
+            /** @var list<non-empty-string> */
+            protected array $steps = ['step1'];
+
+            public function step1(): void
+            {
+                ++$this->count;
+                $this->nextStep('step1');
+            }
+        }]]></code>
+    </PropertyNotSetInConstructor>
+  </file>
+  <file src="tests/Fakes/FakeHttp.php">
+    <PossiblyInvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->history]]></code>
+    </PossiblyInvalidPropertyAssignmentValue>
+  </file>
+  <file src="tests/TestDialogs/PassiveTestDialog.php">
+    <NonInvariantDocblockPropertyType>
+      <code><![CDATA[$steps]]></code>
+    </NonInvariantDocblockPropertyType>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[PassiveTestDialog]]></code>
+    </PropertyNotSetInConstructor>
   </file>
   <file src="tests/ci/console.php">
     <InvalidScope>

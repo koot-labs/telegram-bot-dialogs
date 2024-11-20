@@ -24,6 +24,7 @@ final class DialogConfigurableStepsTest extends TestCase
     public function it_throws_an_exception_when_step_does_not_have_name(): void
     {
         $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {
+            /** @inheritDoc */
             protected array $steps = [
                 [
                     // 'name' => 'first',
@@ -45,6 +46,7 @@ final class DialogConfigurableStepsTest extends TestCase
         $dialog = new class (self::RANDOM_CHAT_ID, $bot) extends Dialog {
             public array $stepsExecuted = [];
 
+            /** @inheritDoc */
             protected array $steps = [
                 [
                     'name' => 'first',
@@ -116,6 +118,7 @@ final class DialogConfigurableStepsTest extends TestCase
         $bot = $this->createBotWithQueuedResponse();
 
         $dialog = new class (self::RANDOM_CHAT_ID, $bot) extends Dialog {
+            /** @inheritDoc */
             protected array $steps = [
                 [
                     'name' => 'first',
@@ -141,6 +144,7 @@ final class DialogConfigurableStepsTest extends TestCase
             public bool $beforeStepCalled = false;
             public bool $afterStepCalled = false;
 
+            /** @inheritDoc */
             protected array $steps = [
                 [
                     'name' => 'first',
