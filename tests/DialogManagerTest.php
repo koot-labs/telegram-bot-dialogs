@@ -40,7 +40,7 @@ final class DialogManagerTest extends TestCase
         $dialog = new HelloExampleDialog(self::RANDOM_CHAT_ID);
 
         $dialogManager->activate($dialog);
-        $exist = $dialogManager->exists(new Update(['message' => ['chat' => ['id' => self::RANDOM_CHAT_ID]]]));
+        $exist = $dialogManager->hasActiveDialog(new Update(['message' => ['chat' => ['id' => self::RANDOM_CHAT_ID]]]));
 
         $this->assertTrue($exist);
     }
@@ -52,7 +52,7 @@ final class DialogManagerTest extends TestCase
         $dialog = new HelloExampleDialog(self::RANDOM_CHAT_ID, null, self::RANDOM_USER_ID);
 
         $dialogManager->activate($dialog);
-        $existResult = $dialogManager->exists(new Update(['message' => [
+        $existResult = $dialogManager->hasActiveDialog(new Update(['message' => [
             'chat' => ['id' => self::RANDOM_CHAT_ID],
             'from' => ['id' => self::RANDOM_USER_ID],
         ]]));
@@ -65,7 +65,7 @@ final class DialogManagerTest extends TestCase
     {
         $dialogManager = $this->instantiateDialogManager();
 
-        $existResult = $dialogManager->exists(new Update(['message' => [
+        $existResult = $dialogManager->hasActiveDialog(new Update(['message' => [
             'chat' => ['id' => self::RANDOM_CHAT_ID],
             'from' => ['id' => self::RANDOM_USER_ID],
         ]]));
@@ -80,7 +80,7 @@ final class DialogManagerTest extends TestCase
         $dialog = new HelloExampleDialog(self::RANDOM_CHAT_ID);
         $dialogManager->activate($dialog);
 
-        $existResult = $dialogManager->exists(new Update(['message' => [
+        $existResult = $dialogManager->hasActiveDialog(new Update(['message' => [
             'chat' => ['id' => 43],
             'from' => ['id' => self::RANDOM_USER_ID]],
         ]));
@@ -96,7 +96,7 @@ final class DialogManagerTest extends TestCase
 
         $dialogManager->activate($dialog);
         $this->expectException(\LogicException::class);
-        $dialog->proceed(new Update(['message' => ['chat' => ['id' => self::RANDOM_CHAT_ID]]]));
+        $dialog->performStep(new Update(['message' => ['chat' => ['id' => self::RANDOM_CHAT_ID]]]));
     }
 
     #[Test]
@@ -109,7 +109,7 @@ final class DialogManagerTest extends TestCase
         $dialog = new PassiveTestDialog($initialUpdate->getChat()->id);
         $dialogManager->activate($dialog);
 
-        $dialogIsFound = $dialogManager->exists($followingUpUpdate);
+        $dialogIsFound = $dialogManager->hasActiveDialog($followingUpUpdate);
 
         $this->assertTrue($dialogIsFound);
     }

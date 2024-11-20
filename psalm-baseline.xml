@@ -7,6 +7,11 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[afterAllStep]]></code>
       <code><![CDATA[beforeAllStep]]></code>
+      <code><![CDATA[end]]></code>
+      <code><![CDATA[isEnd]]></code>
+      <code><![CDATA[isStart]]></code>
+      <code><![CDATA[proceed]]></code>
+      <code><![CDATA[ttl]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="src/Laravel/DialogsServiceProvider.php">

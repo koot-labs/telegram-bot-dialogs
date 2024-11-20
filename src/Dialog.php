@@ -12,6 +12,11 @@ use Telegram\Bot\Api;
 use Telegram\Bot\Objects\Update;
 
 /**
+ * Represents a dialog flow with a Telegram chat.
+ *
+ * A Dialog is a sequence of steps that can be executed in response to Telegram updates.
+ * Each step can send messages, process user input, and determine the next step in the flow.
+ *
  * @psalm-type StepConfiguration = array{
  *     name: non-empty-string,
  *     response?: string,
@@ -97,20 +102,26 @@ abstract class Dialog
     final public function start(Update $update): void
     {
         $this->next = 0;
-        $this->proceed($update);
+        $this->performStep($update);
+    }
+
+    /** @deprecated Will be removed in v1.0. */
+    final public function proceed(Update $update): void
+    {
+        $this->performStep($update);
     }
 
     /**
-     * @internal Should be called by {@see \KootLabs\TelegramBotDialogs\DialogManager::proceed},
+     * @internal Should be called by {@see \KootLabs\TelegramBotDialogs\DialogManager::processUpdate},
      * please do not call this method directly.
      * @throws \KootLabs\TelegramBotDialogs\Exceptions\InvalidDialogStep
      * @throws \Telegram\Bot\Exceptions\TelegramSDKException
      */
-    final public function proceed(Update $update): void
+    final public function performStep(Update $update): void
     {
         $currentStepIndex = $this->next;
 
-        if ($this->isStart()) {
+        if ($this->isAtStart()) {
             $this->beforeFirstStep($update);
         }
 
@@ -177,20 +188,20 @@ abstract class Dialog
         // override the method to add your logic here
     }
 
-    /** @experimental Run code after last step. */
+    /** @experimental Run code after the last step. */
     protected function afterLastStep(Update $update): void
     {
         // override the method to add your logic here
     }
 
     /** @experimental Run code before every step. */
-    protected function beforeEveryStep(Update $update, int $step): void
+    protected function beforeEveryStep(Update $update, int $stepIndex): void
     {
         // override the method to add your logic here
     }
 
     /** @experimental Run code after every step. */
-    protected function afterEveryStep(Update $update, int $step): void
+    protected function afterEveryStep(Update $update, int $stepIndex): void
     {
         // override the method to add your logic here
     }
@@ -211,7 +222,7 @@ abstract class Dialog
     }
 
     /**
-     * Set the step to be proceeded in the next iteration.
+     * Sets the next step to be executed in the dialog flow.
      * @api
      */
     final protected function nextStep(string $stepName): void
@@ -233,12 +244,18 @@ abstract class Dialog
         }
     }
 
+    /** @deprecated Use complete() instead. Will be removed in 1.0 */
+    final public function end(): void
+    {
+        $this->complete();
+    }
+
     /**
      * Move the Dialog’s cursor to the end.
      * If called in a step, this step and all flow after it will be completed, then the Dialog will be forgotten.
      * Works the same if called in last step.
      */
-    final public function end(): void
+    final public function complete(): void
     {
         if (!$this->isLastStep()) {
             $this->next = count($this->steps);
@@ -264,9 +281,15 @@ abstract class Dialog
     }
 
     /** Check if Dialog started */
-    final public function isStart(): bool
+    final public function isAtStart(): bool
     {
         return $this->next === 0;
+    }
+
+    /** @deprecated Use isAtStart() instead. Will be removed in v1.0 */
+    final public function isStart(): bool
+    {
+        return $this->isAtStart();
     }
 
     /** Check if Dialog on the last step */
@@ -275,8 +298,14 @@ abstract class Dialog
         return $this->next === count($this->steps) - 1;
     }
 
-    /** Check if Dialog ended */
+    /** @deprecated Use isCompleted() instead. Will be removed in v1.0 */
     final public function isEnd(): bool
+    {
+        return $this->isCompleted();
+    }
+
+    /** Check if Dialog in a finite state (no more steps left) */
+    final public function isCompleted(): bool
     {
         return $this->next >= count($this->steps);
     }
@@ -293,7 +322,13 @@ abstract class Dialog
         return $this->user_id;
     }
 
-    /** Get a number of seconds to store state of the Dialog after latest activity on it. */
+    /** Get a number of seconds to store the state of the Dialog after the latest activity on it. */
+    final public function getTtl(): int
+    {
+        return $this->ttl;
+    }
+
+    /** @deprecated Use getTtl() instead. Will be removed in v1.0 */
     final public function ttl(): int
     {
         return $this->ttl;
@@ -341,7 +376,7 @@ abstract class Dialog
         $this->afterEveryStep($update, $currentStepIndex);
 
         if (isset($stepConfig['end']) && $stepConfig['end'] === true) {
-            $this->end();
+            $this->complete();
         }
     }
 

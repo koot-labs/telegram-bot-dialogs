@@ -5,7 +5,7 @@ It’s possible to use the package in 2 ways:
 2. By reacting to specific Messages/Updates
 
 ## Reacting to specific Messages/Updates
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > Note, this example uses Artisan command for testing purposes only.
 > It’s not recommended to use this approach in production.
 > Instead, please use a Controller that listens to income webhooks.
@@ -25,12 +25,12 @@ Artisan::command('telegram:test', function (DialogManager $dialogs, BotsManager 
 
     /** @var \Telegram\Bot\Objects\Update $update */
     foreach ($updates as $update) {
-        if ($dialogs->exists($update)) {
-            $dialogs->proceed($update);
+        if ($dialogs->hasActiveDialog($update)) {
+            $dialogs->processUpdate($update);
         } elseif (str_contains($update->getMessage()?->text, 'hello bot')) {
             $dialog = new HelloExampleDialog($update->getChat()->id);
             $dialogs->activate($dialog);
-            $dialogs->proceed($update);
+            $dialogs->processUpdate($update);
         } else {
             $botsManager->sendMessage([ // fallback message
                 'chat_id' => $update->getChat()->id,
