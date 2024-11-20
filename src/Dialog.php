@@ -11,6 +11,20 @@ use KootLabs\TelegramBotDialogs\Exceptions\ControlFlow\SwitchToAnotherStep;
 use Telegram\Bot\Api;
 use Telegram\Bot\Objects\Update;
 
+/**
+ * @psalm-type StepConfiguration = array{
+ *     name: non-empty-string,
+ *     response?: string,
+ *     switch?: non-empty-string,
+ *     nextStep?: non-empty-string,
+ *     end?: true,
+ *     options?: array{
+ *          parse_mode?: 'HTML'|'MarkdownV2'|'Markdown',
+ *          ...
+ *     }
+ * }
+ * Where 'options' is an array of any key-values accepted by https://core.telegram.org/bots/api#sendmessage
+ */
 abstract class Dialog
 {
     /**
@@ -31,7 +45,7 @@ abstract class Dialog
 
     /**
      * @readonly
-     * @var int<-1, max> Seconds to store state of the Dialog after latest activity on it.
+     * @var int<-1, max> Seconds to store the state of the Dialog after the latest activity on it.
      */
     protected int $ttl = 300;
 
@@ -40,14 +54,14 @@ abstract class Dialog
 
     /**
      * @readonly
-     * @var list<string|array{name: string, response: string, options:array}> List of method to execute. The order defines the sequence
+     * @var list<string|StepConfiguration> List of methods to execute. The order defines the sequence.
      */
     protected array $steps = [];
 
-    /** @var int Index of the next step. */
+    /** @var int<0, max> Index of the next step. */
     protected int $next = 0;
 
-    /** @var int|null Index of the next step that set manually using nextStep() method. */
+    /** @var int<0, max>|null Index of the next step that set manually using nextStep() method. */
     private ?int $afterProceedJumpToIndex = null;
 
     /**
@@ -140,7 +154,7 @@ abstract class Dialog
     }
 
     /**
-     * @experimental Run code before all step.
+     * Run code before the first step.
      * @deprecated Will be removed in v1.0. Please use beforeFirstStep() instead.
      */
     protected function beforeAllStep(Update $update): void
@@ -149,7 +163,7 @@ abstract class Dialog
     }
 
     /**
-     * @experimental Run code after all step.
+     * Run code after the last step.
      * @deprecated Will be removed in v1.0. Please use afterLastStep() instead.
      */
     protected function afterAllStep(Update $update): void
@@ -220,8 +234,8 @@ abstract class Dialog
     }
 
     /**
-     * Move Dialog’s cursor to the end.
-     * If called in step, this step and all flow after it will be completed, then dialog will be forgotten.
+     * Move the Dialog’s cursor to the end.
+     * If called in a step, this step and all flow after it will be completed, then the Dialog will be forgotten.
      * Works the same if called in last step.
      */
     final public function end(): void
@@ -258,7 +272,7 @@ abstract class Dialog
     /** Check if Dialog on the last step */
     final public function isLastStep(): bool
     {
-        return $this->next == count($this->steps) - 1;
+        return $this->next === count($this->steps) - 1;
     }
 
     /** Check if Dialog ended */
@@ -286,6 +300,7 @@ abstract class Dialog
     }
 
     /**
+     * @param StepConfiguration $stepConfig
      * @throws \Telegram\Bot\Exceptions\TelegramSDKException
      * @throws \KootLabs\TelegramBotDialogs\Exceptions\InvalidDialogStep
      */
@@ -303,8 +318,8 @@ abstract class Dialog
                 'text' => $stepConfig['response'],
             ];
 
-            if (! empty($stepConfig['options']) && is_array($stepConfig['options'])) {
-                $params = array_merge($params, $stepConfig['options']);
+            if (is_array($stepConfig['options'] ?? null)) {
+                $params = [...$params, ...$stepConfig['options']];
             }
 
             $this->bot->sendMessage($params);
@@ -314,7 +329,7 @@ abstract class Dialog
             $this->switch($stepConfig['switch']);
         }
 
-        // @deprecated Use nextStep
+        // @deprecated Use nextStep, @todo remove it in v1.0
         if (! empty($stepConfig['jump'])) {
             $this->nextStep($stepConfig['jump']);
         }
