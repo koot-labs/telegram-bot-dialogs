@@ -63,7 +63,7 @@ final class DialogManager
 
         $this->processUpdate(new BotInitiatedUpdate($dialog));
 
-        $dialog->isComplete()
+        $dialog->isCompleted()
             ? $this->forgetDialog($dialog)
             : $this->persistDialog($dialog);
     }
@@ -86,7 +86,7 @@ final class DialogManager
 
     /**
      * Run the next step of the active Dialog.
-     * This is a thin wrapper for {@see \KootLabs\TelegramBotDialogs\Dialog::executeStep}
+     * This is a thin wrapper for {@see \KootLabs\TelegramBotDialogs\Dialog::performStep}
      * to store and restore Dialog state between request-response calls.
      * @throws \Telegram\Bot\Exceptions\TelegramSDKException
      * @api
@@ -99,9 +99,9 @@ final class DialogManager
         }
 
         try {
-            $dialog->executeStep($update);
+            $dialog->performStep($update);
         } catch (SwitchToAnotherStep $exception) {
-            $dialog->executeStep($update);
+            $dialog->performStep($update);
         } catch (SwitchToAnotherDialog $exception) {
             $this->forgetDialog($dialog);
             $this->activate($exception->nextDialog);
@@ -109,7 +109,7 @@ final class DialogManager
             return;
         }
 
-        if ($dialog->isComplete()) {
+        if ($dialog->isCompleted()) {
             $this->forgetDialog($dialog);
         } else {
             $this->persistDialog($dialog);
@@ -182,7 +182,7 @@ final class DialogManager
     /** Store all Dialog. */
     private function persistDialog(Dialog $dialog): void
     {
-        $this->repository->put($this->getDialogKey($dialog), $dialog, $dialog->ttl());
+        $this->repository->put($this->getDialogKey($dialog), $dialog, $dialog->getTtl());
     }
 
     /** Restore Dialog. */

@@ -102,13 +102,13 @@ abstract class Dialog
     final public function start(Update $update): void
     {
         $this->next = 0;
-        $this->executeStep($update);
+        $this->performStep($update);
     }
 
     /** @deprecated Will be removed in v1.0. */
     final public function proceed(Update $update): void
     {
-        $this->executeStep($update);
+        $this->performStep($update);
     }
 
     /**
@@ -117,7 +117,7 @@ abstract class Dialog
      * @throws \KootLabs\TelegramBotDialogs\Exceptions\InvalidDialogStep
      * @throws \Telegram\Bot\Exceptions\TelegramSDKException
      */
-    final public function executeStep(Update $update): void
+    final public function performStep(Update $update): void
     {
         $currentStepIndex = $this->next;
 
@@ -298,14 +298,14 @@ abstract class Dialog
         return $this->next === count($this->steps) - 1;
     }
 
-    /** @deprecated Use isComplete() instead. Will be removed in v1.0 */
+    /** @deprecated Use isCompleted() instead. Will be removed in v1.0 */
     final public function isEnd(): bool
     {
-        return $this->isComplete();
+        return $this->isCompleted();
     }
 
-    /** Check if Dialog ended */
-    final public function isComplete(): bool
+    /** Check if Dialog in a finite state (no more steps left) */
+    final public function isCompleted(): bool
     {
         return $this->next >= count($this->steps);
     }
@@ -323,6 +323,12 @@ abstract class Dialog
     }
 
     /** Get a number of seconds to store the state of the Dialog after the latest activity on it. */
+    final public function getTtl(): int
+    {
+        return $this->ttl;
+    }
+
+    /** @deprecated Use getTtl() instead. Will be removed in v1.0 */
     final public function ttl(): int
     {
         return $this->ttl;

@@ -28,7 +28,7 @@ final class DialogSerializationTest extends TestCase
 
         $this->assertSame($dialog->getChatId(), $unserializedDialog->getChatId());
         $this->assertSame($dialog->getUserId(), $unserializedDialog->getUserId());
-        $this->assertSame($dialog->ttl(), $unserializedDialog->ttl());
+        $this->assertSame($dialog->getTtl(), $unserializedDialog->getTtl());
         $this->assertSame($dialog->isAtStart(), $unserializedDialog->isStart());
     }
 
@@ -37,13 +37,13 @@ final class DialogSerializationTest extends TestCase
     {
         $bot = $this->createBotWithQueuedResponse();
         $dialog = new HelloExampleDialog(self::RANDOM_CHAT_ID, $bot);
-        $dialog->executeStep(new Update([]));
+        $dialog->performStep(new Update([]));
 
         $unserializedDialog = unserialize(serialize($dialog));
 
         $this->assertSame($dialog->getChatId(), $unserializedDialog->getChatId());
         $this->assertSame($dialog->getUserId(), $unserializedDialog->getUserId());
-        $this->assertSame($dialog->ttl(), $unserializedDialog->ttl());
+        $this->assertSame($dialog->getTtl(), $unserializedDialog->getTtl());
         $this->assertSame($dialog->isAtStart(), $unserializedDialog->isStart());
     }
 

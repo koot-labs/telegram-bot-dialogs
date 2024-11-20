@@ -13,10 +13,11 @@ The following methods have been renamed to improve clarity and consistency:
 ```php
 // Before                   // After
 $dialog->isStart()          $dialog->isAtStart()
-$dialog->isEnd()            $dialog->isComplete()
+$dialog->isEnd()            $dialog->isCompleted()
 $dialog->end()              $dialog->complete()
+$dialog->ttl()              $dialog->getTtl()
 $dialog->switch()           $dialog->switchToStep()
-$dialog->proceed()          $dialog->executeStep()  // internal method
+$dialog->proceed()          $dialog->performStep()  // internal method
 ```
 
 #### DialogManager Class
