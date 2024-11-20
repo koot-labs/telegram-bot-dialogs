@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace KootLabs\TelegramBotDialogs\Tests;
 
+use KootLabs\TelegramBotDialogs\Dialog;
 use KootLabs\TelegramBotDialogs\DialogRepository;
 use KootLabs\TelegramBotDialogs\Tests\TestDialogs\PassiveTestDialog;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -12,6 +13,7 @@ use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Psr16Cache;
 
 #[CoversClass(DialogRepository::class)]
+#[CoversClass(Dialog::class)]
 final class DialogRepositoryTest extends TestCase
 {
     private Psr16Cache $cache;
