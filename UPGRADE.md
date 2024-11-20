@@ -17,8 +17,6 @@ $dialog->isEnd()            $dialog->isComplete()
 $dialog->end()              $dialog->complete()
 $dialog->switch()           $dialog->switchToStep()
 $dialog->proceed()          $dialog->executeStep()  // internal method
-$dialog->beforeEveryStep()  $dialog->beforeStep()
-$dialog->afterEveryStep()   $dialog->afterStep()
 ```
 
 #### DialogManager Class
