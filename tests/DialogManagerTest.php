@@ -96,7 +96,7 @@ final class DialogManagerTest extends TestCase
 
         $dialogManager->activate($dialog);
         $this->expectException(\LogicException::class);
-        $dialog->proceed(new Update(['message' => ['chat' => ['id' => self::RANDOM_CHAT_ID]]]));
+        $dialog->executeStep(new Update(['message' => ['chat' => ['id' => self::RANDOM_CHAT_ID]]]));
     }
 
     #[Test]

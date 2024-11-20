@@ -47,7 +47,7 @@ final class DialogTest extends TestCase
         };
 
         $dialog->start($this->buildUpdateOfRandomType());
-        $dialog->proceed($this->buildUpdateOfRandomType());
+        $dialog->executeStep($this->buildUpdateOfRandomType());
 
         $this->assertTrue($dialog->isEnd());
     }
@@ -98,8 +98,8 @@ final class DialogTest extends TestCase
             }
         };
 
-        $dialog->proceed($this->buildUpdateOfRandomType());
-        $dialog->proceed($this->buildUpdateOfRandomType());
+        $dialog->executeStep($this->buildUpdateOfRandomType());
+        $dialog->executeStep($this->buildUpdateOfRandomType());
     }
 
     #[Test]
@@ -118,9 +118,9 @@ final class DialogTest extends TestCase
             }
         };
 
-        $dialog->proceed($this->buildUpdateOfRandomType());
-        $dialog->proceed($this->buildUpdateOfRandomType());
-        $dialog->proceed($this->buildUpdateOfRandomType());
+        $dialog->executeStep($this->buildUpdateOfRandomType());
+        $dialog->executeStep($this->buildUpdateOfRandomType());
+        $dialog->executeStep($this->buildUpdateOfRandomType());
 
         $this->assertSame(3, $dialog->count);
     }
@@ -147,11 +147,11 @@ final class DialogTest extends TestCase
             }
         };
 
-        $dialog->proceed($this->buildUpdateOfRandomType());
-        $dialog->proceed($this->buildUpdateOfRandomType());
+        $dialog->executeStep($this->buildUpdateOfRandomType());
+        $dialog->executeStep($this->buildUpdateOfRandomType());
 
         $this->expectException(\LogicException::class);
-        $dialog->proceed($this->buildUpdateOfRandomType());
+        $dialog->executeStep($this->buildUpdateOfRandomType());
     }
 
     #[Test]
@@ -174,9 +174,9 @@ final class DialogTest extends TestCase
             }
         };
 
-        $dialog->proceed($this->buildUpdateOfRandomType());
+        $dialog->executeStep($this->buildUpdateOfRandomType());
 
         $this->expectException(\LogicException::class);
-        $dialog->proceed($this->buildUpdateOfRandomType());
+        $dialog->executeStep($this->buildUpdateOfRandomType());
     }
 }

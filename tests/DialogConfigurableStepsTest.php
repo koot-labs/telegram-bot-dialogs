@@ -34,7 +34,7 @@ final class DialogConfigurableStepsTest extends TestCase
 
         $this->expectException(InvalidDialogStep::class);
 
-        $dialog->proceed($this->buildUpdateOfRandomType());
+        $dialog->executeStep($this->buildUpdateOfRandomType());
     }
 
     #[Test]
@@ -65,9 +65,9 @@ final class DialogConfigurableStepsTest extends TestCase
         };
 
         try {
-            $dialog->proceed($this->buildUpdateOfRandomType());
+            $dialog->executeStep($this->buildUpdateOfRandomType());
         } catch (SwitchToAnotherStep) {
-            $dialog->proceed($this->buildUpdateOfRandomType());
+            $dialog->executeStep($this->buildUpdateOfRandomType());
         }
 
         // Only step 2 (third) should be in stepsExecuted because the first step
@@ -104,8 +104,8 @@ final class DialogConfigurableStepsTest extends TestCase
             }
         };
 
-        $dialog->proceed($this->buildUpdateOfRandomType());
-        $dialog->proceed($this->buildUpdateOfRandomType());
+        $dialog->executeStep($this->buildUpdateOfRandomType());
+        $dialog->executeStep($this->buildUpdateOfRandomType());
 
         $this->assertSame([0, 2], $dialog->stepsExecuted);
     }
@@ -127,7 +127,7 @@ final class DialogConfigurableStepsTest extends TestCase
             ];
         };
 
-        $dialog->proceed($this->buildUpdateOfRandomType());
+        $dialog->executeStep($this->buildUpdateOfRandomType());
 
         $this->assertTrue($dialog->isEnd());
     }
@@ -158,7 +158,7 @@ final class DialogConfigurableStepsTest extends TestCase
             }
         };
 
-        $dialog->proceed($this->buildUpdateOfRandomType());
+        $dialog->executeStep($this->buildUpdateOfRandomType());
 
         $this->assertTrue($dialog->beforeStepCalled);
         $this->assertTrue($dialog->afterStepCalled);

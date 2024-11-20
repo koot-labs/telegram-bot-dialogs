@@ -37,7 +37,7 @@ final class DialogSerializationTest extends TestCase
     {
         $bot = $this->createBotWithQueuedResponse();
         $dialog = new HelloExampleDialog(self::RANDOM_CHAT_ID, $bot);
-        $dialog->proceed(new Update([]));
+        $dialog->executeStep(new Update([]));
 
         $unserializedDialog = unserialize(serialize($dialog));
 

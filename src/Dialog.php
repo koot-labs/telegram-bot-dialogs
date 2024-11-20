@@ -97,7 +97,13 @@ abstract class Dialog
     final public function start(Update $update): void
     {
         $this->next = 0;
-        $this->proceed($update);
+        $this->executeStep($update);
+    }
+
+    /** @deprecated Will be removed in v1.0. */
+    final public function proceed(Update $update): void
+    {
+        $this->executeStep($update);
     }
 
     /**
@@ -106,7 +112,7 @@ abstract class Dialog
      * @throws \KootLabs\TelegramBotDialogs\Exceptions\InvalidDialogStep
      * @throws \Telegram\Bot\Exceptions\TelegramSDKException
      */
-    final public function proceed(Update $update): void
+    final public function executeStep(Update $update): void
     {
         $currentStepIndex = $this->next;
 

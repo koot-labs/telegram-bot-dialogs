@@ -69,11 +69,11 @@ final class DialogManager
     }
 
     /**
-     * @api
-     * Run next step of the active Dialog.
-     * This is a thin wrapper for {@see \KootLabs\TelegramBotDialogs\Dialog::proceed}
+     * Run the next step of the active Dialog.
+     * This is a thin wrapper for {@see \KootLabs\TelegramBotDialogs\Dialog::executeStep}
      * to store and restore Dialog state between request-response calls.
      * @throws \Telegram\Bot\Exceptions\TelegramSDKException
+     * @api
      */
     public function proceed(Update $update): void
     {
@@ -83,9 +83,9 @@ final class DialogManager
         }
 
         try {
-            $dialog->proceed($update);
+            $dialog->executeStep($update);
         } catch (SwitchToAnotherStep $exception) {
-            $dialog->proceed($update);
+            $dialog->executeStep($update);
         } catch (SwitchToAnotherDialog $exception) {
             $this->forgetDialogState($dialog);
             $this->activate($exception->nextDialog);
