@@ -185,7 +185,7 @@ abstract class Dialog
     // State Management
     public function isAtStart(): bool;
     public function isLastStep(): bool;
-    public function isComplete(): bool;
+    public function isCompleted(): bool;
 
     // Lifecycle Hooks
     protected function beforeEveryStep(Update $update, int $stepIndex): void;
