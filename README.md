@@ -76,7 +76,7 @@ composer require koot-labs/telegram-bot-dialogs
 php artisan vendor:publish --tag="telegram-config"
 ```
 
-This creates `config/telegram.php` with these environment variables:
+This creates `config/telegramdialogs.php` with these environment variables:
 - `TELEGRAM_DIALOGS_CACHE_DRIVER` (default: `database`)
 - `TELEGRAM_DIALOGS_CACHE_PREFIX` (default: `tg_dialog_`)
 
