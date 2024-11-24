@@ -27,6 +27,11 @@ $manager->proceed()        $manager->processUpdate()
 $manager->exists()         $manager->hasActiveDialog()
 ```
 
+```php
+// Before                                           // After
+$manager->startNewDialogInitiatedByBot($dialog);    $manager->initiateDialog($dialog);
+```
+
 ### Removed Methods
 
 The following deprecated methods have been removed:
@@ -66,13 +71,3 @@ forgetDialogState()           forgetDialog()
 ```
 
 Note: These are internal changes and shouldn't affect your application unless you've extended DialogManager.
-
-### Bot-Initiated Dialogs
-
-```php
-// Before
-$manager->startNewDialogInitiatedByBot($dialog);
-
-// After
-$manager->initiateDialog($dialog);
-```

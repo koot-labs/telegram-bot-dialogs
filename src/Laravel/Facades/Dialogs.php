@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static void activate(\KootLabs\TelegramBotDialogs\Dialog $dialog) Activate a given Dialog, so processUpdate() will execute it.
  * @method static void processUpdate(\Telegram\Bot\Objects\Update $update) Pass Update into the active Dialog (if any) to process it.
  * @method static \KootLabs\TelegramBotDialogs\DialogManager setBot(\Telegram\Bot\Api $bot) Change the Bot instance to use for API calls.
- * @method static void initiateDialog(\KootLabs\TelegramBotDialogs\Dialog $dialog, array $data = []) Initiate a new Dialog from the server side.
+ * @method static void initiateDialog(\KootLabs\TelegramBotDialogs\Dialog $dialog, array $updateData = []) Initiate a new Dialog from the server side.
  */
 final class Dialogs extends Facade
 {
