@@ -97,7 +97,7 @@ Control dialog flow using these configuration options:
 
 ```php
 protected array $steps = [
-    // Jump to specific step after completion
+    // Jump to a specific step after completion
     [
         'name' => 'start',
         'response' => 'Welcome!',
@@ -108,10 +108,10 @@ protected array $steps = [
     [
         'name' => 'help',
         'response' => 'Showing help...',
-        'switch' => 'help_details',  // Equivalent to $this->switchToStep('help_details')
+        'switch' => 'help_details',  // Equivalent to $this->switch('help_details')
     ],
 
-    // End dialog after step
+    // End dialog after a step
     [
         'name' => 'goodbye',
         'response' => 'Thank you for using our bot!',
@@ -127,9 +127,11 @@ protected array $steps = [
 Create dialogs with multiple paths based on user input:
 
 ```php
+use KootLabs\TelegramBotDialogs\Dialog;
+
 final class SurveyDialog extends Dialog
 {
-    protected array $steps = ['askAge', 'processAge'];
+    protected array $steps = ['askAge', 'processAge', 'underageFlow', 'adultFlow'];
     private int $userAge;
 
     public function askAge(Update $update): void
@@ -145,9 +147,9 @@ final class SurveyDialog extends Dialog
         $this->userAge = (int) $update->getMessage()->getText();
 
         if ($this->userAge < 18) {
-            $this->switchToStep('underageFlow');
+            $this->switch('underageFlow');
         } else {
-            $this->switchToStep('adultFlow');
+            $this->switch('adultFlow');
         }
     }
 
@@ -166,7 +168,6 @@ final class SurveyDialog extends Dialog
             'chat_id' => $this->getChatId(),
             'text' => 'Welcome! Let\'s continue with the survey.',
         ]);
-        $this->nextStep('questions');
     }
 }
 ```

@@ -179,7 +179,7 @@ abstract class Dialog
 {
     // Navigation
     public function nextStep(string $stepName): void;
-    public function switchToStep(string $stepName): void;
+    public function switch(string $stepName): void;
     public function complete(): void;
 
     // State Management

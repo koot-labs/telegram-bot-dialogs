@@ -16,7 +16,6 @@ $dialog->isStart()          $dialog->isAtStart()
 $dialog->isEnd()            $dialog->isCompleted()
 $dialog->end()              $dialog->complete()
 $dialog->ttl()              $dialog->getTtl()
-$dialog->switch()           $dialog->switchToStep()
 $dialog->proceed()          $dialog->performStep()  // internal method
 ```
 
