@@ -6,7 +6,7 @@ This is a major release that includes several backward-incompatible changes. Ple
 
 ### Method Renames
 
-#### Dialog Class
+#### `Dialog` Class
 
 The following methods have been renamed to improve clarity and consistency:
 
@@ -19,7 +19,7 @@ $dialog->ttl()              $dialog->getTtl()
 $dialog->proceed()          $dialog->performStep()  // internal method
 ```
 
-#### DialogManager Class
+#### `DialogManager` Class
 
 ```php
 // Before                  // After
@@ -31,6 +31,10 @@ $manager->exists()         $manager->hasActiveDialog()
 // Before                                           // After
 $manager->startNewDialogInitiatedByBot($dialog);    $manager->initiateDialog($dialog);
 ```
+
+### `BotInitiatedUpdate` Class
+
+`Dialog $dialg` parameter has been [removed](83e901d0) from the constructor, as well as the `$dialog` property from the class.
 
 ### Removed Methods
 
@@ -59,7 +63,7 @@ $this->memory->forget('key');
 
 ### Internal Methods Renames
 
-The following internal methods in DialogManager have been renamed:
+The following internal methods in `DialogManager` have been renamed:
 
 ```php
 // Before                     // After
@@ -70,4 +74,4 @@ readDialogState()             retrieveDialog()
 forgetDialogState()           forgetDialog()
 ```
 
-Note: These are internal changes and shouldn't affect your application unless you've extended DialogManager.
+Note: These are internal changes and shouldn't affect your application unless you've extended `DialogManager`.
