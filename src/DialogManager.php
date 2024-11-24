@@ -61,7 +61,7 @@ final class DialogManager
     {
         $this->activate($dialog);
 
-        $this->processUpdate(new BotInitiatedUpdate($dialog, $updateData));
+        $this->processUpdate(new BotInitiatedUpdate($updateData));
 
         $dialog->isCompleted()
             ? $this->forgetDialog($dialog)
@@ -86,7 +86,7 @@ final class DialogManager
             $performOneMoreStepRequired = false;
             try {
                 $dialog->performStep($update);
-            } catch (SwitchToAnotherStep $exception) {
+            } catch (SwitchToAnotherStep) {
                 $performOneMoreStepRequired = true;
             } catch (SwitchToAnotherDialog $exception) {
                 $this->forgetDialog($dialog);
