@@ -54,7 +54,7 @@ final class DialogManager
      * Initiate a new Dialog from the server side (e.g., by cron).
      * Note, a User firstly should start a chat with a bot (bot can't initiate a chat — this is TG Bot API limitation).
      * @api
-     * @throws \Telegram\Bot\Exceptions\TelegramSDKException
+     * @throws \Telegram\Bot\Exceptions\TelegramSDKException In case a chat is not available (bots can't initiate chats) or other API errors.
      */
     public function initiateDialog(Dialog $dialog): void
     {

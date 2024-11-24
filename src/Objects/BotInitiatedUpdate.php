@@ -15,10 +15,14 @@ final class BotInitiatedUpdate extends Update
 {
     public Dialog $dialog;
 
-    public function __construct(Dialog $dialog, array $data = [])
+    /**
+     * @param \KootLabs\TelegramBotDialogs\Dialog $dialog
+     * @param array<mixed> $updateData Raw Update data to create {@see \Telegram\Bot\Objects\Update} instance from.
+     */
+    public function __construct(Dialog $dialog, array $updateData = [])
     {
         $this->dialog = $dialog;
 
-        parent::__construct($data);
+        parent::__construct($updateData);
     }
 }
