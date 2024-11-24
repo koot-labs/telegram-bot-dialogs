@@ -56,11 +56,11 @@ final class DialogManager
      * @api
      * @throws \Telegram\Bot\Exceptions\TelegramSDKException
      */
-    public function initiateDialog(Dialog $dialog): void
+    public function initiateDialog(Dialog $dialog, array $data = []): void
     {
         $this->activate($dialog);
 
-        $this->processUpdate(new BotInitiatedUpdate($dialog));
+        $this->processUpdate(new BotInitiatedUpdate($dialog, $data));
 
         $dialog->isCompleted()
             ? $this->forgetDialog($dialog)
@@ -81,16 +81,19 @@ final class DialogManager
             return;
         }
 
-        try {
-            $dialog->performStep($update);
-        } catch (SwitchToAnotherStep $exception) {
-            $dialog->performStep($update);
-        } catch (SwitchToAnotherDialog $exception) {
-            $this->forgetDialog($dialog);
-            $this->activate($exception->nextDialog);
-            $this->processUpdate($update);
-            return;
-        }
+        do {
+            $performOneMoreStepRequired = false;
+            try {
+                $dialog->performStep($update);
+            } catch (SwitchToAnotherStep $exception) {
+                $performOneMoreStepRequired = true;
+            } catch (SwitchToAnotherDialog $exception) {
+                $this->forgetDialog($dialog);
+                $this->activate($exception->nextDialog);
+                $this->processUpdate($update);
+                return;
+            }
+        } while($performOneMoreStepRequired);
 
         if ($dialog->isCompleted()) {
             $this->forgetDialog($dialog);

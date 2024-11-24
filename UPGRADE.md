@@ -62,7 +62,7 @@ findDialogKeyForStore()       resolveDialogKey()
 getDialogInstance()           resolveActiveDialog()
 storeDialogState()            persistDialog()
 readDialogState()             retrieveDialog()
-forgetDialogState()           removeDialog()
+forgetDialogState()           forgetDialog()
 ```
 
 Note: These are internal changes and shouldn't affect your application unless you've extended DialogManager.
