@@ -269,6 +269,12 @@ abstract class Dialog
 
             if (is_array($stepConfig['options'] ?? null)) {
                 $params = [...$params, ...$stepConfig['options']];
+
+                if (is_array($params['reply_markup'] ?? null) && [] != $params['reply_markup']) {
+                    $params['reply_markup'] = json_encode($params['reply_markup']);
+                } else{
+                    unset($params['reply_markup']);
+                }
             }
 
             $this->bot->sendMessage($params);
