@@ -10,12 +10,16 @@ trait FakeBot
 {
     use FakeHttp;
 
-    public function createBotWithQueuedResponse(array $data = [], int $statusCode = 200, array $headers = []): Api
+    protected function createBotWithQueuedResponse(array $resultData = [], int $statusCode = 200, array $headers = []): Api
     {
         return new Api(
             'fake',
             false,
-            $this->getGuzzleHttpClient([$this->makeFakeServerResponse($data, $statusCode, $headers)])
+            $this->getGuzzleHttpClient([
+                $this->makeFakeServerResponse($resultData, $statusCode, $headers),
+                $this->makeFakeServerResponse($resultData, $statusCode, $headers),
+                $this->makeFakeServerResponse($resultData, $statusCode, $headers),
+            ])
         );
     }
 }

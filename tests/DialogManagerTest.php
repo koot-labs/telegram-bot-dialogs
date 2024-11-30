@@ -7,6 +7,7 @@ namespace KootLabs\TelegramBotDialogs\Tests;
 use KootLabs\TelegramBotDialogs\DialogManager;
 use KootLabs\TelegramBotDialogs\DialogRepository;
 use KootLabs\TelegramBotDialogs\Dialogs\HelloExampleDialog;
+use KootLabs\TelegramBotDialogs\Tests\Fakes\FakeBot;
 use KootLabs\TelegramBotDialogs\Tests\TestDialogs\PassiveTestDialog;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -22,6 +23,8 @@ use Telegram\Bot\Objects\Update;
 #[UsesClass(\KootLabs\TelegramBotDialogs\DialogRepository::class)]
 final class DialogManagerTest extends TestCase
 {
+    use FakeBot;
+
     private const RANDOM_CHAT_ID = 42;
     private const RANDOM_USER_ID = 110;
 
@@ -92,10 +95,11 @@ final class DialogManagerTest extends TestCase
     public function it_throws_custom_exception_when_switch_to_another_step(): void
     {
         $dialogManager = $this->instantiateDialogManager();
-        $dialog = new PassiveTestDialog(self::RANDOM_CHAT_ID);
-
+        $dialog = new PassiveTestDialog(self::RANDOM_CHAT_ID, $this->createBotWithQueuedResponse());
         $dialogManager->activate($dialog);
+
         $this->expectException(\LogicException::class);
+
         $dialog->performStep(new Update(['message' => ['chat' => ['id' => self::RANDOM_CHAT_ID]]]));
     }
 

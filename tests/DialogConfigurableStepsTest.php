@@ -50,13 +50,16 @@ final class DialogConfigurableStepsTest extends TestCase
             protected array $steps = [
                 [
                     'name' => 'first',
-                    'switch' => 'third',
+                    'sendMessage' => 'Hi!',
+                    'control' => ['switch' => 'third'],
                 ],
                 [
                     'name' => 'second',
+                    'sendMessage' => 'Hi again (2)',
                 ],
                 [
                     'name' => 'third',
+                    'sendMessage' => 'Hi again (3)',
                 ],
             ];
 
@@ -90,14 +93,11 @@ final class DialogConfigurableStepsTest extends TestCase
             protected array $steps = [
                 [
                     'name' => 'first',
-                    'nextStep' => 'third',
+                    'sendMessage' => 'Hi!',
+                    'control' => ['nextStep' => 'third'],
                 ],
-                [
-                    'name' => 'second',
-                ],
-                [
-                    'name' => 'third',
-                ],
+                ['name' => 'second', 'sendMessage' => 'this is second'],
+                ['name' => 'third', 'sendMessage' => 'this is third'],
             ];
 
             protected function afterEveryStep(Update $update, int $stepIndex): void
@@ -122,7 +122,8 @@ final class DialogConfigurableStepsTest extends TestCase
             protected array $steps = [
                 [
                     'name' => 'first',
-                    'end' => true,
+                    'sendMessage' => 'Hi!',
+                    'control' => ['complete' => true],
                 ],
                 [
                     'name' => 'second',
@@ -148,6 +149,7 @@ final class DialogConfigurableStepsTest extends TestCase
             protected array $steps = [
                 [
                     'name' => 'first',
+                    'sendMessage' => 'Hi!',
                 ],
             ];
 

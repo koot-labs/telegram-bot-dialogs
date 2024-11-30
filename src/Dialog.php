@@ -19,16 +19,52 @@ use Telegram\Bot\Objects\Update;
  *
  * @psalm-type StepConfiguration = array{
  *     name: non-empty-string,
- *     response?: string,
- *     switch?: non-empty-string,
- *     nextStep?: non-empty-string,
- *     end?: true,
- *     options?: array{
+ *     sendMessage: non-empty-string|array{
+ *          text: string,
+ *          business_connection_id?: string,
+ *          message_thread_id?: int,
  *          parse_mode?: 'HTML'|'MarkdownV2'|'Markdown',
- *          ...
- *     }
+ *          entities?: list<array{type: string, offset: int, length: int, url?: string|null, language?: string|null}>,
+ *          link_preview_options?: array{is_disabled?: bool, url?: string, prefer_small_media?: bool, prefer_large_media?: bool, show_above_text?: bool},
+ *          disable_notification?: bool,
+ *          protect_content?: bool,
+ *          allow_paid_broadcast?: bool,
+ *          message_effect_id?: string,
+ *          reply_parameters?: string,
+ *          reply_markup?: non-empty-array|string,
+ *     },
+ *     control: array{
+ *          switch?: non-empty-string|null,
+ *          nextStep?: non-empty-string|null,
+ *          complete?: bool,
+ *     },
  * }
- * Where 'options' is an array of any key-values accepted by https://core.telegram.org/bots/api#sendmessage
+ * Where 'sendMessage' is an array of any key-values accepted by https://core.telegram.org/bots/api#sendmessage
+ *
+ * @psalm-type NormalizedStepConfiguration = array{
+ *     name: non-empty-string,
+ *     sendMessage: array{
+ *         chat_id: int,
+ *         text: non-empty-string,
+ *         business_connection_id?: string,
+ *         message_thread_id?: int,
+ *         text?: string,
+ *         parse_mode?: 'HTML'|'MarkdownV2'|'Markdown',
+ *         entities?: array,
+ *         link_preview_options?: array,
+ *         disable_notification?: bool,
+ *         protect_content?: bool,
+ *         allow_paid_broadcast?: bool,
+ *         message_effect_id?: string,
+ *         reply_parameters?: string,
+ *         reply_markup?: non-empty-array|string,
+ *     },
+ *     control: array{
+ *         switch: non-empty-string|null,
+ *         nextStep: non-empty-string|null,
+ *         complete: bool,
+ *     },
+ *  }
  */
 abstract class Dialog
 {
@@ -175,6 +211,7 @@ abstract class Dialog
     /**
      * Sets the next step to be executed in the dialog flow (on next tick).
      * @api
+     * @param non-empty-string $stepName
      */
     final protected function nextStep(string $stepName): void
     {
@@ -189,6 +226,7 @@ abstract class Dialog
     /**
      * Switch to the particular step of the Dialog.
      * This step will be executed at once with new proceed iteration.
+     * @param non-empty-string $stepName
      */
     final protected function switch(string $stepName): void
     {
@@ -255,44 +293,64 @@ abstract class Dialog
      */
     private function proceedConfiguredStep(array $stepConfig, Update $update, int $currentStepIndex): void
     {
-        if (! isset($stepConfig['name'])) {
-            throw new InvalidDialogStep('Configurable Dialog step does not contain required “name” value.');
-        }
+        $normalizedStepConfig = $this->normalizeConfiguredStep($stepConfig);
 
         $this->beforeEveryStep($update, $currentStepIndex);
 
-        if (isset($stepConfig['response'])) {
-            $params = [
-                'chat_id' => $this->getChatId(),
-                'text' => $stepConfig['response'],
-            ];
+        $this->bot->sendMessage($normalizedStepConfig['sendMessage']);
 
-            if (is_array($stepConfig['options'] ?? null)) {
-                $params = [...$params, ...$stepConfig['options']];
-
-                if (is_array($params['reply_markup'] ?? null) && [] != $params['reply_markup']) {
-                    $params['reply_markup'] = json_encode($params['reply_markup']);
-                } else{
-                    unset($params['reply_markup']);
-                }
-            }
-
-            $this->bot->sendMessage($params);
+        if (is_string($normalizedStepConfig['control']['switch'])) {
+            $this->switch($normalizedStepConfig['control']['switch']);
         }
 
-        if (! empty($stepConfig['switch'])) {
-            $this->switch($stepConfig['switch']);
-        }
-
-        if (! empty($stepConfig['nextStep'])) {
-            $this->nextStep($stepConfig['nextStep']);
+        if (is_string($normalizedStepConfig['control']['nextStep'])) {
+            $this->nextStep($normalizedStepConfig['control']['nextStep']);
         }
 
         $this->afterEveryStep($update, $currentStepIndex);
 
-        if (isset($stepConfig['end']) && $stepConfig['end'] === true) {
+        if ($normalizedStepConfig['control']['complete'] === true) {
             $this->complete();
         }
+    }
+
+    /**
+     * Normalize step configured by an array as it requires some JSON serialization and other sanity checks.
+     * It's also a great extending point for a custom functionality.
+     * @psalm-param StepConfiguration $rawStepConfig
+     * @psalm-return NormalizedStepConfiguration
+     * @throws \KootLabs\TelegramBotDialogs\Exceptions\InvalidDialogStep
+     */
+    protected function normalizeConfiguredStep(array $rawStepConfig): array
+    {
+        if (! is_string($rawStepConfig['name'] ?? null)) {
+            throw new InvalidDialogStep('Configurable Dialog step does not contain required “name” key.');
+        }
+
+        if (!is_string($rawStepConfig['sendMessage']) && ! is_string($rawStepConfig['sendMessage']['text'])) {
+            throw new InvalidDialogStep('Configurable Dialog step does not contain required “sendMessage.text” key.');
+        }
+
+        $sendMessage = is_string($rawStepConfig['sendMessage'])
+            ? ['text' => $rawStepConfig['sendMessage']]
+            : $rawStepConfig['sendMessage'];
+        $sendMessage['chat_id'] = $this->getChatId();
+
+        $normalized = [
+            'name' => $rawStepConfig['name'],
+            'sendMessage' => $sendMessage,
+            'control' => [
+                'switch' => $rawStepConfig['control']['switch'] ?? null,
+                'nextStep' => $rawStepConfig['control']['nextStep'] ?? null,
+                'complete' => $rawStepConfig['control']['complete'] ?? false,
+            ],
+        ];
+
+        if (is_array($normalized['sendMessage']['reply_markup'] ?? null)) {
+            $normalized['reply_markup'] = json_encode($normalized['sendMessage']['reply_markup'], \JSON_THROW_ON_ERROR);
+        }
+
+        return $normalized;
     }
 
     /** @return array<string, mixed> */

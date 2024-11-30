@@ -19,6 +19,34 @@ $dialog->ttl()              $dialog->getTtl()
 $dialog->proceed()          $dialog->performStep()  // internal method
 ```
 
+If you use configured steps (as an array), the array shape structure is changed:
+```diff
+[
+    'name' => 'step-name',
+-   'response' => 'Hi!',
++   'sendMessage' => 'Hi!',
+````
+
+if you used "options" key, rename it into "sendMessage" and move "response" into "sendMessage.text":
+```diff
+[
+    'name' => 'step-name',
+-   'response' => 'Hi!',
+-   'options' => ['parse_mode' => 'HTML'],
++   'sendMessage' => ['text' => 'Hi!', 'parse_mode' => 'HTML'],
+```
+
+control flow instructions moved into a "control" subarray, where "end" renamed into "complete"":
+```diff
+[
+    'name' => 'step-name',
+-   'response' => 'Hi!',
+-   'switch' => 'next',
+-   'nextStep' => 'next',
+-   'end' => true,
++   'control' => ['switch' => "next", 'nextStep' => 'next', 'complete' => true],
+```
+
 #### `DialogManager` Class
 
 ```php

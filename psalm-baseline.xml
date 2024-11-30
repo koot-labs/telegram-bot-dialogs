@@ -1,23 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
   <file src="src/Dialog.php">
-    <InvalidOperand>
-      <code><![CDATA[$stepConfig['options']]]></code>
-    </InvalidOperand>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$stepConfig['options']]]></code>
-    </PossiblyUndefinedArrayOffset>
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$normalizedStepConfig['control']['nextStep']]]></code>
+      <code><![CDATA[$normalizedStepConfig['control']['switch']]]></code>
+    </ArgumentTypeCoercion>
+    <DocblockTypeContradiction>
+      <code><![CDATA[is_array($stepNameOrConfig)]]></code>
+      <code><![CDATA[is_array($value)]]></code>
+      <code><![CDATA[is_array($value)]]></code>
+    </DocblockTypeContradiction>
+    <InvalidDocblock>
+      <code><![CDATA[abstract class Dialog]]></code>
+    </InvalidDocblock>
+    <MismatchingDocblockParamType>
+      <code><![CDATA[StepConfiguration]]></code>
+      <code><![CDATA[StepConfiguration]]></code>
+    </MismatchingDocblockParamType>
+    <MismatchingDocblockReturnType>
+      <code><![CDATA[NormalizedStepConfiguration]]></code>
+    </MismatchingDocblockReturnType>
+    <NoValue>
+      <code><![CDATA[$stepNameOrConfig]]></code>
+    </NoValue>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$bot]]></code>
     </PropertyNotSetInConstructor>
-    <RedundantConditionGivenDocblockType>
-      <code><![CDATA[is_string($stepNameOrConfig)]]></code>
-      <code><![CDATA[isset($stepConfig['end']) && $stepConfig['end'] === true]]></code>
-    </RedundantConditionGivenDocblockType>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[empty($stepConfig['nextStep'])]]></code>
-      <code><![CDATA[empty($stepConfig['switch'])]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="src/DialogManager.php">
     <LessSpecificReturnStatement>
@@ -71,7 +79,8 @@
             protected array $steps = [
                 [
                     'name' => 'first',
-                    'end' => true,
+                    'sendMessage' => 'Hi!',
+                    'control' => ['complete' => true],
                 ],
                 [
                     'name' => 'second',
@@ -85,13 +94,16 @@
             protected array $steps = [
                 [
                     'name' => 'first',
-                    'switch' => 'third',
+                    'sendMessage' => 'Hi!',
+                    'control' => ['switch' => 'third'],
                 ],
                 [
                     'name' => 'second',
+                    'sendMessage' => 'Hi again (2)',
                 ],
                 [
                     'name' => 'third',
+                    'sendMessage' => 'Hi again (3)',
                 ],
             ];
 
@@ -106,14 +118,11 @@
             protected array $steps = [
                 [
                     'name' => 'first',
-                    'nextStep' => 'third',
+                    'sendMessage' => 'Hi!',
+                    'control' => ['nextStep' => 'third'],
                 ],
-                [
-                    'name' => 'second',
-                ],
-                [
-                    'name' => 'third',
-                ],
+                ['name' => 'second', 'sendMessage' => 'this is second'],
+                ['name' => 'third', 'sendMessage' => 'this is third'],
             ];
 
             protected function afterEveryStep(Update $update, int $stepIndex): void
@@ -129,6 +138,7 @@
             protected array $steps = [
                 [
                     'name' => 'first',
+                    'sendMessage' => 'Hi!',
                 ],
             ];
 
