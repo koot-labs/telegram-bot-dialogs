@@ -63,8 +63,33 @@
       <code><![CDATA[$steps]]></code>
       <code><![CDATA[$steps]]></code>
       <code><![CDATA[$steps]]></code>
+      <code><![CDATA[$steps]]></code>
+      <code><![CDATA[$steps]]></code>
+      <code><![CDATA[$steps]]></code>
+      <code><![CDATA[$steps]]></code>
     </NonInvariantDocblockPropertyType>
     <PropertyNotSetInConstructor>
+      <code><![CDATA[class (self::RANDOM_CHAT_ID) extends Dialog {
+            /** @inheritDoc */
+            protected array $steps = [
+                [
+                    'name' => 'first',
+                    'sendMessage' => [
+                        'parse_mode' => 'HTML',
+                        // 'text' key is missing
+                    ],
+                ],
+            ];
+        }]]></code>
+      <code><![CDATA[class (self::RANDOM_CHAT_ID) extends Dialog {
+            /** @inheritDoc */
+            protected array $steps = [
+                [
+                    'name' => 'first',
+                    // 'sendMessage' key is missing
+                ],
+            ];
+        }]]></code>
       <code><![CDATA[class (self::RANDOM_CHAT_ID) extends Dialog {
             /** @inheritDoc */
             protected array $steps = [
@@ -84,6 +109,34 @@
                 ],
                 [
                     'name' => 'second',
+                ],
+            ];
+        }]]></code>
+      <code><![CDATA[class (self::RANDOM_CHAT_ID, $bot) extends Dialog {
+            /** @inheritDoc */
+            protected array $steps = [
+                [
+                    'name' => 'first',
+                    'sendMessage' => [
+                        'text' => 'Hi!',
+                        'reply_markup' => '{"inline_keyboard":[[{"text":"Button 1","callback_data":"btn1"}]]}',
+                    ],
+                ],
+            ];
+        }]]></code>
+      <code><![CDATA[class (self::RANDOM_CHAT_ID, $bot) extends Dialog {
+            /** @inheritDoc */
+            protected array $steps = [
+                [
+                    'name' => 'first',
+                    'sendMessage' => [
+                        'text' => 'Hi!',
+                        'reply_markup' => [
+                            'inline_keyboard' => [
+                                [['text' => 'Button 1', 'callback_data' => 'btn1']],
+                            ],
+                        ],
+                    ],
                 ],
             ];
         }]]></code>
@@ -252,6 +305,28 @@
             {
                 ++$this->count;
                 $this->nextStep('step1');
+            }
+        }]]></code>
+    </PropertyNotSetInConstructor>
+  </file>
+  <file src="tests/Fakes/FakeBot.php">
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[class('fake', false, $this->getGuzzleHttpClient([
+            $this->makeFakeServerResponse($resultData, $statusCode, $headers),
+            $this->makeFakeServerResponse($resultData, $statusCode, $headers),
+            $this->makeFakeServerResponse($resultData, $statusCode, $headers),
+        ])) extends Api {
+            private array $lastSentMessage = [];
+
+            public function sendMessage(array $params): \Telegram\Bot\Objects\Message
+            {
+                $this->lastSentMessage = $params;
+                return parent::sendMessage($params);
+            }
+
+            public function getLastSentMessage(): array
+            {
+                return $this->lastSentMessage;
             }
         }]]></code>
     </PropertyNotSetInConstructor>
