@@ -1,8 +1,18 @@
 # Upgrade Guide
 
-## Upgrading from 0.13 to 1.0
+## Upgrading from 0.X.Y to 1.0
 
-This is a major release that includes several backward-incompatible changes. Please review this guide thoroughly before upgrading.
+This is a major release that includes several backward-incompatible changes. Please review this guide thoroughly before
+upgrading.
+
+### Breaking Changes
+
+⚠️ **High Impact Changes**
+
+- Method renames in core classes
+- Configuration structure changes
+- Removal of deprecated methods
+- Changes in `BotInitiatedUpdate` constructor
 
 ### Method Renames
 
@@ -10,75 +20,114 @@ This is a major release that includes several backward-incompatible changes. Ple
 
 The following methods have been renamed to improve clarity and consistency:
 
-```php
-// Before                   // After
-$dialog->isStart()          $dialog->isAtStart()
-$dialog->isEnd()            $dialog->isCompleted()
-$dialog->end()              $dialog->complete()
-$dialog->ttl()              $dialog->getTtl()
-$dialog->proceed()          $dialog->performStep()  // internal method
-```
+| Before               | After                    | Impact |
+|----------------------|--------------------------|--------|
+| `$dialog->isStart()` | `$dialog->isAtStart()`   | Medium |
+| `$dialog->isEnd()`   | `$dialog->isCompleted()` | Medium |
+| `$dialog->end()`     | `$dialog->complete()`    | Medium |
+| `$dialog->ttl()`     | `$dialog->getTtl()`      | Low    |
+| `$dialog->proceed()` | `$dialog->performStep()` | Low    |
 
-If you use configured steps (as an array), the array shape structure is changed:
-```diff
-[
-    'name' => 'step-name',
--   'response' => 'Hi!',
-+   'sendMessage' => 'Hi!',
-````
-
-if you used "options" key, rename it into "sendMessage" and move "response" into "sendMessage.text":
-```diff
-[
-    'name' => 'step-name',
--   'response' => 'Hi!',
--   'options' => ['parse_mode' => 'HTML'],
-+   'sendMessage' => ['text' => 'Hi!', 'parse_mode' => 'HTML'],
-```
-
-control flow instructions moved into a "control" subarray, where "end" renamed into "complete"":
-```diff
-[
-    'name' => 'step-name',
--   'response' => 'Hi!',
-+   'sendMessage' => 'Hi!',
--   'switch' => 'next',
--   'nextStep' => 'next',
--   'end' => true,
-+   'control' => ['switch' => "next", 'nextStep' => 'next', 'complete' => true],
-```
-
-#### `DialogManager` Class
+Example migration:
 
 ```php
-// Before                  // After
-$manager->proceed()        $manager->processUpdate()
-$manager->exists()         $manager->hasActiveDialog()
+// Before
+if ($dialog->isStart()) {
+    $dialog->proceed();
+    if ($dialog->isEnd()) {
+        $dialog->end();
+    }
+}
+
+// After
+if ($dialog->isAtStart()) {
+    $dialog->performStep();
+    if ($dialog->isCompleted()) {
+        $dialog->complete();
+    }
+}
 ```
+
+### Configuration Changes
+
+If you use configured steps (as an array), the structure has changed:
+
+#### Basic Message Configuration
 
 ```php
-// Before                                           // After
-$manager->startNewDialogInitiatedByBot($dialog);    $manager->initiateDialog($dialog);
+// Before
+[
+    'name' => 'step-name',
+    'response' => 'Hi!',
+]
+
+// After
+[
+    'name' => 'step-name',
+    'sendMessage' => 'Hi!',
+]
 ```
 
-### `BotInitiatedUpdate` Class
+#### Advanced Message Configuration
 
-`Dialog $dialg` parameter has been [removed](83e901d0) from the constructor, as well as the `$dialog` property from the class.
+```php
+// Before
+[
+    'name' => 'step-name',
+    'response' => 'Hi!',
+    'options' => ['parse_mode' => 'HTML'],
+]
+
+// After
+[
+    'name' => 'step-name',
+    'sendMessage' => [
+        'text' => 'Hi!',
+        'parse_mode' => 'HTML',
+    ],
+]
+```
+
+#### Control Flow Configuration
+
+```php
+// Before
+[
+    'name' => 'step-name',
+    'response' => 'Hi!',
+    'switch' => 'next',
+    'nextStep' => 'next',
+    'end' => true,
+]
+
+// After
+[
+    'name' => 'step-name',
+    'sendMessage' => 'Hi!',
+    'control' => [
+        'switch' => 'next',
+        'nextStep' => 'next',
+        'complete' => true,
+    ],
+]
+```
 
 ### Removed Methods
 
 The following deprecated methods have been removed:
 
-```php
-// Dialog Class
-$dialog->start()           // Use DialogManager::processUpdate() instead
-$dialog->jump()            // Use nextStep() instead
-$dialog->remember()        // Use $dialog->memory directly
-$dialog->forget()          // Use $dialog->memory directly
-$dialog->beforeAllStep()   // Use beforeFirstStep() instead
-$dialog->afterAllStep()    // Use afterLastStep() instead
+| Removed Method             | New API                              | Example                             |
+|----------------------------|--------------------------------------|-------------------------------------|
+| `$dialog->start()`         | Use `DialogManager::processUpdate()` | `$manager->processUpdate($update)`  |
+| `$dialog->jump()`          | Use `nextStep()`                     | `$dialog->nextStep('step-name')`    |
+| `$dialog->beforeAllStep()` | Use `beforeFirstStep()`              | `$dialog->beforeFirstStep()`        |
+| `$dialog->afterAllStep()`  | Use `afterLastStep()`                | `$dialog->afterLastStep()`          |
+| `$dialog->remember()`      | Use `$dialog->memory` directly       | See memory management example below |
+| `$dialog->forget()`        | Use `$dialog->memory` directly       | See memory management example below |
 
-// Example migration for memory management
+#### Memory Management Migration
+
+```php
 // Before
 $this->remember('key', 'value');
 $value = $this->memory->get('key');
@@ -90,17 +139,37 @@ $value = $this->memory->get('key');
 $this->memory->forget('key');
 ```
 
-### Internal Methods Renames
+### Internal Changes
 
-The following internal methods in `DialogManager` have been renamed:
+⚠️ **Note**: These changes only affect you if you've extended the `DialogManager` class.
 
-```php
-// Before                     // After
-findDialogKeyForStore()       resolveDialogKey()
-getDialogInstance()           resolveActiveDialog()
-storeDialogState()            persistDialog()
-readDialogState()             retrieveDialog()
-forgetDialogState()           forgetDialog()
-```
+| Before                    | After                   |
+|---------------------------|-------------------------|
+| `findDialogKeyForStore()` | `resolveDialogKey()`    |
+| `getDialogInstance()`     | `resolveActiveDialog()` |
+| `storeDialogState()`      | `persistDialog()`       |
+| `readDialogState()`       | `retrieveDialog()`      |
+| `forgetDialogState()`     | `forgetDialog()`        |
 
-Note: These are internal changes and shouldn't affect your application unless you've extended `DialogManager`.
+## Troubleshooting
+
+### Common Issues
+
+1. **Method Not Found Errors**
+    - Check the method renames section and update all occurrences
+    - Common in: Dialog class method calls
+
+2. **Configuration Not Working**
+    - Verify the new configuration structure
+    - Ensure 'sendMessage' is used instead of 'response'
+    - Check control flow configuration is under 'control' key
+
+3. **Memory Access Issues**
+    - Ensure direct memory access is used instead of remember/forget methods
+    - Verify memory operations use the new syntax
+
+For more detailed information, please refer to:
+
+- [Advanced Dialogs Documentation](docs/advanced-dialogs.md)
+- [Laravel Simple Example](docs/laravel-simple-example.md)
+- [Using Without Framework](docs/using-without-framework.md)
