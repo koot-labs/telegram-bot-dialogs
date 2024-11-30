@@ -347,7 +347,7 @@ abstract class Dialog
         ];
 
         if (is_array($normalized['sendMessage']['reply_markup'] ?? null)) {
-            $normalized['reply_markup'] = json_encode($normalized['sendMessage']['reply_markup'], \JSON_THROW_ON_ERROR);
+            $normalized['sendMessage']['reply_markup'] = json_encode($normalized['sendMessage']['reply_markup'], \JSON_THROW_ON_ERROR);
         }
 
         return $normalized;

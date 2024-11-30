@@ -78,6 +78,67 @@ final class DialogConfigurableStepsTest extends TestCase
     }
 
     #[Test]
+    public function it_json_encodes_reply_markup_when_array(): void
+    {
+        $bot = $this->createBotWithQueuedResponse();
+        $replyMarkup = [
+            'inline_keyboard' => [
+                [['text' => 'Button 1', 'callback_data' => 'btn1']],
+            ],
+        ];
+
+        $dialog = new class (self::RANDOM_CHAT_ID, $bot) extends Dialog {
+            /** @inheritDoc */
+            protected array $steps = [
+                [
+                    'name' => 'first',
+                    'sendMessage' => [
+                        'text' => 'Hi!',
+                        'reply_markup' => [
+                            'inline_keyboard' => [
+                                [['text' => 'Button 1', 'callback_data' => 'btn1']],
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+        };
+
+        $dialog->performStep($this->buildUpdateOfRandomType());
+
+        $expectedJson = json_encode($replyMarkup, \JSON_THROW_ON_ERROR);
+        $this->assertSame($expectedJson, $bot->getLastSentMessage()['reply_markup']);
+    }
+
+    #[Test]
+    public function it_preserves_reply_markup_when_already_json_string(): void
+    {
+        $bot = $this->createBotWithQueuedResponse();
+        $replyMarkup = json_encode([
+            'inline_keyboard' => [
+                [['text' => 'Button 1', 'callback_data' => 'btn1']],
+            ],
+        ], JSON_THROW_ON_ERROR);
+
+        $dialog = new class (self::RANDOM_CHAT_ID, $bot) extends Dialog {
+            /** @inheritDoc */
+            protected array $steps = [
+                [
+                    'name' => 'first',
+                    'sendMessage' => [
+                        'text' => 'Hi!',
+                        'reply_markup' => '{"inline_keyboard":[[{"text":"Button 1","callback_data":"btn1"}]]}',
+                    ],
+                ],
+            ];
+        };
+
+        $dialog->performStep($this->buildUpdateOfRandomType());
+
+        $this->assertSame($replyMarkup, $bot->getLastSentMessage()['reply_markup']);
+    }
+
+    #[Test]
     public function it_switches_to_another_step(): void
     {
         $bot = $this->createBotWithQueuedResponse();
