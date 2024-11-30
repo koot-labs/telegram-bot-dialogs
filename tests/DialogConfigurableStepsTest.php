@@ -39,6 +39,45 @@ final class DialogConfigurableStepsTest extends TestCase
     }
 
     #[Test]
+    public function it_throws_an_exception_when_step_does_not_have_sendMessage(): void
+    {
+        $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {
+            /** @inheritDoc */
+            protected array $steps = [
+                [
+                    'name' => 'first',
+                    // 'sendMessage' key is missing
+                ],
+            ];
+        };
+
+        $this->expectException(InvalidDialogStep::class);
+
+        $dialog->performStep($this->buildUpdateOfRandomType());
+    }
+
+    #[Test]
+    public function it_throws_an_exception_when_step_does_not_have_sendMessage_text(): void
+    {
+        $dialog = new class (self::RANDOM_CHAT_ID) extends Dialog {
+            /** @inheritDoc */
+            protected array $steps = [
+                [
+                    'name' => 'first',
+                    'sendMessage' => [
+                        'parse_mode' => 'HTML',
+                        // 'text' key is missing
+                    ],
+                ],
+            ];
+        };
+
+        $this->expectException(InvalidDialogStep::class);
+
+        $dialog->performStep($this->buildUpdateOfRandomType());
+    }
+
+    #[Test]
     public function it_switches_to_another_step(): void
     {
         $bot = $this->createBotWithQueuedResponse();

@@ -327,7 +327,7 @@ abstract class Dialog
             throw new InvalidDialogStep('Configurable Dialog step does not contain required “name” key.');
         }
 
-        if (!is_string($rawStepConfig['sendMessage']) && ! is_string($rawStepConfig['sendMessage']['text'])) {
+        if (! is_string($rawStepConfig['sendMessage'] ?? null) && ! is_string($rawStepConfig['sendMessage']['text']  ?? null)) {
             throw new InvalidDialogStep('Configurable Dialog step does not contain required “sendMessage.text” key.');
         }
 
