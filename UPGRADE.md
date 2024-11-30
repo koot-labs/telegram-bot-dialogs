@@ -41,6 +41,7 @@ control flow instructions moved into a "control" subarray, where "end" renamed i
 [
     'name' => 'step-name',
 -   'response' => 'Hi!',
++   'sendMessage' => 'Hi!',
 -   'switch' => 'next',
 -   'nextStep' => 'next',
 -   'end' => true,
