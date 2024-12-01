@@ -87,8 +87,8 @@ If you use configured steps (as an array), the structure has changed:
     'name' => 'step-name',
     'sendMessage' => 'Hi!',
     'control' => [
-        'switch' => 'next',
-        'nextStep' => 'next',
+        'switch' => 'some-step',
+        'nextStep' => 'some-step',
         'complete' => true,
     ],
 ]
