@@ -30,24 +30,6 @@ The following methods have been renamed to improve clarity and consistency:
 
 Example migration:
 
-```php
-// Before
-if ($dialog->isStart()) {
-    $dialog->proceed();
-    if ($dialog->isEnd()) {
-        $dialog->end();
-    }
-}
-
-// After
-if ($dialog->isAtStart()) {
-    $dialog->performStep();
-    if ($dialog->isCompleted()) {
-        $dialog->complete();
-    }
-}
-```
-
 ### Configuration Changes
 
 If you use configured steps (as an array), the structure has changed:
