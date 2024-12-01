@@ -10,12 +10,29 @@ trait FakeBot
 {
     use FakeHttp;
 
-    public function createBotWithQueuedResponse(array $data = [], int $statusCode = 200, array $headers = []): Api
+    private array $lastSentMessage = [];
+
+    protected function createBotWithQueuedResponse(array $resultData = [], int $statusCode = 200, array $headers = []): Api
     {
-        return new Api(
-            'fake',
-            false,
-            $this->getGuzzleHttpClient([$this->makeFakeServerResponse($data, $statusCode, $headers)])
-        );
+        $bot = new class('fake', false, $this->getGuzzleHttpClient([
+            $this->makeFakeServerResponse($resultData, $statusCode, $headers),
+            $this->makeFakeServerResponse($resultData, $statusCode, $headers),
+            $this->makeFakeServerResponse($resultData, $statusCode, $headers),
+        ])) extends Api {
+            private array $lastSentMessage = [];
+
+            public function sendMessage(array $params): \Telegram\Bot\Objects\Message
+            {
+                $this->lastSentMessage = $params;
+                return parent::sendMessage($params);
+            }
+
+            public function getLastSentMessage(): array
+            {
+                return $this->lastSentMessage;
+            }
+        };
+
+        return $bot;
     }
 }

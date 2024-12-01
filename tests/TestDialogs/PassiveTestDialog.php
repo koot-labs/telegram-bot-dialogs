@@ -8,17 +8,18 @@ use KootLabs\TelegramBotDialogs\Dialog;
 use Telegram\Bot\Objects\Update;
 
 /**
- * An example of Dialog class, which only listens and doesn't send anything, for test purposes.
+ * An example of Dialog class, which only listens to and doesn't send anything, for test purposes.
  * @internal
  * @api
  */
 final class PassiveTestDialog extends Dialog
 {
-    /** @var list<non-empty-string|array{name: string, switch: non-empty-string}> List of method to execute. The order defines the sequence */
+    /** @var list<non-empty-string|array{name: string, sendMessage: string|array, control?: array}> List of method to execute. The order defines the sequence */
     protected array $steps = [
         [
             'name' => 'step1',
-            'switch' => 'step2',
+            'sendMessage' => 'Hi!',
+            'control' => ['switch' => 'step2'],
         ],
         'step2',
         'step3',
@@ -27,7 +28,7 @@ final class PassiveTestDialog extends Dialog
 
     public function step2(Update $update): void
     {
-        $this->switch("step4");
+        $this->switch('step4');
     }
 
     public function step3(Update $update): void {}

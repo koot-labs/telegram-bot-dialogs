@@ -1,23 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
   <file src="src/Dialog.php">
-    <InvalidOperand>
-      <code><![CDATA[$stepConfig['options']]]></code>
-    </InvalidOperand>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$stepConfig['options']]]></code>
-    </PossiblyUndefinedArrayOffset>
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$normalizedStepConfig['control']['nextStep']]]></code>
+      <code><![CDATA[$normalizedStepConfig['control']['switch']]]></code>
+    </ArgumentTypeCoercion>
+    <DocblockTypeContradiction>
+      <code><![CDATA[is_array($stepNameOrConfig)]]></code>
+      <code><![CDATA[is_array($value)]]></code>
+      <code><![CDATA[is_array($value)]]></code>
+    </DocblockTypeContradiction>
+    <InvalidDocblock>
+      <code><![CDATA[abstract class Dialog]]></code>
+    </InvalidDocblock>
+    <MismatchingDocblockParamType>
+      <code><![CDATA[StepConfiguration]]></code>
+      <code><![CDATA[StepConfiguration]]></code>
+    </MismatchingDocblockParamType>
+    <MismatchingDocblockReturnType>
+      <code><![CDATA[NormalizedStepConfiguration]]></code>
+    </MismatchingDocblockReturnType>
+    <NoValue>
+      <code><![CDATA[$stepNameOrConfig]]></code>
+    </NoValue>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$bot]]></code>
     </PropertyNotSetInConstructor>
-    <RedundantConditionGivenDocblockType>
-      <code><![CDATA[is_string($stepNameOrConfig)]]></code>
-      <code><![CDATA[isset($stepConfig['end']) && $stepConfig['end'] === true]]></code>
-    </RedundantConditionGivenDocblockType>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[empty($stepConfig['nextStep'])]]></code>
-      <code><![CDATA[empty($stepConfig['switch'])]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="src/DialogManager.php">
     <LessSpecificReturnStatement>
@@ -55,8 +63,33 @@
       <code><![CDATA[$steps]]></code>
       <code><![CDATA[$steps]]></code>
       <code><![CDATA[$steps]]></code>
+      <code><![CDATA[$steps]]></code>
+      <code><![CDATA[$steps]]></code>
+      <code><![CDATA[$steps]]></code>
+      <code><![CDATA[$steps]]></code>
     </NonInvariantDocblockPropertyType>
     <PropertyNotSetInConstructor>
+      <code><![CDATA[class (self::RANDOM_CHAT_ID) extends Dialog {
+            /** @inheritDoc */
+            protected array $steps = [
+                [
+                    'name' => 'first',
+                    'sendMessage' => [
+                        'parse_mode' => 'HTML',
+                        // 'text' key is missing
+                    ],
+                ],
+            ];
+        }]]></code>
+      <code><![CDATA[class (self::RANDOM_CHAT_ID) extends Dialog {
+            /** @inheritDoc */
+            protected array $steps = [
+                [
+                    'name' => 'first',
+                    // 'sendMessage' key is missing
+                ],
+            ];
+        }]]></code>
       <code><![CDATA[class (self::RANDOM_CHAT_ID) extends Dialog {
             /** @inheritDoc */
             protected array $steps = [
@@ -71,10 +104,39 @@
             protected array $steps = [
                 [
                     'name' => 'first',
-                    'end' => true,
+                    'sendMessage' => 'Hi!',
+                    'control' => ['complete' => true],
                 ],
                 [
                     'name' => 'second',
+                ],
+            ];
+        }]]></code>
+      <code><![CDATA[class (self::RANDOM_CHAT_ID, $bot) extends Dialog {
+            /** @inheritDoc */
+            protected array $steps = [
+                [
+                    'name' => 'first',
+                    'sendMessage' => [
+                        'text' => 'Hi!',
+                        'reply_markup' => '{"inline_keyboard":[[{"text":"Button 1","callback_data":"btn1"}]]}',
+                    ],
+                ],
+            ];
+        }]]></code>
+      <code><![CDATA[class (self::RANDOM_CHAT_ID, $bot) extends Dialog {
+            /** @inheritDoc */
+            protected array $steps = [
+                [
+                    'name' => 'first',
+                    'sendMessage' => [
+                        'text' => 'Hi!',
+                        'reply_markup' => [
+                            'inline_keyboard' => [
+                                [['text' => 'Button 1', 'callback_data' => 'btn1']],
+                            ],
+                        ],
+                    ],
                 ],
             ];
         }]]></code>
@@ -85,13 +147,16 @@
             protected array $steps = [
                 [
                     'name' => 'first',
-                    'switch' => 'third',
+                    'sendMessage' => 'Hi!',
+                    'control' => ['switch' => 'third'],
                 ],
                 [
                     'name' => 'second',
+                    'sendMessage' => 'Hi again (2)',
                 ],
                 [
                     'name' => 'third',
+                    'sendMessage' => 'Hi again (3)',
                 ],
             ];
 
@@ -106,14 +171,11 @@
             protected array $steps = [
                 [
                     'name' => 'first',
-                    'nextStep' => 'third',
+                    'sendMessage' => 'Hi!',
+                    'control' => ['nextStep' => 'third'],
                 ],
-                [
-                    'name' => 'second',
-                ],
-                [
-                    'name' => 'third',
-                ],
+                ['name' => 'second', 'sendMessage' => 'this is second'],
+                ['name' => 'third', 'sendMessage' => 'this is third'],
             ];
 
             protected function afterEveryStep(Update $update, int $stepIndex): void
@@ -129,6 +191,7 @@
             protected array $steps = [
                 [
                     'name' => 'first',
+                    'sendMessage' => 'Hi!',
                 ],
             ];
 
@@ -242,6 +305,28 @@
             {
                 ++$this->count;
                 $this->nextStep('step1');
+            }
+        }]]></code>
+    </PropertyNotSetInConstructor>
+  </file>
+  <file src="tests/Fakes/FakeBot.php">
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[class('fake', false, $this->getGuzzleHttpClient([
+            $this->makeFakeServerResponse($resultData, $statusCode, $headers),
+            $this->makeFakeServerResponse($resultData, $statusCode, $headers),
+            $this->makeFakeServerResponse($resultData, $statusCode, $headers),
+        ])) extends Api {
+            private array $lastSentMessage = [];
+
+            public function sendMessage(array $params): \Telegram\Bot\Objects\Message
+            {
+                $this->lastSentMessage = $params;
+                return parent::sendMessage($params);
+            }
+
+            public function getLastSentMessage(): array
+            {
+                return $this->lastSentMessage;
             }
         }]]></code>
     </PropertyNotSetInConstructor>

@@ -26,11 +26,8 @@ final class WelcomeDialog extends Dialog
     /**
      * @var list<string|array{
      *   name: string,
-     *   response?: string,
-     *   options?: array<string, mixed>,
-     *   nextStep?: string,
-     *   switch?: string,
-     *   end?: bool
+     *   sendMessage: string|array<string, mixed>,
+     *   control?: array{nextStep?: string, switch?: string, complete?: bool}
      * }>
      */
     protected array $steps = [
@@ -40,15 +37,14 @@ final class WelcomeDialog extends Dialog
         // Configured step with default response
         [
             'name' => 'greeting',
-            'response' => 'Hello! How can I help you today?',
-            'options' => ['parse_mode' => 'HTML'],
+            'sendMessage' => 'Hello! How can I help you today?',
         ],
 
-        // Step with flow control
+        // Step with advanced parameters
         [
             'name' => 'menu',
-            'response' => 'Please choose an option:',
-            'options' => [
+            'sendMessage' => [
+                'text' => 'Please choose an option:', // required key
                 'reply_markup' => [
                     'keyboard' => [
                         ['Help', 'About'],
@@ -64,7 +60,7 @@ final class WelcomeDialog extends Dialog
 
 ### Available Options
 
-The `options` array supports all parameters from the [Telegram sendMessage API](https://core.telegram.org/bots/api#sendmessage), including:
+The `sendMessage` array supports all parameters from the [Telegram sendMessage API](https://core.telegram.org/bots/api#sendmessage), including:
 
 ```php
 [
@@ -83,8 +79,8 @@ Example with formatted text:
 ```php
 [
     'name' => 'formatted_message',
-    'response' => '<b>Bold text</b> and <i>italic text</i>',
-    'options' => [
+    'sendMessage' => [
+        'text' => '<b>Bold text</b> and <i>italic text</i>',
         'parse_mode' => 'HTML',
         'disable_web_page_preview' => true,
     ],
@@ -100,22 +96,22 @@ protected array $steps = [
     // Jump to a specific step after completion
     [
         'name' => 'start',
-        'response' => 'Welcome!',
-        'nextStep' => 'menu',  // Equivalent to $this->nextStep('menu')
+        'sendMessage' => 'Welcome!',
+        'control' => ['nextStep' => 'menu'],  // Equivalent to $this->nextStep('menu')
     ],
 
     // Switch to another step immediately
     [
         'name' => 'help',
-        'response' => 'Showing help...',
-        'switch' => 'help_details',  // Equivalent to $this->switch('help_details')
+        'sendMessage' => 'Showing help...',
+        'control' => ['switch' => 'help_details'],  // Equivalent to $this->switch('help_details')
     ],
 
     // End dialog after a step
     [
         'name' => 'goodbye',
-        'response' => 'Thank you for using our bot!',
-        'end' => true,  // Equivalent to $this->complete()
+        'sendMessage' => 'Thank you for using our bot!',
+        'control' => ['complete' => true],  // Equivalent to $this->complete()
     ],
 ];
 ```
