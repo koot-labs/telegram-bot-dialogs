@@ -86,9 +86,9 @@ abstract class Dialog
 
     /**
      * @readonly
-     * @var int<-1, max> Seconds to store the state of the Dialog after the latest activity on it.
+     * @var int<-1, max> Seconds to store the state of the Dialog after the latest activity on it. Use -1 to store forever.
      */
-    protected int $ttl = 300;
+    protected int $ttl = 300; // 5 min
 
     /** @var \Telegram\Bot\Api Associated Bot instance that will perform API calls. */
     protected Api $bot;
@@ -280,7 +280,11 @@ abstract class Dialog
         return $this->user_id;
     }
 
-    /** Get a number of seconds to store the state of the Dialog after the latest activity on it. */
+    /**
+     * Get a number of seconds to store the state of the Dialog after the latest activity on it.
+     * Use -1 to store forever.
+     * @return int<-1, max>
+     */
     final public function getTtl(): int
     {
         return $this->ttl;
