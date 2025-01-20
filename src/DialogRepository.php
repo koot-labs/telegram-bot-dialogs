@@ -19,13 +19,13 @@ final class DialogRepository
     }
 
     /** Store a Dialog in a cache. */
-    public function put(string $key, Dialog $dialog, \DateTime | \DateInterval | int $seconds): void
+    public function put(string $key, Dialog $dialog, \DateTime | \DateInterval | int | null $ttl = null): void
     {
-        if ($seconds instanceof \DateTime) {
-            $seconds = max(0, $seconds->getTimestamp() - time());
+        if ($ttl instanceof \DateTime) {
+            $ttl = max(0, $ttl->getTimestamp() - time());
         }
 
-        $this->cache->set($this->prefixKey($key), serialize($dialog), $seconds);
+        $this->cache->set($this->prefixKey($key), serialize($dialog), $ttl);
     }
 
     public function has(string $key): bool
