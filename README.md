@@ -196,7 +196,7 @@ abstract class Dialog
     // Properties Access
     public function getChatId(): int;
     public function getUserId(): ?int;
-    public function getTtl(): int;
+    public function getTtl(): ?int;
 }
 ```
 
