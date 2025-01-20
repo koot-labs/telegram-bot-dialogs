@@ -13,7 +13,7 @@ use Telegram\Bot\Objects\Update;
 /** @api */
 final class DialogManager
 {
-    /** Bot instance to use for all API calls. */
+    /** Bot instance to use it for all API calls. */
     private Api $bot;
 
     /** Storage to store Dialog state between requests. */
