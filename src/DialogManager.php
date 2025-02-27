@@ -61,11 +61,23 @@ final class DialogManager
     {
         $this->activate($dialog);
 
-        $this->processUpdate(new BotInitiatedUpdate($updateData));
+        // To get instance of initiated Dialog from a Storage in processUpdate
+        if (empty($updateData)) {
+            $updateData = [
+                'message' => [
+                    'chat' => [
+                        'id' => $dialog->getChatId(),
+                    ],
+                ],
+            ];
 
-        $dialog->isCompleted()
-            ? $this->forgetDialog($dialog)
-            : $this->persistDialog($dialog);
+            $userId = $dialog->getUserId();
+            if ($userId !== null){
+                $updateData['message']['from'] = ['id' => $userId];
+            }
+        }
+
+        $this->processUpdate(new BotInitiatedUpdate($updateData));
     }
 
     /**
