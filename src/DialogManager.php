@@ -59,13 +59,26 @@ final class DialogManager
      */
     public function initiateDialog(Dialog $dialog, array $updateData = []): void
     {
+        // Required in processUpdate to get instance of the current active Dialog from a Storage
+        if (empty($updateData)) {
+            $updateData = [
+                'message' => [
+                    'chat' => [
+                        'id' => $dialog->getChatId(),
+                    ],
+                ],
+            ];
+
+            $userId = $dialog->getUserId();
+            if ($userId !== null){
+                $updateData['message']['from'] = ['id' => $userId];
+            }
+        }
+
+        $update = new BotInitiatedUpdate($updateData);
+        $this->forgetActiveDialog($update);
         $this->activate($dialog);
-
-        $this->processUpdate(new BotInitiatedUpdate($updateData));
-
-        $dialog->isCompleted()
-            ? $this->forgetDialog($dialog)
-            : $this->persistDialog($dialog);
+        $this->processUpdate($update);
     }
 
     /**
@@ -96,11 +109,9 @@ final class DialogManager
             }
         } while($performOneMoreStepRequired);
 
-        if ($dialog->isCompleted()) {
-            $this->forgetDialog($dialog);
-        } else {
-            $this->persistDialog($dialog);
-        }
+        $dialog->isCompleted()
+            ? $this->forgetDialog($dialog)
+            : $this->persistDialog($dialog);
     }
 
     /** @return non-empty-string|null */
@@ -172,7 +183,7 @@ final class DialogManager
         $this->repository->put($this->getDialogKey($dialog), $dialog, $dialog->getTtl());
     }
 
-    /** Restore Dialog. */
+    /** Retrieve Dialog. */
     private function retrieveDialog(string $key): Dialog
     {
         return $this->repository->get($key);
