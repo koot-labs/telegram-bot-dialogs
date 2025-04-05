@@ -59,9 +59,7 @@ final class DialogManager
      */
     public function initiateDialog(Dialog $dialog, array $updateData = []): void
     {
-        $this->activate($dialog);
-
-        // To get instance of initiated Dialog from a Storage in processUpdate
+        // Required in processUpdate to get instance of the current active Dialog from a Storage
         if (empty($updateData)) {
             $updateData = [
                 'message' => [
@@ -77,7 +75,10 @@ final class DialogManager
             }
         }
 
-        $this->processUpdate(new BotInitiatedUpdate($updateData));
+        $update = new BotInitiatedUpdate($updateData);
+        $this->forgetActiveDialog($update);
+        $this->activate($dialog);
+        $this->processUpdate($update);
     }
 
     /**
@@ -108,11 +109,9 @@ final class DialogManager
             }
         } while($performOneMoreStepRequired);
 
-        if ($dialog->isCompleted()) {
-            $this->forgetDialog($dialog);
-        } else {
-            $this->persistDialog($dialog);
-        }
+        $dialog->isCompleted()
+            ? $this->forgetDialog($dialog)
+            : $this->persistDialog($dialog);
     }
 
     /** @return non-empty-string|null */
@@ -184,7 +183,7 @@ final class DialogManager
         $this->repository->put($this->getDialogKey($dialog), $dialog, $dialog->getTtl());
     }
 
-    /** Restore Dialog. */
+    /** Retrieve Dialog. */
     private function retrieveDialog(string $key): Dialog
     {
         return $this->repository->get($key);
