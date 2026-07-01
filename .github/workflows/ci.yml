@@ -53,7 +53,7 @@ jobs:
 
       - name: Send PHP code coverage report to Codecov.io
         if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: phpunit
